@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="DxPlus">
+      <UniqueIdentifier>{dfe186d4-3275-460f-846a-146aa56ccb53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DxPlus\ヘッダー ファイル">
+      <UniqueIdentifier>{19ae654c-6c8e-467d-b772-7843a177a3ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DxPlus\ソース ファイル">
+      <UniqueIdentifier>{311832a5-fef8-4918-a103-60cc2a60bf6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Status">
+      <UniqueIdentifier>{8aecfc3f-e6ed-4708-8650-83d40208180d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_MainData">
+      <UniqueIdentifier>{0e4627dc-dc47-4e2a-8c89-052b1006ad79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_MainData\Player">
+      <UniqueIdentifier>{3d549e95-d9b2-44c8-b559-f307598dea1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_MainData\Back">
+      <UniqueIdentifier>{566b94ec-ae56-4e58-a711-981af555bb3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{8d15c10b-e45d-444f-a464-a83c1d07b7c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\00_Title">
+      <UniqueIdentifier>{9e03a90b-c8a2-4c4a-9433-487323639508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\05_MainGame">
+      <UniqueIdentifier>{7ce917ad-3e53-4e1e-bc75-281240c7224b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\10_Result">
+      <UniqueIdentifier>{bec8c82b-1bb0-4e3b-9234-e327f7b2bdd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_MainData\Vegetable">
+      <UniqueIdentifier>{c9882769-2830-443b-8293-41c9e43df61e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DxPlus\Animation.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\Debug.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\DxPlus.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\DxPlusConstants.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\DxWrapper.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\HighResolutionTimer.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\Input.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\InputConstants.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\InputManager.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\Primitive2D.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\Sprite.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\Text.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\TextAnimator.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\Utils.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPlus\Vector2.h">
+      <Filter>DxPlus\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Clear.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Scene\05_MainGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Battle.h">
+      <Filter>Scene\05_MainGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity2D.h">
+      <Filter>01_Status</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
+      <Filter>Scene\00_Title</Filter>
+    </ClInclude>
+    <ClInclude Include="WinMain.h">
+      <Filter>00_MainData</Filter>
+    </ClInclude>
+    <ClInclude Include="AllManager.h">
+      <Filter>00_MainData</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>00_MainData\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Result.h">
+      <Filter>Scene\10_Result</Filter>
+    </ClInclude>
+    <ClInclude Include="Back.h">
+      <Filter>00_MainData\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="Vegetable.h">
+      <Filter>00_MainData\Vegetable</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DxPlus\Animation.cpp">
+      <Filter>DxPlus\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DxPlus\Debug.cpp">
+      <Filter>DxPlus\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DxPlus\DxPlus.cpp">
+      <Filter>DxPlus\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DxPlus\DxWrapper.cpp">
+      <Filter>DxPlus\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DxPlus\Input.cpp">
+      <Filter>DxPlus\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DxPlus\InputManager.cpp">
+      <Filter>DxPlus\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DxPlus\Primitive2D.cpp">
+      <Filter>DxPlus\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DxPlus\Sprite.cpp">
+      <Filter>DxPlus\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DxPlus\Text.cpp">
+      <Filter>DxPlus\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DxPlus\TextAnimator.cpp">
+      <Filter>DxPlus\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DxPlus\Utils.cpp">
+      <Filter>DxPlus\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Clear.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Scene\05_MainGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Battle.cpp">
+      <Filter>Scene\05_MainGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>Scene\00_Title</Filter>
+    </ClCompile>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>00_MainData</Filter>
+    </ClCompile>
+    <ClCompile Include="AllManager.cpp">
+      <Filter>00_MainData</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>00_MainData\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Result.cpp">
+      <Filter>Scene\10_Result</Filter>
+    </ClCompile>
+    <ClCompile Include="Back.cpp">
+      <Filter>00_MainData\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="Vegetable.cpp">
+      <Filter>00_MainData\Vegetable</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
