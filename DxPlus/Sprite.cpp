@@ -49,8 +49,8 @@ namespace DxPlus::Sprite
     {
         int roundedX = static_cast<int>(std::round(position.x));
         int roundedY = static_cast<int>(std::round(position.y));
-        int roundedCenterX = static_cast<int>(std::round(center.x));
-        int roundedCenterY = static_cast<int>(std::round(center.y));
+        int roundedcenterX = static_cast<int>(std::round(center.x));
+        int roundedcenterY = static_cast<int>(std::round(center.y));
 
         // 色を設定
         SetDrawBright(Utils::GetColorR(color), Utils::GetColorG(color), Utils::GetColorB(color));
@@ -59,8 +59,8 @@ namespace DxPlus::Sprite
         DrawRotaGraph3(
             roundedX,
             roundedY,
-            roundedCenterX,
-            roundedCenterY,
+            roundedcenterX,
+            roundedcenterY,
             static_cast<double>(scale.x),
             static_cast<double>(scale.y),
             static_cast<double>(rotationZ),
@@ -180,13 +180,13 @@ namespace DxPlus::Sprite
         }
     }
 
-    bool SpriteBase::LoadImage(const std::wstring& path, Vec2 autoCenter)
+    bool SpriteBase::LoadImage(const std::wstring& path, Vec2 autocenter)
     {
         int w = 0, h = 0;
         id = DxPlus::Sprite::Load(path);
         if (id == -1) return false;
         if (DxLib::GetGraphSize(id, &w, &h) != 0) return false;
-        center = { w * autoCenter.x, h * autoCenter.y };
+        center = { w * autocenter.x, h * autocenter.y };
         return true;
     }
 
@@ -199,7 +199,7 @@ namespace DxPlus::Sprite
         return LoadImage(path, { 0.0f, 0.0f });
     }
 
-    bool SpriteCenter::Load(const std::wstring& path)
+    bool Spritecenter::Load(const std::wstring& path)
     {
         return LoadImage(path, { 0.5f, 0.5f });
     }

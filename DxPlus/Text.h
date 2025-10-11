@@ -16,13 +16,13 @@ namespace DxPlus::Text
     enum TextAlign
     {
         TOP_LEFT,
-        TOP_CENTER,
+        TOP_center,
         TOP_RIGHT,
         MIDDLE_LEFT,
-        MIDDLE_CENTER,
+        MIDDLE_center,
         MIDDLE_RIGHT,
         BOTTOM_LEFT,
-        BOTTOM_CENTER,
+        BOTTOM_center,
         BOTTOM_RIGHT
     };
 

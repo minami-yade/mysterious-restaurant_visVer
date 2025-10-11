@@ -72,13 +72,13 @@ namespace DxPlus::Text
         switch (align)
         {
         case TOP_LEFT: offsetX = 0; offsetY = 0; break;
-        case TOP_CENTER: offsetX = textWidth / 2; offsetY = 0; break;
+        case TOP_center: offsetX = textWidth / 2; offsetY = 0; break;
         case TOP_RIGHT: offsetX = textWidth; offsetY = 0; break;
         case MIDDLE_LEFT: offsetX = 0; offsetY = textHeight / 2; break;
-        case MIDDLE_CENTER: offsetX = textWidth / 2; offsetY = textHeight / 2; break;
+        case MIDDLE_center: offsetX = textWidth / 2; offsetY = textHeight / 2; break;
         case MIDDLE_RIGHT: offsetX = textWidth; offsetY = textHeight / 2; break;
         case BOTTOM_LEFT: offsetX = 0; offsetY = textHeight; break;
-        case BOTTOM_CENTER: offsetX = textWidth / 2; offsetY = textHeight; break;
+        case BOTTOM_center: offsetX = textWidth / 2; offsetY = textHeight; break;
         case BOTTOM_RIGHT: offsetX = textWidth; offsetY = textHeight; break;
         }
 

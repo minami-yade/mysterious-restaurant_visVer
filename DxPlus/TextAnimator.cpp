@@ -73,7 +73,7 @@ namespace DxPlus
 
                 int lineWidth = GetDrawStringWidthToHandle(line.c_str(), -1, fontHandle);
                 int drawX = x;
-                if (alignment == TextAlign::Center)
+                if (alignment == TextAlign::center)
                     drawX = x + (width - lineWidth) / 2;
                 else if (alignment == TextAlign::Right)
                     drawX = x + (width - lineWidth);
@@ -95,7 +95,7 @@ namespace DxPlus
 
                 int lineWidth = GetDrawStringWidthToHandle(line.c_str(), -1, fontHandle);
                 int drawX = x;
-                if (alignment == TextAlign::Center)
+                if (alignment == TextAlign::center)
                     drawX = x + (width - lineWidth) / 2;
                 else if (alignment == TextAlign::Right)
                     drawX = x + (width - lineWidth);
@@ -116,7 +116,7 @@ namespace DxPlus
         {
             int lineWidth = GetDrawStringWidthToHandle(line.c_str(), -1, fontHandle);
             int drawX = x;
-            if (alignment == TextAlign::Center)
+            if (alignment == TextAlign::center)
                 drawX = x + (width - lineWidth) / 2;
             else if (alignment == TextAlign::Right)
                 drawX = x + (width - lineWidth);

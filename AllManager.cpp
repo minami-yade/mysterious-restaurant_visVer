@@ -4,6 +4,7 @@ void GameAllLoad() {
 	PlayerImage();
 	GameBackImage();
 	VegetableImage();
+
 }
 
 void GameAllDelete() {
@@ -12,6 +13,7 @@ void GameAllDelete() {
 	for (int i = 0; i < VEGETABLE_NUM; ++i) {
 		VegetableDelete(i);
 	}
+
 }
 
 float GetDeltaTime_DxLib(int g_prevMs)

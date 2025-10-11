@@ -41,5 +41,7 @@ void TitleBackDelete() {
 }
 
 void GameBackDelete() {
-    DxPlus::Sprite::Delete(gameBack.spriteID);
+    if (gameBack.spriteID != -1) {
+        DxPlus::Sprite::Delete(gameBack.spriteID);
+    }
 }

@@ -57,7 +57,7 @@ void Battle_Render()
 {
     DxPlus::Text::DrawString(L"ばとる",
         { DxPlus::CLIENT_WIDTH * 0.5f, DxPlus::CLIENT_HEIGHT * 0.33f },
-        DxLib::GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_CENTER, { 3.0f, 3.0f });
+        DxLib::GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_center, { 3.0f, 3.0f });
 
     // フェードイン / フェードアウト用 
     if (battleFadeTimer > 0.0f) {

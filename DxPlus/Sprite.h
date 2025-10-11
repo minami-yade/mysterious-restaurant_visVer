@@ -73,7 +73,7 @@ namespace DxPlus::Sprite
     protected:
         int id = -1;
         DxPlus::Vec2 center = { 0.0f, 0.0f };
-        bool LoadImage(const std::wstring& path, Vec2 autoCenter);
+        bool LoadImage(const std::wstring& path, Vec2 autocenter);
     };
 
     // ============================================================================
@@ -89,7 +89,7 @@ namespace DxPlus::Sprite
     // ============================================================================
     // スプライト：中央が中心（プレイヤー・敵キャラ向け）
     // ============================================================================
-    class SpriteCenter : public SpriteBase
+    class Spritecenter : public SpriteBase
     {
     public:
         bool Load(const std::wstring& path);
@@ -138,9 +138,9 @@ namespace DxPlus::Sprite
 
             int w = 0, h = 0;
             DxLib::GetGraphSize(tempIDs[i], &w, &h);
-            Vec2 pixelCenter = { w * T::DefaultPivot().x, h * T::DefaultPivot().y };
+            Vec2 pixelcenter = { w * T::DefaultPivot().x, h * T::DefaultPivot().y };
 
-            spriteArray[i].SetID(tempIDs[i], pixelCenter);
+            spriteArray[i].SetID(tempIDs[i], pixelcenter);
         }
     }
 }

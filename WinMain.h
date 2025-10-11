@@ -8,3 +8,6 @@ enum Scene
 	SceneBattle,
 	SceneClear,
 };
+
+
+void HandleScreenToggle();

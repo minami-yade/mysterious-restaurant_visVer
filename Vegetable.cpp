@@ -39,7 +39,7 @@ void VegetableReset()
 		case 0: //　キャベツ
             vegetable[i].type = 0;
             vegetable[i].scale = { 0.5f, 0.5f };
-            vegetable[i].Center = { 141.0f, 81.0f };
+            vegetable[i].center = { 141.0f, 81.0f };
             vegetable[i].speed = 3.0f; // 100 ピクセル/秒
             break;
 		default:
@@ -107,9 +107,9 @@ void VegetableDraw(int i)
     if (!vegetable[i].isActive) return;
 	if (vegetable[i].spriteID == -1) return;
     if(vegetable[i].speed > 0)
-    DxPlus::Sprite::Draw(vegetable[i].spriteID, vegetable[i].position, vegetable[i].scale, vegetable[i].Center);
+    DxPlus::Sprite::Draw(vegetable[i].spriteID, vegetable[i].position, vegetable[i].scale, vegetable[i].center);
     else
-        DxPlus::Sprite::Draw(vegetable[i].spriteID, vegetable[i].position, { -vegetable[i].scale.x ,vegetable[i].scale.y }, vegetable[i].Center);
+        DxPlus::Sprite::Draw(vegetable[i].spriteID, vegetable[i].position, { -vegetable[i].scale.x ,vegetable[i].scale.y }, vegetable[i].center);
 }
 
 // --- 解放関数 ---

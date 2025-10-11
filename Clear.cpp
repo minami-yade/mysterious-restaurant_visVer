@@ -57,7 +57,7 @@ void Clear_Render()
 
     DxPlus::Text::DrawString(L"‚­‚è‚ ",
         { DxPlus::CLIENT_WIDTH * 0.5f, DxPlus::CLIENT_HEIGHT * 0.33f },
-        DxLib::GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_CENTER, { 3.0f, 3.0f });
+        DxLib::GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_center, { 3.0f, 3.0f });
 
 
 

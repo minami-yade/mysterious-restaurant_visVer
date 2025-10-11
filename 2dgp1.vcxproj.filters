@@ -49,6 +49,9 @@
     <Filter Include="00_MainData\Vegetable">
       <UniqueIdentifier>{c9882769-2830-443b-8293-41c9e43df61e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_MainData\Mouse">
+      <UniqueIdentifier>{286e7c8e-e6cd-4ffe-a392-4ee29c579b2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DxPlus\Animation.h">
@@ -129,6 +132,9 @@
     <ClInclude Include="Vegetable.h">
       <Filter>00_MainData\Vegetable</Filter>
     </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>00_MainData\Mouse</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxPlus\Animation.cpp">
@@ -193,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="Vegetable.cpp">
       <Filter>00_MainData\Vegetable</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>00_MainData\Mouse</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

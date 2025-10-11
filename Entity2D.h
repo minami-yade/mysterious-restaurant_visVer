@@ -9,7 +9,7 @@ struct Entity2D
     //画像
     int spriteID = -1;
 	DxPlus::Vec2 scale = { 1.0f, 1.0f };
-	DxPlus::Vec2 Center = { 64.0f, 64.0f };
+	DxPlus::Vec2 center = { 64.0f, 64.0f };
 
 
     //player
@@ -23,6 +23,12 @@ struct Entity2D
     float amplitude;    // 振幅（最大高さ - baseY）
     float period;       // 周期（秒）
     float timeAcc = 0;  // 累積時間（内部で管理）
+
+	//mouse
+	bool click = false;
+	float timer = 0.0f;
+	DxPlus::Vec2 pointer = { 0,0 };
+	int effectID = -1;
 
 };
 const int PLAYER_NUM = 9;

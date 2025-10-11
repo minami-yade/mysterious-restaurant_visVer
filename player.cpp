@@ -89,63 +89,63 @@ void PlayerReset() {
             player[i].position = { playerBasePosition.x,
                                    playerBasePosition.y + 147.0f };
             // 足元基準（ボディ）
-            player[i].Center    = { 84.0f, 294.0f };
+            player[i].center    = { 84.0f, 294.0f };
             player[i].scale     = { 1.0f, 1.0f };
             break;
 
         case PART_RIGHT_ARM:
             player[i].position  = { playerBasePosition.x - Armoffset.x,
                                     playerBasePosition.y - Armoffset.y };
-            player[i].Center    = { 84.0f, 23.0f };
+            player[i].center    = { 84.0f, 23.0f };
             player[i].scale     = { 1.0f, 1.0f };
             break;
 
         case PART_RIGHT_ARM_LONG:
             player[i].position  = { playerBasePosition.x - LongArmoffset.x,
                                     playerBasePosition.y - LongArmoffset.y };
-            player[i].Center    = { 100.0f, 56.0f };
+            player[i].center    = { 100.0f, 56.0f };
             player[i].scale     = { 1.0f, 1.0f };
             break;
 
         case PART_RIGHT_HAND:
             player[i].position = { playerBasePosition.x - LongArmoffset.x - Handoffset.x,
                                    playerBasePosition.y - LongArmoffset.y + Handoffset.y };
-            player[i].Center   = { 18.5f, 18.0f };
+            player[i].center   = { 18.5f, 18.0f };
             player[i].scale    = { 1.0f, 1.0f };
             break;
 
         case PART_LEFT_ARM:
             player[i].position = { playerBasePosition.x + Armoffset.x,
                                    playerBasePosition.y - Armoffset.y };
-            player[i].Center   = { 0.0f, 23.0f };
+            player[i].center   = { 0.0f, 23.0f };
             player[i].scale    = { 1.0f, 1.0f };
             break;
 
         case PART_LEFT_ARM_LONG:
             player[i].position = { playerBasePosition.x + LongArmoffset.x,
                                    playerBasePosition.y - LongArmoffset.y };
-            player[i].Center   = { 0.0f, 56.0f };
+            player[i].center   = { 0.0f, 56.0f };
             player[i].scale    = { 1.0f, 1.0f };
             break;
 
         case PART_LEFT_HAND:
             player[i].position = { playerBasePosition.x + LongArmoffset.x + Handoffset.x,
                                    playerBasePosition.y - LongArmoffset.y + Handoffset.y };
-            player[i].Center   = { 18.5f, 18.0f };
+            player[i].center   = { 18.5f, 18.0f };
             player[i].scale    = { 1.0f, 1.0f };
             break;
 
         case PART_ROD_RIGHT:
             player[i].position = { player[PART_LEFT_HAND].position.x,
                                     player[PART_LEFT_HAND].position.y};
-            player[i].Center   = { 18.0f, 180.0f };
+            player[i].center   = { 18.0f, 180.0f };
             player[i].scale    = { 1.0f, 1.0f };
             break;
 
         case PART_ROD_LEFT:
             player[i].position = { player[PART_RIGHT_HAND].position.x,
                                     player[PART_RIGHT_HAND].position.y };
-            player[i].Center   = { 120.0f, 180.0f };
+            player[i].center   = { 120.0f, 180.0f };
             player[i].scale    = { 1.0f, 1.0f };
             break;
 
@@ -159,21 +159,21 @@ void PlayerReset() {
 void PlayerDraw(bool right) {
    if(right){
        // 右向き
-       DxPlus::Sprite::Draw(player[PART_BODY].spriteID, player[PART_BODY].position, player[PART_BODY].scale, player[PART_BODY].Center);
-       DxPlus::Sprite::Draw(player[PART_LEFT_HAND].spriteID, player[PART_LEFT_HAND].position, player[PART_LEFT_HAND].scale, player[PART_LEFT_HAND].Center);
-       DxPlus::Sprite::Draw(player[PART_LEFT_ARM_LONG].spriteID, player[PART_LEFT_ARM_LONG].position, player[PART_LEFT_ARM_LONG].scale, player[PART_LEFT_ARM_LONG].Center);
-       DxPlus::Sprite::Draw(player[PART_RIGHT_ARM].spriteID, player[PART_RIGHT_ARM].position, player[PART_RIGHT_ARM].scale, player[PART_RIGHT_ARM].Center);
-       DxPlus::Sprite::Draw(player[PART_RIGHT_ARM].spriteID, player[PART_RIGHT_ARM].position, player[PART_RIGHT_ARM].scale, player[PART_RIGHT_ARM].Center);
-       DxPlus::Sprite::Draw(player[PART_ROD_RIGHT].spriteID, player[PART_ROD_RIGHT].position, player[PART_ROD_RIGHT].scale, player[PART_ROD_RIGHT].Center);
+       DxPlus::Sprite::Draw(player[PART_BODY].spriteID, player[PART_BODY].position, player[PART_BODY].scale, player[PART_BODY].center);
+       DxPlus::Sprite::Draw(player[PART_LEFT_HAND].spriteID, player[PART_LEFT_HAND].position, player[PART_LEFT_HAND].scale, player[PART_LEFT_HAND].center);
+       DxPlus::Sprite::Draw(player[PART_LEFT_ARM_LONG].spriteID, player[PART_LEFT_ARM_LONG].position, player[PART_LEFT_ARM_LONG].scale, player[PART_LEFT_ARM_LONG].center);
+       DxPlus::Sprite::Draw(player[PART_RIGHT_ARM].spriteID, player[PART_RIGHT_ARM].position, player[PART_RIGHT_ARM].scale, player[PART_RIGHT_ARM].center);
+       DxPlus::Sprite::Draw(player[PART_RIGHT_ARM].spriteID, player[PART_RIGHT_ARM].position, player[PART_RIGHT_ARM].scale, player[PART_RIGHT_ARM].center);
+       DxPlus::Sprite::Draw(player[PART_ROD_RIGHT].spriteID, player[PART_ROD_RIGHT].position, player[PART_ROD_RIGHT].scale, player[PART_ROD_RIGHT].center);
    }
    else {
        // 左向き
-       DxPlus::Sprite::Draw(player[PART_BODY].spriteID, player[PART_BODY].position, player[PART_BODY].scale, player[PART_BODY].Center);
-       DxPlus::Sprite::Draw(player[PART_RIGHT_HAND].spriteID, player[PART_RIGHT_HAND].position, player[PART_RIGHT_HAND].scale, player[PART_RIGHT_HAND].Center);
-       DxPlus::Sprite::Draw(player[PART_RIGHT_ARM_LONG].spriteID, player[PART_RIGHT_ARM_LONG].position, player[PART_RIGHT_ARM_LONG].scale, player[PART_RIGHT_ARM_LONG].Center);
-       DxPlus::Sprite::Draw(player[PART_LEFT_ARM].spriteID, player[PART_LEFT_ARM].position, player[PART_LEFT_ARM].scale, player[PART_LEFT_ARM].Center);
-       DxPlus::Sprite::Draw(player[PART_LEFT_ARM].spriteID, player[PART_LEFT_ARM].position, player[PART_LEFT_ARM].scale, player[PART_LEFT_ARM].Center);
-       DxPlus::Sprite::Draw(player[PART_ROD_LEFT].spriteID, player[PART_ROD_LEFT].position, player[PART_ROD_LEFT].scale, player[PART_ROD_LEFT].Center);
+       DxPlus::Sprite::Draw(player[PART_BODY].spriteID, player[PART_BODY].position, player[PART_BODY].scale, player[PART_BODY].center);
+       DxPlus::Sprite::Draw(player[PART_RIGHT_HAND].spriteID, player[PART_RIGHT_HAND].position, player[PART_RIGHT_HAND].scale, player[PART_RIGHT_HAND].center);
+       DxPlus::Sprite::Draw(player[PART_RIGHT_ARM_LONG].spriteID, player[PART_RIGHT_ARM_LONG].position, player[PART_RIGHT_ARM_LONG].scale, player[PART_RIGHT_ARM_LONG].center);
+       DxPlus::Sprite::Draw(player[PART_LEFT_ARM].spriteID, player[PART_LEFT_ARM].position, player[PART_LEFT_ARM].scale, player[PART_LEFT_ARM].center);
+       DxPlus::Sprite::Draw(player[PART_LEFT_ARM].spriteID, player[PART_LEFT_ARM].position, player[PART_LEFT_ARM].scale, player[PART_LEFT_ARM].center);
+       DxPlus::Sprite::Draw(player[PART_ROD_LEFT].spriteID, player[PART_ROD_LEFT].position, player[PART_ROD_LEFT].scale, player[PART_ROD_LEFT].center);
    }
 }
 

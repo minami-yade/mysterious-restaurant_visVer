@@ -13,7 +13,7 @@ namespace DxPlus
     enum class TextAlign
     {
         Left,
-        Center,
+        center,
         Right
     };
 

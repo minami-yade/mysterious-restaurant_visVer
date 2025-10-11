@@ -94,12 +94,12 @@ void Title_Render() {
 	// ƒ^ƒCƒgƒ‹‚Ì•`‰æ 
 	DxPlus::Text::DrawString(L"2D GameProgramming I",
 		{ DxPlus::CLIENT_WIDTH * 0.5f, DxPlus::CLIENT_HEIGHT * 0.33f },
-		BlackGreen, DxPlus::Text::TextAlign::MIDDLE_CENTER, { 3.0f, 3.0f });
+		BlackGreen, DxPlus::Text::TextAlign::MIDDLE_center, { 3.0f, 3.0f });
 
 	DxPlus::Text::DrawString(L"Start Game",
 		{ DxPlus::CLIENT_WIDTH * 0.5f, DxPlus::CLIENT_HEIGHT * 0.7f },
 		BlackGreen,
-		DxPlus::Text::TextAlign::MIDDLE_CENTER,
+		DxPlus::Text::TextAlign::MIDDLE_center,
 		{ 2.0f, 2.0f });
 
 

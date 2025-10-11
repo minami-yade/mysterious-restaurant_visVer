@@ -177,6 +177,7 @@
     <ClInclude Include="DxPlus\Vector2.h" />
     <ClInclude Include="Entity2D.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Mouse.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="Title.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="DxPlus\TextAnimator.cpp" />
     <ClCompile Include="DxPlus\Utils.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="Title.cpp" />

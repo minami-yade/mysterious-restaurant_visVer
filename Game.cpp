@@ -13,7 +13,6 @@
 //----------------------------------------------------------------------
 int vegetableSpawnTimer;
 
-
 int gameState;
 float gameFadeTimer;
 extern int nextScene;
@@ -29,6 +28,9 @@ static unsigned int g_prevMs = 0;
 //----------------------------------------------------------------------
 void Game_Init()
 {
+
+
+ 
 	//今の時間を取得
     g_prevMs = GetNowCount();
 
@@ -59,16 +61,16 @@ void Game_Reset()
 
 void Game_Update()
 {
+    float delta = GetDeltaTime_DxLib(g_prevMs);
     vegetableSpawnTimer--;
 
-	float delta = GetDeltaTime_DxLib(g_prevMs);
+
+
     for (int i = 0; i < VEGETABLE_NUM; i++)
     {
         SpawnTimeVegetable(i, &vegetableSpawnTimer);
         UpdateVegetable(i ,delta);
     }
-
- 
 
 
 
@@ -110,11 +112,12 @@ void Game_Render()
     wchar_t buf[64];
     swprintf(buf, 64, L"vegetableSpawnTimer: %d", vegetableSpawnTimer);
     DxPlus::Text::DrawString(buf,
-        {0,100},
-        GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_CENTER, { 1.0f, 1.0f });
+        {100,100},
+        GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_center, { 1.0f, 1.0f });
 
 #endif
     
+
     FadeDrawGame();
 }
 
