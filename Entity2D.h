@@ -6,6 +6,9 @@ struct Entity2D
     //位置関係
     DxPlus::Vec2 position = {};
     DxPlus::Vec2 velocity = {};
+	float gravity = 0.98f; // 重力加速度
+
+
     //画像
     int spriteID = -1;
 	DxPlus::Vec2 scale = { 1.0f, 1.0f };
@@ -20,15 +23,16 @@ struct Entity2D
 	float speed = 0.0f;
 	int type = 0; //　0:キャベツ
     float  baseY;        // 基準高
-    float amplitude;    // 振幅（最大高さ - baseY）
-    float period;       // 周期（秒）
-    float timeAcc = 0;  // 累積時間（内部で管理）
+	float JumpPower = 10.0f;
+
+
 
 	//mouse
 	bool click = false;
 	float timer = 0.0f;
 	DxPlus::Vec2 pointer = { 0,0 };
 	int effectID = -1;
+
 
 };
 const int PLAYER_NUM = 9;

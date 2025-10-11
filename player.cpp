@@ -13,9 +13,12 @@ const int PART_LEFT_HAND       = 6;
 const int PART_ROD_RIGHT       = 7;
 const int PART_ROD_LEFT        = 8;
 
+const float playerSize = 0.75f;
+
+
 DxPlus::Vec2 playerBasePosition = {
     DxPlus::CLIENT_WIDTH / 2.0f,
-    DxPlus::CLIENT_HEIGHT - 195.0f
+	DxPlus::CLIENT_HEIGHT - 145.0f* playerSize - 48.0f
 };
 
 void PlayerImage()
@@ -81,72 +84,75 @@ void PlayerReset() {
 	DxPlus::Vec2 Handoffset = { 108.0f,-50.0f };
 
     for (int i = 0; i < PLAYER_NUM; ++i) {
+
+        player[i].scale = { playerSize, playerSize };
+
         switch (i) {
-         
-         
-        case PART_BODY: 
-        
-            player[i].position = { playerBasePosition.x,
-                                   playerBasePosition.y + 147.0f };
-            // 足元基準（ボディ）
-            player[i].center    = { 84.0f, 294.0f };
-            player[i].scale     = { 1.0f, 1.0f };
+
+        case PART_BODY:
+            player[i].position = {
+                playerBasePosition.x,
+                playerBasePosition.y + 147.0f * player[i].scale.y
+            };
+            player[i].center = { 84.0f, 294.0f };
             break;
 
         case PART_RIGHT_ARM:
-            player[i].position  = { playerBasePosition.x - Armoffset.x,
-                                    playerBasePosition.y - Armoffset.y };
-            player[i].center    = { 84.0f, 23.0f };
-            player[i].scale     = { 1.0f, 1.0f };
+            player[i].position = {
+                playerBasePosition.x - Armoffset.x * player[i].scale.x,
+                playerBasePosition.y - Armoffset.y * player[i].scale.y
+            };
+            player[i].center = { 84.0f, 23.0f };
             break;
 
         case PART_RIGHT_ARM_LONG:
-            player[i].position  = { playerBasePosition.x - LongArmoffset.x,
-                                    playerBasePosition.y - LongArmoffset.y };
-            player[i].center    = { 100.0f, 56.0f };
-            player[i].scale     = { 1.0f, 1.0f };
+            player[i].position = {
+                playerBasePosition.x - LongArmoffset.x * player[i].scale.x,
+                playerBasePosition.y - LongArmoffset.y * player[i].scale.y
+            };
+            player[i].center = { 100.0f, 56.0f };
             break;
 
         case PART_RIGHT_HAND:
-            player[i].position = { playerBasePosition.x - LongArmoffset.x - Handoffset.x,
-                                   playerBasePosition.y - LongArmoffset.y + Handoffset.y };
-            player[i].center   = { 18.5f, 18.0f };
-            player[i].scale    = { 1.0f, 1.0f };
+            player[i].position = {
+                playerBasePosition.x - (LongArmoffset.x + Handoffset.x) * player[i].scale.x,
+                playerBasePosition.y - LongArmoffset.y * player[i].scale.y + Handoffset.y * player[i].scale.y
+            };
+            player[i].center = { 18.5f, 18.0f };
             break;
 
         case PART_LEFT_ARM:
-            player[i].position = { playerBasePosition.x + Armoffset.x,
-                                   playerBasePosition.y - Armoffset.y };
-            player[i].center   = { 0.0f, 23.0f };
-            player[i].scale    = { 1.0f, 1.0f };
+            player[i].position = {
+                playerBasePosition.x + Armoffset.x * player[i].scale.x,
+                playerBasePosition.y - Armoffset.y * player[i].scale.y
+            };
+            player[i].center = { 0.0f, 23.0f };
             break;
 
         case PART_LEFT_ARM_LONG:
-            player[i].position = { playerBasePosition.x + LongArmoffset.x,
-                                   playerBasePosition.y - LongArmoffset.y };
-            player[i].center   = { 0.0f, 56.0f };
-            player[i].scale    = { 1.0f, 1.0f };
+            player[i].position = {
+                playerBasePosition.x + LongArmoffset.x * player[i].scale.x,
+                playerBasePosition.y - LongArmoffset.y * player[i].scale.y
+            };
+            player[i].center = { 0.0f, 56.0f };
             break;
 
         case PART_LEFT_HAND:
-            player[i].position = { playerBasePosition.x + LongArmoffset.x + Handoffset.x,
-                                   playerBasePosition.y - LongArmoffset.y + Handoffset.y };
-            player[i].center   = { 18.5f, 18.0f };
-            player[i].scale    = { 1.0f, 1.0f };
+            player[i].position = {
+                playerBasePosition.x + (LongArmoffset.x + Handoffset.x) * player[i].scale.x,
+                playerBasePosition.y - LongArmoffset.y * player[i].scale.y + Handoffset.y * player[i].scale.y
+            };
+            player[i].center = { 18.5f, 18.0f };
             break;
 
         case PART_ROD_RIGHT:
-            player[i].position = { player[PART_LEFT_HAND].position.x,
-                                    player[PART_LEFT_HAND].position.y};
-            player[i].center   = { 18.0f, 180.0f };
-            player[i].scale    = { 1.0f, 1.0f };
+            player[i].position = player[PART_LEFT_HAND].position;
+            player[i].center = { 18.0f, 180.0f };
             break;
 
         case PART_ROD_LEFT:
-            player[i].position = { player[PART_RIGHT_HAND].position.x,
-                                    player[PART_RIGHT_HAND].position.y };
-            player[i].center   = { 120.0f, 180.0f };
-            player[i].scale    = { 1.0f, 1.0f };
+            player[i].position = player[PART_RIGHT_HAND].position;
+            player[i].center = { 120.0f, 180.0f };
             break;
 
         default:

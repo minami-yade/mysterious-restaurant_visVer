@@ -57,26 +57,28 @@ void UpdateVegetable(int i, float deltaTime)
 {
     if (!vegetable[i].isActive) return;
 
-
-    // 累積時間を進める
-    vegetable[i].timeAcc += deltaTime;
-
-
-    float t = fmodf(vegetable[i].timeAcc, vegetable[i].period) / vegetable[i].period;
-    float triangle = 1.0f - fabsf(2.0f * t - 1.0f);
-
-    // 高さを計算（baseY を下限にして amplitude 分だけ上がる）
-    vegetable[i].position.y = vegetable[i].baseY + triangle * vegetable[i].amplitude;
-
     // 前進
     vegetable[i].position.x += vegetable[i].speed * deltaTime;
 
+    // 重力加速度を加える
+    vegetable[i].velocity.y += vegetable[i].gravity * deltaTime;
 
-    // 画面外に出たら非アクティブにする
-    if (vegetable[i].position.x < -100 || vegetable[i].position.x > DxPlus::CLIENT_WIDTH + 100) {
-        vegetable[i].isActive = false;
+    // 地面（baseY）に到達したら跳ね返る
+    if (vegetable[i].position.y >= vegetable[i].baseY)
+    {
+        // 位置を更新
+        vegetable[i].position.y = vegetable[i].baseY;
+        vegetable[i].velocity.y += -vegetable[i].JumpPower;
     }
 
+    // 位置を更新
+    vegetable[i].position.y += vegetable[i].velocity.y * deltaTime;
+
+    // 画面外に出たら非アクティブにする
+    if (vegetable[i].position.x < -100 || vegetable[i].position.x > DxPlus::CLIENT_WIDTH + 100)
+    {
+        vegetable[i].isActive = false;
+    }
 }
 
 DxPlus::Vec2 randamSpawn() {
@@ -95,9 +97,6 @@ void SpawnTimeVegetable(int i , int* Timer) {
         vegetable[i].isActive        = true;
 		*Timer                       = GetRand(240) + 60;            //４秒から５秒
         vegetable[i].baseY           = vegetable[i].position.y;      // 基準高
-        vegetable[i].amplitude       = GetRand(50) + 50;             // 振幅（最大高さ - baseY）
-        vegetable[i].period          = 60;                           // 周期（フレーム）
-        vegetable[i].timeAcc         = 0;                            // 累積時間（内部で管理）
     } 
 }
 
