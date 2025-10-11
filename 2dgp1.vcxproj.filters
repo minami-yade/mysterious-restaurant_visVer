@@ -52,6 +52,15 @@
     <Filter Include="00_MainData\Mouse">
       <UniqueIdentifier>{286e7c8e-e6cd-4ffe-a392-4ee29c579b2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_MainData\Score">
+      <UniqueIdentifier>{afb8307e-7c98-4b7b-8061-34add20551b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_MainData\Fishing">
+      <UniqueIdentifier>{21ec4b8b-6192-4246-ae4f-555cbbcdd737}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_MainData\Enemy">
+      <UniqueIdentifier>{97ef054c-a750-4947-83c9-0fdd0eff2391}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DxPlus\Animation.h">
@@ -134,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="Mouse.h">
       <Filter>00_MainData\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="playerData.h">
+      <Filter>01_Status</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

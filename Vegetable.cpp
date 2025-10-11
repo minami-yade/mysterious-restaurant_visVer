@@ -67,7 +67,7 @@ void UpdateVegetable(int i, float deltaTime)
     if (vegetable[i].position.y >= vegetable[i].baseY)
     {
         // ˆÊ’u‚ğXV
-        vegetable[i].position.y = vegetable[i].baseY;
+        vegetable[i].position.y =  vegetable[i].baseY;
         vegetable[i].velocity.y += -vegetable[i].JumpPower;
     }
 
