@@ -1,7 +1,7 @@
 #include "Vegetable.h"
 
 
-Entity2D vegetable[12];
+Entity2D vegetable[VEGETABLE_NUM];
 
 
 // --- ‰æ‘œ“Ç‚İ‚İŠÖŒW ---

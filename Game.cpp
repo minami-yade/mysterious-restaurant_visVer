@@ -13,6 +13,8 @@
 //----------------------------------------------------------------------
 int vegetableSpawnTimer;
 
+float mousePosX = 0;
+
 int gameState;
 float gameFadeTimer;
 extern int nextScene;
@@ -84,15 +86,17 @@ void Game_Update()
 //----------------------------------------------------------------------
 void Game_Render()
 {
-	int input = DxPlus::Input::GetButton(DxPlus::Input::PLAYER1);
-	int SPACE = input & DxPlus::Input::BUTTON_TRIGGER1;
+	
 	//背景
 	GameBackDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
 	GameFloorDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
 
+    int mouseX, mouseY;
+    DxLib::GetMousePoint(&mouseX, &mouseY);
+    mousePosX = { static_cast<float>(mouseX)};
 	//player
     //仮のため後で変える
-    if (input && SPACE)
+    if (mousePosX > DxPlus::CLIENT_WIDTH / 2)
     {
         PlayerDraw(true);
     }

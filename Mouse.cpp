@@ -2,6 +2,7 @@
 
 Entity2D mouse;
 
+
 void Mouse_Image() {
     mouse.spriteID = LoadGraph(L"./Data/images/wood_png.png");
     if (mouse.spriteID == -1) {

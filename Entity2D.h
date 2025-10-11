@@ -22,7 +22,7 @@ struct Entity2D
 	bool isActive = false;
 	float speed = 0.0f;
 	int type = 0; //　0:キャベツ
-    float  baseY;        // 基準高
+	float  baseY = {};        // 基準高
 	float JumpPower = 10.0f;
 
 
@@ -39,3 +39,8 @@ const int PLAYER_NUM = 9;
 
 const int VEGETABLE_NUM = 12;
 const int VEGETABLE_TYPE = 1; // 0:キャベツ
+
+
+
+
+
