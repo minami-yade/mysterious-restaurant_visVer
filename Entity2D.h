@@ -15,6 +15,9 @@ struct Entity2D
 	DxPlus::Vec2 center = { 64.0f, 64.0f };
 	bool isActive = false;
 	int type = 0;
+	
+	//フックで使う
+	float angle = 0;
 
     //player
     int score = 0;

@@ -14,6 +14,9 @@ takagiにenemyと当たり判定作らせてる
 //----------------------------------------------------------------------
 int vegetableSpawnTimer;
 
+int hookX = 0;
+int hookY = 0;
+
 float mousePosX = 0;
 
 int gameState;
@@ -101,7 +104,7 @@ void Game_Render()
     //仮のため後で変える
    
     PlayerDraw(mousePosX > DxPlus::CLIENT_WIDTH / 2);
-    hookDraw(mousePosX > DxPlus::CLIENT_WIDTH / 2);
+    hookDraw();
     for (int i = 0; i < ENEMY_NUM; i++)
     {
         EnemyDraw(i);
