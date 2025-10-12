@@ -5,7 +5,7 @@
 
 
 /*memo
-
+takagiにenemyと当たり判定作らせてる
 
 */
 
@@ -22,7 +22,7 @@ extern int nextScene;
 
 static unsigned int g_prevMs = 0;
 
-
+extern DxPlus::Vec2 playerBasePosition;
 
 
 
@@ -51,6 +51,8 @@ void Game_Reset()
 
 	PlayerReset();
 	VegetableReset();
+	hookReset(playerBasePosition);
+	EnemyReset();
 
     gameState = 0;
     gameFadeTimer = 1.0f;
@@ -99,6 +101,11 @@ void Game_Render()
     //仮のため後で変える
    
     PlayerDraw(mousePosX > DxPlus::CLIENT_WIDTH / 2);
+    hookDraw(mousePosX > DxPlus::CLIENT_WIDTH / 2);
+    for (int i = 0; i < ENEMY_NUM; i++)
+    {
+        EnemyDraw(i);
+	}
   
 
 	//Vegetable

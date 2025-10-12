@@ -33,7 +33,7 @@ struct Entity2D
 	int effectID = -1;
 
 	//enemy
-//	int BreakScore = 0;
+	int BreakScore = 0;
 	
 
 };
@@ -42,8 +42,8 @@ const int PLAYER_NUM = 9;
 const int VEGETABLE_NUM = 12;
 const int VEGETABLE_TYPE = 1; // 0:ƒLƒƒƒxƒc
 
-//const int ENEMY_NUM = 6;
-//const int ENEMY_TYPE = 1; // 0:‚Ë‚¸‚Ý
+const int ENEMY_NUM = 6;
+const int ENEMY_TYPE = 1; // 0:‚Ë‚¸‚Ý
 
 
 
