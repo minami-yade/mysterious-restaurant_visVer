@@ -3,6 +3,7 @@
 #include "WinMain.h"
 #include "AllManager.h"
 
+
 /*memo
 
 
@@ -96,14 +97,9 @@ void Game_Render()
     mousePosX = { static_cast<float>(mouseX)};
 	//player
     //仮のため後で変える
-    if (mousePosX > DxPlus::CLIENT_WIDTH / 2)
-    {
-        PlayerDraw(true);
-    }
-    else
-    {
-        PlayerDraw(false);
-    }
+   
+    PlayerDraw(mousePosX > DxPlus::CLIENT_WIDTH / 2);
+  
 
 	//Vegetable
     for (int i = 0; i < VEGETABLE_NUM; i++)

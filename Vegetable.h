@@ -12,7 +12,7 @@ void VegetableReset();
 void UpdateVegetable(int i,float deltaTime);
 
 // ‰æ–ÊŠO‚©‚çƒ‰ƒ“ƒ_ƒ€‚ÉoŒ»
-DxPlus::Vec2 randamSpawn();
+
 void SpawnTimeVegetable(int i, int* Timer);
 
 // --- •`‰æŠÖ” ---

@@ -175,16 +175,19 @@
     <ClInclude Include="DxPlus\TextAnimator.h" />
     <ClInclude Include="DxPlus\Utils.h" />
     <ClInclude Include="DxPlus\Vector2.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity2D.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="playerData.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Vegetable.h" />
     <ClInclude Include="WinMain.h" />
     <ClInclude Include="Back.h" />
+    <ClInclude Include="hook.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AllManager.cpp" />
@@ -202,10 +205,13 @@
     <ClCompile Include="DxPlus\Text.cpp" />
     <ClCompile Include="DxPlus\TextAnimator.cpp" />
     <ClCompile Include="DxPlus\Utils.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="hook.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Vegetable.cpp" />
     <ClCompile Include="WinMain.cpp" />
