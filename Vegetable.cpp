@@ -1,7 +1,8 @@
 #include "Vegetable.h"
+#include "AllManager.h"
 
 
-Entity2D vegetable[12];
+Entity2D vegetable[VEGETABLE_NUM];
 
 
 // --- âÊëúì«Ç›çûÇ›ä÷åW ---
@@ -81,12 +82,6 @@ void UpdateVegetable(int i, float deltaTime)
     }
 }
 
-DxPlus::Vec2 randamSpawn() {
-	DxPlus::Vec2 position;
-	position.x = (DxLib::GetRand(2) == 0) ? -50 : 1280;
-    position.y = DxLib::GetRand(DxPlus::CLIENT_HEIGHT / 4) + DxPlus::CLIENT_HEIGHT / 6;
-	return position;
-}
 
 void SpawnTimeVegetable(int i , int* Timer) {
 	if (vegetable[i].isActive) return;

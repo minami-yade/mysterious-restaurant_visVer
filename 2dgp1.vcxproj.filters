@@ -55,11 +55,11 @@
     <Filter Include="00_MainData\Score">
       <UniqueIdentifier>{afb8307e-7c98-4b7b-8061-34add20551b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_MainData\Fishing">
-      <UniqueIdentifier>{21ec4b8b-6192-4246-ae4f-555cbbcdd737}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00_MainData\Enemy">
       <UniqueIdentifier>{97ef054c-a750-4947-83c9-0fdd0eff2391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_MainData\hook">
+      <UniqueIdentifier>{21ec4b8b-6192-4246-ae4f-555cbbcdd737}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +147,15 @@
     <ClInclude Include="playerData.h">
       <Filter>01_Status</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>00_MainData\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="hook.h">
+      <Filter>00_MainData\hook</Filter>
+    </ClInclude>
+    <ClInclude Include="Score.h">
+      <Filter>00_MainData\Score</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxPlus\Animation.cpp">
@@ -214,6 +223,15 @@
     </ClCompile>
     <ClCompile Include="Mouse.cpp">
       <Filter>00_MainData\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>00_MainData\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="hook.cpp">
+      <Filter>00_MainData\hook</Filter>
+    </ClCompile>
+    <ClCompile Include="Score.cpp">
+      <Filter>00_MainData\Score</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
