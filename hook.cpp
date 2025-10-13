@@ -2,6 +2,9 @@
 
 Entity2D hook;
 
+HookState hookState = Idle;
+
+
 // --- 画像読み込み関係 ---
 void hookImage()
 {
@@ -16,31 +19,104 @@ void hookImage()
 // --- リセット関数（初期配置や状態の初期化） ---
 void hookReset(DxPlus::Vec2 playerBasePosition)
 {
-    hook.position.x = playerBasePosition.x - 194;
-    hook.position.y = playerBasePosition.y - 173;
+    int Xoffset = 200;
+    int Yoffset = 136;
+
+    hook.HomePositionLeft.x = playerBasePosition.x - Xoffset;
+    hook.HomePositionLeft.y = playerBasePosition.y - Yoffset;
+
+	hook.HomePositionRight.x = playerBasePosition.x + Xoffset;
+    hook.HomePositionRight.y = playerBasePosition.y - Yoffset;
+    hook.position = hook.HomePositionRight;
+	hook.target = hook.HomePositionRight;
 
 	hook.scale = { 0.5f,0.5f };
-	hook.center = { 64.0f, 0.0f };
+	hook.center = { 49.0f, 62.0f };
 
     hook.angle = 12;
 }
 
-// --- 動きの更新（単純な三角波で上下） ---
-void Updatehook(float deltaTime,int x ,int y)
+void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer,bool left)
 {
-    int mouseX, mouseY;
-    DxLib::GetMousePoint(&mouseX, &mouseY);
-    hook.pointer = { static_cast<float>(mouseX), static_cast<float>(mouseY) };
+    DxLib::GetMousePoint(&x, &y);
+    pointer = { static_cast<float>(x), static_cast<float>(y) };
+
+    hook.angle += 0.5f;
+    if (hookState == Idle)
+    {
+        hook.position = left ? hook.HomePositionRight : hook.HomePositionLeft;
+    }
 
     int mousInput = DxLib::GetMouseInput();
-    if (mousInput & MOUSE_INPUT_LEFT)
+    if (mousInput & MOUSE_INPUT_LEFT && hookState == Idle)
     {
-        x = mouseX;y = mouseY;
+        hook.target = pointer;
+        hookState = FlyingOut;
     }
-    hook.position.x = x;
-    hook.position.y = y;
 
+    float dx = hook.target.x - hook.position.x;
+    float dy = hook.target.y - hook.position.y;
+    float distanceSq = dx * dx + dy * dy;
+    float thresholdSq = 40.0f;
 
+    if (distanceSq > thresholdSq)
+    {
+        float distance = std::sqrt(distanceSq);
+        float speed = 20.0f;
+        float moveX = (dx / distance) * speed * deltaTime;
+        float moveY = (dy / distance) * speed * deltaTime;
+
+        hook.position.x += moveX;
+        hook.position.y += moveY;
+    }
+    else
+    {
+        // 到達したら位置を固定
+        hook.position = hook.target;
+
+        if (hookState == FlyingOut)
+        {
+            if(left)
+                hook.target = hook.HomePositionRight;
+			else
+                hook.target = hook.HomePositionLeft;
+            
+            hookState = Returning;
+        }
+        else if (hookState == Returning)
+        {
+            hookState = Idle;
+        }
+    }
+}
+
+void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius)
+{
+
+    float hookRadius = 10.0f;            // フックの半径（任意）
+
+    // 2点間の距離を計算
+    float dx = hook.position.x - targetPos.x;
+    float dy = hook.position.y - targetPos.y;
+    float distanceSq = dx * dx + dy * dy;
+
+    // 半径の合計
+    float radiusSum = hookRadius + targetRadius;
+
+    // 当たり判定（距離の2乗と半径の合計の2乗を比較）
+    if (distanceSq <= radiusSum * radiusSum)
+    {
+        // 当たっている
+        onHookHit(targetPos); // ヒット時の処理（例：敵にダメージなど）
+    }
+}
+
+void onHookHit(const DxPlus::Vec2& targetPos)
+{
+    // フックが何かに当たったときの処理をここに記述
+    // 例: 敵にダメージを与える、アイテムを取得するなど
+    // ここでは単純にフックを戻すだけの例を示します
+    hookState = Returning;
 }
 
 // --- 描画関数 ---

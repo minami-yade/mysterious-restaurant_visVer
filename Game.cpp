@@ -18,6 +18,9 @@ int hookX = 0;
 int hookY = 0;
 
 float mousePosX = 0;
+float mousePosY = 0;
+
+float delta;
 
 int gameState;
 float gameFadeTimer;
@@ -26,6 +29,8 @@ extern int nextScene;
 static unsigned int g_prevMs = 0;
 
 extern DxPlus::Vec2 playerBasePosition;
+extern HookState hookState;
+bool isRight = true;
 
 
 
@@ -69,10 +74,17 @@ void Game_Reset()
 
 void Game_Update()
 {
-    float delta = GetDeltaTime_DxLib(g_prevMs);
+    delta = GetDeltaTime_DxLib(g_prevMs);
     vegetableSpawnTimer--;
 
+    int mouseX, mouseY;
+    DxLib::GetMousePoint(&mouseX, &mouseY);
+    mousePosX = { static_cast<float>(mouseX) };
+    mousePosY = { static_cast<float>(mouseY) };
 
+    Updatehook(delta, mouseX, mouseY, { mousePosX,mousePosY },isRight);
+
+	AllChackCollider();
 
     for (int i = 0; i < VEGETABLE_NUM; i++)
     {
@@ -97,13 +109,19 @@ void Game_Render()
 	GameBackDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
 	GameFloorDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
 
-    int mouseX, mouseY;
-    DxLib::GetMousePoint(&mouseX, &mouseY);
-    mousePosX = { static_cast<float>(mouseX)};
+
 	//player
-    //仮のため後で変える
-   
-    PlayerDraw(mousePosX > DxPlus::CLIENT_WIDTH / 2);
+    if (hookState == Idle) {
+        if (mousePosX > DxPlus::CLIENT_WIDTH / 2)
+        {
+            isRight = true;
+        }
+        else {
+            isRight = false;
+        }
+    }
+       PlayerDraw(isRight);
+
     hookDraw();
     for (int i = 0; i < ENEMY_NUM; i++)
     {

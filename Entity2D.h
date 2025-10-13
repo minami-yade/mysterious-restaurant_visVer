@@ -18,6 +18,9 @@ struct Entity2D
 	
 	//フックで使う
 	float angle = 0;
+	DxPlus::Vec2 target = {};
+	DxPlus::Vec2 HomePositionLeft = {};
+	DxPlus::Vec2 HomePositionRight = {};
 
     //player
     int score = 0;
@@ -51,3 +54,8 @@ const int ENEMY_TYPE = 1; // 0:ねずみ
 
 
 
+enum HookState {
+	FlyingOut,
+	Returning,
+	Idle
+};

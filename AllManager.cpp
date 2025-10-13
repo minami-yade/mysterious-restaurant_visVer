@@ -21,6 +21,9 @@ void GameAllDelete() {
 	}
 
 }
+void AllChackCollider() {
+
+}
 
 float GetDeltaTime_DxLib(int g_prevMs)
 {
