@@ -12,8 +12,7 @@ void hookReset(DxPlus::Vec2 playerBasePosition);
 // --- “®‚«‚ÌXV ---
 void Updatehook(float deltaTime,int x ,int y,DxPlus::Vec2 pointer, bool left);
 
-void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius);
-void onHookHit(const DxPlus::Vec2& targetPos);
+void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius, int i);
 
 // --- •`‰æŠÖ” ---
 void hookDraw();

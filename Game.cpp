@@ -21,6 +21,7 @@ float mousePosX = 0;
 float mousePosY = 0;
 
 float delta;
+bool isReturning;
 
 int gameState;
 float gameFadeTimer;
@@ -32,6 +33,9 @@ extern DxPlus::Vec2 playerBasePosition;
 extern HookState hookState;
 bool isRight = true;
 
+
+extern Entity2D vegetable[VEGETABLE_NUM];
+extern HookState hookState;
 
 
 //----------------------------------------------------------------------
@@ -56,6 +60,7 @@ void Game_Init()
 void Game_Reset()
 {
     vegetableSpawnTimer = 0;
+    isReturning = false;
 
 	PlayerReset();
 	VegetableReset();
@@ -84,12 +89,12 @@ void Game_Update()
 
     Updatehook(delta, mouseX, mouseY, { mousePosX,mousePosY },isRight);
 
-	AllChackCollider();
+	
 
     for (int i = 0; i < VEGETABLE_NUM; i++)
     {
         SpawnTimeVegetable(i, &vegetableSpawnTimer);
-        UpdateVegetable(i ,delta);
+        UpdateVegetable(i ,delta,hookState);
     }
 
 
@@ -120,19 +125,25 @@ void Game_Render()
             isRight = false;
         }
     }
+  
+	
        PlayerDraw(isRight);
 
+    //hook
     hookDraw();
     for (int i = 0; i < ENEMY_NUM; i++)
     {
         EnemyDraw(i);
 	}
+	
+    
   
 
 	//Vegetable
     for (int i = 0; i < VEGETABLE_NUM; i++)
     {
             VegetableDraw(i);
+            checkHookCollider(vegetable[i].position, vegetable[i].radius,i);
     }
    
     

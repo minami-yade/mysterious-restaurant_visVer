@@ -1,6 +1,8 @@
 #include "hook.h"
+#include "vegetable.h"
 
 Entity2D hook;
+extern Entity2D player[PLAYER_NUM];
 
 HookState hookState = Idle;
 
@@ -32,65 +34,119 @@ void hookReset(DxPlus::Vec2 playerBasePosition)
 
 	hook.scale = { 0.5f,0.5f };
 	hook.center = { 49.0f, 62.0f };
+	hook.velocity = { 0.0f, 0.0f };
+	hook.gravity = 0.98f;
 
     hook.angle = 12;
 }
 
-void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer,bool left)
+
+
+void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
 {
     DxLib::GetMousePoint(&x, &y);
     pointer = { static_cast<float>(x), static_cast<float>(y) };
 
-    hook.angle += 0.5f;
+    hook.angle += 0.3f;//回転
+
     if (hookState == Idle)
     {
         hook.position = left ? hook.HomePositionRight : hook.HomePositionLeft;
+        hook.velocity = { 0.0f, 0.0f };
     }
 
-    int mousInput = DxLib::GetMouseInput();
-    if (mousInput & MOUSE_INPUT_LEFT && hookState == Idle)
-    {
-        hook.target = pointer;
-        hookState = FlyingOut;
-    }
+    int mouseInput = DxLib::GetMouseInput();
+    static int prevMouseInput = 0;
 
-    float dx = hook.target.x - hook.position.x;
-    float dy = hook.target.y - hook.position.y;
-    float distanceSq = dx * dx + dy * dy;
-    float thresholdSq = 40.0f;
+    // 左クリックが「今押されていて、前フレームは押されていなかった」＝押した瞬間
+    if ((mouseInput & MOUSE_INPUT_LEFT) && !(prevMouseInput & MOUSE_INPUT_LEFT)) {
 
-    if (distanceSq > thresholdSq)
-    {
-        float distance = std::sqrt(distanceSq);
-        float speed = 20.0f;
-        float moveX = (dx / distance) * speed * deltaTime;
-        float moveY = (dy / distance) * speed * deltaTime;
-
-        hook.position.x += moveX;
-        hook.position.y += moveY;
-    }
-    else
-    {
-        // 到達したら位置を固定
-        hook.position = hook.target;
-
-        if (hookState == FlyingOut)
+        if (hookState == FlyingOut)//飛んでる時に押したら
         {
-            if(left)
-                hook.target = hook.HomePositionRight;
-			else
-                hook.target = hook.HomePositionLeft;
-            
-            hookState = Returning;
+            hookState = Returning;//もどる
         }
-        else if (hookState == Returning)
+
+		if (hookState == Idle)//止まってる時に押したら
+        {
+            DxPlus::Vec2 dir = pointer - hook.position;
+            float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+            if (len > 1.0f)
+            {
+                dir.x /= len;
+                dir.y /= len;
+                float launchSpeed = 30.0f; // 初速
+                hook.velocity = { dir.x * launchSpeed/2, dir.y * launchSpeed };
+                hookState = FlyingOut;
+            }
+        }
+
+    }
+    if (hookState == Returning) //戻る処理
+    {
+
+        DxPlus::Vec2 home = left ? hook.HomePositionRight : hook.HomePositionLeft;//右か左に戻る
+        DxPlus::Vec2 dir = home - hook.position;;//差
+        float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);;
+		if (len > 20.0f)//遠いなら
+        {
+            if (hook.position.x == home.x) {
+				hook.position.y += 5.0f;
+            }
+            else {
+                dir.x /= len;
+                dir.y /= len;
+                float returnSpeed = 3.5f;//戻る早さ
+                hook.velocity = { dir.x * returnSpeed, dir.y * returnSpeed };
+               
+
+            }
+        }
+        else //近いなら
         {
             hookState = Idle;
         }
+
     }
+
+
+
+
+
+    //仮
+    // 画面外に出たら強制的に戻すにする
+    if (hook.position.x < 0 || hook.position.x > DxPlus::CLIENT_WIDTH 
+        || hook.position.y < 0 || hook.position.y > DxPlus::CLIENT_HEIGHT - 48.0f)
+    {
+		if (hook.position.y < 0) hook.position.y = 0;
+		if (hook.position.y > DxPlus::CLIENT_HEIGHT - 48.0f) hook.position.y = DxPlus::CLIENT_HEIGHT - 48.0f;
+		if (hook.position.x < 0) hook.position.x = 0;
+		if (hook.position.x > DxPlus::CLIENT_WIDTH) hook.position.x = DxPlus::CLIENT_WIDTH;
+        //↑超えないようにするため
+
+        hook.velocity = { 0,0 };//いらない移動を削除
+
+		//hookState = Returning;　//これを消すと端に行っても止まる
+    }
+
+    // 飛んでいる間は重力を加算
+    if (hookState == FlyingOut)
+    {
+        hook.velocity.y += hook.gravity * deltaTime;
+    }
+    // -----------------
+
+    // 物理っぽい移動（減速あり）
+    if (hookState == FlyingOut || hookState == Returning)
+    {
+        hook.position.x += hook.velocity.x * deltaTime;
+        hook.position.y += hook.velocity.y * deltaTime;
+    }
+
+    prevMouseInput = mouseInput; // 状態を更新
 }
 
-void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius)
+
+void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius,int i)
 {
 
     float hookRadius = 10.0f;            // フックの半径（任意）
@@ -103,21 +159,15 @@ void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius)
     // 半径の合計
     float radiusSum = hookRadius + targetRadius;
 
-    // 当たり判定（距離の2乗と半径の合計の2乗を比較）
+    // 当たり判定
     if (distanceSq <= radiusSum * radiusSum)
     {
         // 当たっている
-        onHookHit(targetPos); // ヒット時の処理（例：敵にダメージなど）
+        onHookHit(targetPos,&hook,&player[0], i); // ヒット時の処理（例：敵にダメージなど）
     }
 }
 
-void onHookHit(const DxPlus::Vec2& targetPos)
-{
-    // フックが何かに当たったときの処理をここに記述
-    // 例: 敵にダメージを与える、アイテムを取得するなど
-    // ここでは単純にフックを戻すだけの例を示します
-    hookState = Returning;
-}
+
 
 // --- 描画関数 ---
 void hookDraw()

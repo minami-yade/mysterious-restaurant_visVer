@@ -1,5 +1,9 @@
 #include "AllManager.h"
 
+extern Entity2D hook;
+extern Entity2D player;
+extern HookState hookState;
+
 
 void GameAllLoad() {
 	PlayerImage();
@@ -19,9 +23,6 @@ void GameAllDelete() {
 	for (int i = 0; i < ENEMY_NUM; ++i) {
 		EnemyDelete(i);
 	}
-
-}
-void AllChackCollider() {
 
 }
 
