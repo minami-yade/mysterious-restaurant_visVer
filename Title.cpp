@@ -20,7 +20,7 @@ int BlackGreen = GetColor(0, 100, 0);
 int titleState;
 
 float titleFadeTimer;
-bool isMouseOver;
+
 int startbutton;
 int mouseX, mouseY;
 int mouseInput;
@@ -61,11 +61,6 @@ void Title_Update() {
 	DxLib::GetMousePoint(&mouseX, &mouseY);
 
 
-	if (startbutton) {
-		isMouseOver = true;
-	}
-	else isMouseOver = false;
-
 
 
 
@@ -87,7 +82,7 @@ void Title_Render() {
 	DxPlus::Primitive2D::DrawRect(
 		{ DxPlus::CLIENT_WIDTH * 0.5f - 150, DxPlus::CLIENT_HEIGHT * 0.7f - 40 }, // íÜâõäÓèÄÇ…èCê≥
 		{ 300, 80 },
-		DxLib::GetColor(255, 255, 255), isMouseOver);
+		DxLib::GetColor(255, 255, 255), startbutton);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);  // å≥Ç…ñﬂÇ∑
 
 

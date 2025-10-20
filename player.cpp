@@ -76,6 +76,7 @@ void PlayerImage()
     if (player[PART_ROD_LEFT].spriteID == -1) {
         DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/facing_left.png");
     }
+
 }
 
 void PlayerReset() {

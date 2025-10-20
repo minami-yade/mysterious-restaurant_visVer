@@ -4,9 +4,14 @@
 #include "Vegetable.h"
 #include "Enemy.h"
 #include "hook.h"
-
+#include "bowl.h"
+#include "score.h"
+#include "Timer.h"
 
 void GameAllLoad();
 void GameAllDelete();
 float GetDeltaTime_DxLib(int g_prevMs);
+void Score(int haveScore);
 DxPlus::Vec2 randamSpawn();
+
+

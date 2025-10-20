@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Entity2D.h"
 // --- ‰æ‘œ“Ç‚İ‚İŠÖŒW ---
 void ScoreImage();
 
@@ -10,7 +10,7 @@ void ScoreReset();
 void UpdateScore(float deltaTime);
 
 // --- •`‰æŠÖ” ---
-void ScoreDraw();
+void ScoreDraw(int score);
 
 // --- ‰ğ•úŠÖ” ---
 void ScoreDelete();

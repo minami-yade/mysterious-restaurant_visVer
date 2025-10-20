@@ -97,6 +97,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>c:\DxLib\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -115,6 +116,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>c:\DxLib\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -131,6 +133,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>c:\DxLib\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,6 +152,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>c:\DxLib\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +163,7 @@
   <ItemGroup>
     <ClInclude Include="AllManager.h" />
     <ClInclude Include="Battle.h" />
+    <ClInclude Include="bowl.h" />
     <ClInclude Include="Clear.h" />
     <ClInclude Include="DxPlus\Animation.h" />
     <ClInclude Include="DxPlus\Debug.h" />
@@ -183,6 +188,7 @@
     <ClInclude Include="Result.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="Score.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Vegetable.h" />
     <ClInclude Include="WinMain.h" />
@@ -193,6 +199,7 @@
     <ClCompile Include="AllManager.cpp" />
     <ClCompile Include="Back.cpp" />
     <ClCompile Include="Battle.cpp" />
+    <ClCompile Include="bowl.cpp" />
     <ClCompile Include="Clear.cpp" />
     <ClCompile Include="DxPlus\Animation.cpp" />
     <ClCompile Include="DxPlus\Debug.cpp" />
@@ -212,6 +219,7 @@
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="Score.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Vegetable.cpp" />
     <ClCompile Include="WinMain.cpp" />
