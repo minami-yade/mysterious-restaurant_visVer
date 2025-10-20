@@ -6,6 +6,8 @@ void Game_Reset();
 
 void Game_Update();
 
+void GameTimer();
+
 void Game_Render();
 
 void FadeDrawGame();

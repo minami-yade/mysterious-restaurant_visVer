@@ -3,16 +3,13 @@
 #include "WinMain.h"
 #include "AllManager.h"
 
-
-/*memo
-takagiにenemyと当たり判定作らせてる
-
-*/
-
+const float TIME_LIMIT = 3.0f; // ゲーム制限時間（秒）
+float MainGameTimer = 0.0f;
 //----------------------------------------------------------------------
 // 
 //----------------------------------------------------------------------
-int vegetableSpawnTimer;
+int vegetableSpawnTimer,enemySpawnTimer;
+
 
 int hookX = 0;
 int hookY = 0;
@@ -27,6 +24,8 @@ int gameState;
 float gameFadeTimer;
 extern int nextScene;
 
+int score = 0;
+
 static unsigned int g_prevMs = 0;
 
 extern DxPlus::Vec2 playerBasePosition;
@@ -37,6 +36,8 @@ bool isRight = true;
 extern Entity2D vegetable[VEGETABLE_NUM];
 extern HookState hookState;
 
+extern Entity2D enemy[ENEMY_NUM];
+bool veg = true;
 
 //----------------------------------------------------------------------
 // 
@@ -60,16 +61,22 @@ void Game_Init()
 void Game_Reset()
 {
     vegetableSpawnTimer = 0;
+    enemySpawnTimer = 300;
     isReturning = false;
 
 	PlayerReset();
 	VegetableReset();
 	hookReset(playerBasePosition);
 	EnemyReset();
+	bowlReset();
+    score = 0;
+
+    MainGameTimer = 0.0f;
+
 
     gameState = 0;
     gameFadeTimer = 1.0f;
-    
+	veg = true;
 }
 
 
@@ -81,6 +88,7 @@ void Game_Update()
 {
     delta = GetDeltaTime_DxLib(g_prevMs);
     vegetableSpawnTimer--;
+    enemySpawnTimer--;
 
     int mouseX, mouseY;
     DxLib::GetMousePoint(&mouseX, &mouseY);
@@ -88,18 +96,39 @@ void Game_Update()
     mousePosY = { static_cast<float>(mouseY) };
 
     Updatehook(delta, mouseX, mouseY, { mousePosX,mousePosY },isRight);
-
+   
+    GameTimer();
 	
-
     for (int i = 0; i < VEGETABLE_NUM; i++)
     {
+		veg = true;
         SpawnTimeVegetable(i, &vegetableSpawnTimer);
         UpdateVegetable(i ,delta,hookState);
+        checkHookCollider(vegetable[i].position, vegetable[i].radius, i,veg);
+        checkbowlCollider(vegetable[i], i);
+       
+    }
+    for (size_t i = 0; i < ENEMY_NUM; i++)
+    {
+		veg = false;
+        SpawnTimeEnemy(i, &enemySpawnTimer);
+        checkbowlCollider(enemy[i], i);
+        checkHookCollider(enemy[i].position, enemy[i].radius, i,veg);
+		UpdateEnemy(i, delta, hookState);
     }
 
 
 
     Game_Fade();
+}
+
+void GameTimer()
+{
+    MainGameTimer += 1 / 60.0f;;
+    if (MainGameTimer >= TIME_LIMIT)
+    {
+        gameState = 3;//ゲームおわり
+    }
 }
 
 
@@ -109,28 +138,34 @@ void Game_Update()
 //----------------------------------------------------------------------
 void Game_Render()
 {
-	
-	//背景
-	GameBackDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
-	GameFloorDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
+
+    //背景
+    GameBackDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
+    GameFloorDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
 
 
-	//player
+    //player
     if (hookState == Idle) {
-        if (mousePosX > DxPlus::CLIENT_WIDTH / 2)
-        {
-            isRight = true;
-        }
-        else {
-            isRight = false;
+        if (!(mousePosX > DxPlus::CLIENT_WIDTH / 3 && mousePosX < DxPlus::CLIENT_WIDTH - DxPlus::CLIENT_WIDTH / 3)) {
+
+        
+            if (mousePosX > DxPlus::CLIENT_WIDTH / 2)
+            {
+                isRight = true;
+            }
+            else {
+                isRight = false;
+            }
         }
     }
+
   
 	
        PlayerDraw(isRight);
+	   bowlDraw();
 
     //hook
-    hookDraw();
+    hookDraw(isRight);
     for (int i = 0; i < ENEMY_NUM; i++)
     {
         EnemyDraw(i);
@@ -143,7 +178,7 @@ void Game_Render()
     for (int i = 0; i < VEGETABLE_NUM; i++)
     {
             VegetableDraw(i);
-            checkHookCollider(vegetable[i].position, vegetable[i].radius,i);
+         
     }
    
     
@@ -151,7 +186,12 @@ void Game_Render()
     wchar_t buf[64];
     swprintf(buf, 64, L"vegetableSpawnTimer: %d", vegetableSpawnTimer);
     DxPlus::Text::DrawString(buf,
-        {100,100},
+        {150,100},
+        GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_center, { 1.0f, 1.0f });
+    wchar_t buf2[64];
+    swprintf(buf2, 64, L"Score: %d", score);
+    DxPlus::Text::DrawString(buf2,
+        {150,200},
         GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_center, { 1.0f, 1.0f });
 
 #endif

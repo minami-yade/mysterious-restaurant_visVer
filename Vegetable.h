@@ -16,7 +16,7 @@ void UpdateVegetable(int i,float deltaTime,HookState hookState);
 void SpawnTimeVegetable(int i, int* Timer);
 
 
-void onHookHit(const DxPlus::Vec2& targetPos, Entity2D* hook, Entity2D* player, int i);
+void onHookHit(const DxPlus::Vec2& targetPos, Entity2D* hook, int i);
 
 
 // --- ï`âÊä÷êî ---

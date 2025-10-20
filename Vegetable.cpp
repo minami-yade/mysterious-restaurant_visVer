@@ -3,6 +3,7 @@
 
 
 Entity2D vegetable[VEGETABLE_NUM];
+extern Entity2D enemy[ENEMY_NUM];
 extern Entity2D hook;
 
 
@@ -20,11 +21,53 @@ void VegetableImage()
                 DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/cabbage.png");
             }
             break;
-
+        case 1://肉
+            vegetable[i].spriteID = LoadGraph(L"./Data/images/beef.png");
+            if (vegetable[i].spriteID == -1) {
+                DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/beef.png");
+            }
+            break;
+        case 2://パプリカ
+            vegetable[i].spriteID = LoadGraph(L"./Data/images/paprika.png");
+            if (vegetable[i].spriteID == -1) {
+                DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/paprika.png");
+            }
+            break;
+        case 3://毒キノコ
+            vegetable[i].spriteID = LoadGraph(L"./Data/images/poison_mushroom.png");
+            if (vegetable[i].spriteID == -1) {
+                DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/poison_mushroom.png");
+            }
+            break;
+        case 4://ニンジン
+             vegetable[i].spriteID = LoadGraph(L"./Data/images/carrot.png");
+            if (vegetable[i].spriteID == -1) {
+                DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/carrot.png");
+            }
+			break;
+        case 5: //ナス
+            vegetable[i].spriteID = LoadGraph(L"./Data/images/eggplant.png");
+            if (vegetable[i].spriteID == -1) {
+                DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/eggplant.png");
+			}
+			break;
+		case 6://トマト
+            vegetable[i].spriteID = LoadGraph(L"./Data/images/tomato.png");
+            if (vegetable[i].spriteID == -1) {
+                DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/tomato.png");
+			}   
+			break;
+        case 7://ピーマン
+            vegetable[i].spriteID = LoadGraph(L"./Data/images/pepper.png");
+            if (vegetable[i].spriteID == -1) {
+                DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/pepper.png");
+            }
+			break;
         default:
             DxPlus::Utils::FatalError(L"野菜の画像が存在しません！");
             break;
-        }
+        };
+
     }
 
    
@@ -40,7 +83,6 @@ void VegetableReset()
     
         switch (i % VEGETABLE_TYPE) {
 		case 0: //　キャベツ
-            vegetable[i].type = 0;
             vegetable[i].scale = { 0.5f, 0.5f };
             vegetable[i].center = { 49.0f, 49.0f };
             vegetable[i].speed = 3.0f; // 100 ピクセル/秒
@@ -48,6 +90,56 @@ void VegetableReset()
             vegetable[i].moveVegetable = 0;
 
             break;
+        case 1://肉
+            vegetable[i].scale = { 0.5f, 0.5f };
+            vegetable[i].center = { 49.0f, 49.0f };
+            vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+            vegetable[i].JumpPower = 15.0f;
+            vegetable[i].moveVegetable = 0;
+			break;
+        case 2://パプリカ
+            vegetable[i].scale = { 0.5f, 0.5f };
+            vegetable[i].center = { 49.0f, 49.0f };
+            vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+            vegetable[i].JumpPower = 15.0f;
+            vegetable[i].moveVegetable = 0;
+			break;
+        case 3://毒キノコ
+            vegetable[i].scale = { 0.5f, 0.5f };
+            vegetable[i].center = { 49.0f, 49.0f };
+            vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+            vegetable[i].JumpPower = 15.0f;
+            vegetable[i].moveVegetable = 0;
+			break;
+         case 4://ニンジン
+            vegetable[i].scale = { 0.5f, 0.5f };
+            vegetable[i].center = { 49.0f, 49.0f };
+            vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+            vegetable[i].JumpPower = 15.0f;
+			vegetable[i].moveVegetable = 0;
+            break;
+        case 5: //ナス
+            vegetable[i].scale = { 0.5f, 0.5f };
+            vegetable[i].center = { 49.0f, 49.0f };
+            vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+			vegetable[i].JumpPower = 15.0f;
+            vegetable[i].moveVegetable = 0;
+			break;
+            case 6://トマト
+            vegetable[i].scale = { 0.5f, 0.5f };
+            vegetable[i].center = { 49.0f, 49.0f };
+			vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+            vegetable[i].JumpPower = 15.0f;
+			vegetable[i].moveVegetable = 0;
+            break;
+        case 7://ピーマン
+            vegetable[i].scale = { 0.5f, 0.5f };
+            vegetable[i].center = { 49.0f, 49.0f };
+            vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+			vegetable[i].JumpPower = 15.0f;
+			vegetable[i].moveVegetable = 0;
+			break;
+
 		default:
 			DxPlus::Utils::FatalError(L"野菜の画像が存在しません！");
 			break;
@@ -91,6 +183,7 @@ void UpdateVegetable(int i, float deltaTime,HookState hookState)
         if (hookState == Idle) {
             vegetable[i].moveVegetable = 2;
         }
+		vegetable[i].angle -= 6.0f;
         break;
 
     case 2: // フックに捕まった後放たれた
@@ -151,13 +244,20 @@ void SpawnTimeVegetable(int i , int* Timer) {
     } 
 }
 
-void onHookHit(const DxPlus::Vec2& targetPos, Entity2D* hook, Entity2D* player, int i)
+void onHookHit(const DxPlus::Vec2& targetPos, Entity2D* hook, int i)
 {
+    // 安全性チェック
+    if (i < 0 || i >= VEGETABLE_NUM) return;
+
     // 野菜をフックにくっつける
     hook->isCarryingVegetable = true;
     hook->carriedVegetable = &vegetable[i];
-    if(vegetable[i].moveVegetable == 0)vegetable[i].moveVegetable = 1;
-  //  player->score += vegetable[i].havescore;
+
+    if (vegetable[i].moveVegetable == 0) {
+        vegetable[i].moveVegetable = 1;
+        vegetable[i].velocity = { 0, 0 }; // 必要なら初期化
+        // vegetable[i].angle = 0; // 状況に応じて
+    }
 }
 
 

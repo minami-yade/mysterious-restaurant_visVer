@@ -1,8 +1,10 @@
 #include "hook.h"
 #include "vegetable.h"
+#include "Enemy.h"
 
 Entity2D hook;
 extern Entity2D player[PLAYER_NUM];
+extern Entity2D vegetable[VEGETABLE_NUM];
 
 HookState hookState = Idle;
 
@@ -21,8 +23,8 @@ void hookImage()
 // --- リセット関数（初期配置や状態の初期化） ---
 void hookReset(DxPlus::Vec2 playerBasePosition)
 {
-    int Xoffset = 200;
-    int Yoffset = 136;
+    int Xoffset = 195;
+    int Yoffset = 138;
 
     hook.HomePositionLeft.x = playerBasePosition.x - Xoffset;
     hook.HomePositionLeft.y = playerBasePosition.y - Yoffset;
@@ -37,6 +39,11 @@ void hookReset(DxPlus::Vec2 playerBasePosition)
 	hook.velocity = { 0.0f, 0.0f };
 	hook.gravity = 0.98f;
 
+    hook.reachedUpHook = false;
+	//int UpHookOffsetX = 100;
+    hook.upHookLeft  = { hook.HomePositionLeft.x  ,DxPlus::CLIENT_HEIGHT - 48 - 50 };   //左側の引き上げ地点
+    hook.upHookRight = { hook.HomePositionRight.x ,DxPlus::CLIENT_HEIGHT - 48 - 50 };  //右側の引き上げ地点
+
     hook.angle = 12;
 }
 
@@ -44,15 +51,23 @@ void hookReset(DxPlus::Vec2 playerBasePosition)
 
 void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
 {
-    DxLib::GetMousePoint(&x, &y);
     pointer = { static_cast<float>(x), static_cast<float>(y) };
 
     hook.angle += 0.3f;//回転
 
+  
     if (hookState == Idle)
     {
         hook.position = left ? hook.HomePositionRight : hook.HomePositionLeft;
         hook.velocity = { 0.0f, 0.0f };
+
+    }
+    for (int i = 0; i < VEGETABLE_NUM; ++i)
+    {
+        if (vegetable[i].moveVegetable == 1) {
+            hook.reachedUpHook = true;
+            hookState = Returning;
+        }
     }
 
     int mouseInput = DxLib::GetMouseInput();
@@ -63,6 +78,8 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
 
         if (hookState == FlyingOut)//飛んでる時に押したら
         {
+           
+            if ( hook.position.y > DxPlus::CLIENT_HEIGHT - 48.0f)//地面
             hookState = Returning;//もどる
         }
 
@@ -76,39 +93,51 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
                 dir.y /= len;
                 float launchSpeed = 30.0f; // 初速
                 hook.velocity = { dir.x * launchSpeed/2, dir.y * launchSpeed };
+				hook.reachedUpHook = false;
                 hookState = FlyingOut;
             }
         }
 
     }
-    if (hookState == Returning) //戻る処理
-    {
 
-        DxPlus::Vec2 home = left ? hook.HomePositionRight : hook.HomePositionLeft;//右か左に戻る
-        DxPlus::Vec2 dir = home - hook.position;;//差
-        float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);;
-		if (len > 20.0f)//遠いなら
+
+
+    if (hookState == Returning)
+    {
+        // 目的地の選択：まず upHook、到達後に Home に切り替え
+		
+        DxPlus::Vec2 CheckPoint = !hook.reachedUpHook
+            ? (left ? hook.upHookRight : hook.upHookLeft)
+            : (left ? hook.HomePositionRight:hook.HomePositionLeft );
+
+        DxPlus::Vec2 dir = CheckPoint - hook.position;
+        float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+
+
+        if (len > 20.0f) // まだ遠い
         {
-            if (hook.position.x == home.x) {
-				hook.position.y += 5.0f;
+            if (hook.position.x == CheckPoint.x) {
+                hook.position.y += 5.0f;
+
             }
+
             else {
                 dir.x /= len;
                 dir.y /= len;
-                float returnSpeed = 3.5f;//戻る早さ
+                float returnSpeed = 40.0f;
                 hook.velocity = { dir.x * returnSpeed, dir.y * returnSpeed };
-               
-
             }
         }
-        else //近いなら
+        else // 近づいたら
         {
-            hookState = Idle;
+            if (!hook.reachedUpHook) {
+                hook.reachedUpHook = true; // upHook に到達 → 次は Home へ
+            }
+            else {
+                hookState = Idle; // Home に到達 → 終了
+            }
         }
-
     }
-
-
 
 
 
@@ -131,6 +160,7 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
     // 飛んでいる間は重力を加算
     if (hookState == FlyingOut)
     {
+   
         hook.velocity.y += hook.gravity * deltaTime;
     }
     // -----------------
@@ -141,15 +171,15 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
         hook.position.x += hook.velocity.x * deltaTime;
         hook.position.y += hook.velocity.y * deltaTime;
     }
+  
 
     prevMouseInput = mouseInput; // 状態を更新
 }
 
 
-void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius,int i)
+void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius,int i,bool veg)
 {
-
-    float hookRadius = 10.0f;            // フックの半径（任意）
+    float hookRadius = 10.0f;            // フックの半径
 
     // 2点間の距離を計算
     float dx = hook.position.x - targetPos.x;
@@ -163,21 +193,63 @@ void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius,int i)
     if (distanceSq <= radiusSum * radiusSum)
     {
         // 当たっている
-        onHookHit(targetPos,&hook,&player[0], i); // ヒット時の処理（例：敵にダメージなど）
+		if (veg)
+        onHookHit(targetPos, &hook, i);
+		else
+        onHookEnemyHit(targetPos, &hook, i);
     }
 }
 
 
 
 // --- 描画関数 ---
-void hookDraw()
+void hookDraw(bool left)
 {
     DxPlus::Sprite::Draw(hook.spriteID, hook.position, hook.scale, hook.center,hook.angle);
+ 
 
+	// 糸の描画（ベジェ曲線でたわみを表現）
+
+
+    float time = static_cast<float>(DxLib::GetNowCount()) / 1000.0f; // 秒単位の時間
+
+    DxPlus::Vec2 start = left ? hook.HomePositionRight : hook.HomePositionLeft;
+    DxPlus::Vec2 end = hook.position;
+
+    // 糸の長さに応じてたわみ量を調整
+    float length = std::sqrt((end - start).x * (end - start).x + (end - start).y * (end - start).y);
+    float swayAmount = std::min(40.0f, length * 0.2f); // 最大40pxまでたわむ
+
+    // 中間点：たわみ＋揺れ
+    DxPlus::Vec2 mid = (start + end) * 0.5f;
+    mid.y += swayAmount;
+    mid.x += std::sin(time * 6.0f) * 8.0f; // 横揺れ（引いてる感じ）
+
+    // ベジェ曲線で描画（滑らか）
+    const int segmentCount = 24;
+    for (int i = 0; i < segmentCount; ++i) {
+        float t1 = static_cast<float>(i) / segmentCount;
+        float t2 = static_cast<float>(i + 1) / segmentCount;
+
+        auto bezier = [](const DxPlus::Vec2& p0, const DxPlus::Vec2& p1, const DxPlus::Vec2& p2, float t) {
+            float u = 1.0f - t;
+            return p0 * (u * u) + p1 * (2 * u * t) + p2 * (t * t);
+            };
+
+        DxPlus::Vec2 p1 = bezier(start, mid, end, t1);
+        DxPlus::Vec2 p2 = bezier(start, mid, end, t2);
+
+        DrawLine(static_cast<int>(p1.x), static_cast<int>(p1.y),
+            static_cast<int>(p2.x), static_cast<int>(p2.y),
+            GetColor(0, 0, 0));
+    }
 }
 
 // --- 解放関数 ---
 void hookDelete()
 {
-
+    if (hook.spriteID != -1) {
+        DxPlus::Sprite::Delete(hook.spriteID);
+        hook.spriteID = -1;
+    }
 }
