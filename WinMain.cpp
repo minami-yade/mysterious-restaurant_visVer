@@ -13,6 +13,7 @@ int currentScene = SceneNone;
 int nextScene = SceneTitle;
  
 int fontID1 = -1;
+int fontID2 = -1;
 
 
 float deltaTime = 0.0f;
@@ -47,12 +48,20 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 	{
 		DxPlus::Utils::FatalError(L"Failed to add font: ./Data/Fonts/Yusei_Magic/YuseiMagic-Regular.ttf");
 	}
-	fontID1 = DxPlus::Text::InitializeFont(L"Yusei Magic", 30, 5);
-	if (fontID1 == -1)
+	fontID2 = DxPlus::Text::InitializeFont(L"Yusei Magic", 30, 5);
+	if (fontID2== -1)
 	{
 		DxPlus::Utils::FatalError(L"Failed to init font: Yusei Magic");
 	}
-
+	if (AddFontResourceExW(L"./Data/Fonts/New/001Shirokuma-Regular.otf", FR_PRIVATE, 0) == 0)
+	{
+		DxPlus::Utils::FatalError(L"Failed to add font: ./Data/Fonts/New/001Shirokuma-Regular (1).otf");
+	}
+	fontID1 = DxPlus::Text::InitializeFont(L"001Shirokuma-Regular", 40, 5);
+	if (fontID1 == -1)
+	{
+		DxPlus::Utils::FatalError(L"Failed to init font: font");
+	}
 	Mouse_Image();
 	Mouse_Reset();
 
