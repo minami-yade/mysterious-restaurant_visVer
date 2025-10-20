@@ -5,7 +5,7 @@
 #include "Enemy.h"
 #include "hook.h"
 #include "bowl.h"
-
+#include "score.h"
 
 void GameAllLoad();
 void GameAllDelete();

@@ -13,6 +13,7 @@ void GameAllLoad() {
 	hookImage();
 	EnemyImage();
 	bowlImage();
+	ScoreImage();
 }
 
 void GameAllDelete() {
@@ -26,7 +27,7 @@ void GameAllDelete() {
 		EnemyDelete(i);
 	}
 	bowlDelete();
-
+	ScoreDelete();
 }
 
 float GetDeltaTime_DxLib(int g_prevMs)

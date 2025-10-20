@@ -3,7 +3,7 @@
 #include "WinMain.h"
 #include "AllManager.h"
 
-const float TIME_LIMIT = 3.0f; // ゲーム制限時間（秒）
+const float TIME_LIMIT = 1130.0f; // ゲーム制限時間（秒）
 float MainGameTimer = 0.0f;
 //----------------------------------------------------------------------
 // 
@@ -70,7 +70,7 @@ void Game_Reset()
 	EnemyReset();
 	bowlReset();
     score = 0;
-
+    ScoreReset();
     MainGameTimer = 0.0f;
 
 
@@ -142,6 +142,7 @@ void Game_Render()
     //背景
     GameBackDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
     GameFloorDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
+    ScoreDraw(score);
 
 
     //player
@@ -172,7 +173,7 @@ void Game_Render()
 	}
 	
     
-  
+    
 
 	//Vegetable
     for (int i = 0; i < VEGETABLE_NUM; i++)
@@ -186,13 +187,9 @@ void Game_Render()
     wchar_t buf[64];
     swprintf(buf, 64, L"vegetableSpawnTimer: %d", vegetableSpawnTimer);
     DxPlus::Text::DrawString(buf,
-        {150,100},
+        {250,400},
         GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_center, { 1.0f, 1.0f });
     wchar_t buf2[64];
-    swprintf(buf2, 64, L"Score: %d", score);
-    DxPlus::Text::DrawString(buf2,
-        {150,200},
-        GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_center, { 1.0f, 1.0f });
 
 #endif
     
