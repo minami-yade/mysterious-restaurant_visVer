@@ -6,6 +6,7 @@
 #include "hook.h"
 #include "bowl.h"
 #include "score.h"
+#include "Timer.h"
 
 void GameAllLoad();
 void GameAllDelete();

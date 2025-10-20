@@ -64,6 +64,9 @@
     <Filter Include="00_MainData\bowl">
       <UniqueIdentifier>{0277dff4-d7da-4292-ba65-50bd9559a76d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_MainData\Timer">
+      <UniqueIdentifier>{cdc180bf-d9a9-4a05-83b9-503651cf7a4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DxPlus\Animation.h">
@@ -162,6 +165,9 @@
     <ClInclude Include="bowl.h">
       <Filter>00_MainData\bowl</Filter>
     </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>00_MainData\Timer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxPlus\Animation.cpp">
@@ -241,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="bowl.cpp">
       <Filter>00_MainData\bowl</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>00_MainData\Timer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 #include "WinMain.h"
 #include "AllManager.h"
 
-const float TIME_LIMIT = 1130.0f; // ゲーム制限時間（秒）
+
 float MainGameTimer = 0.0f;
 //----------------------------------------------------------------------
 // 
@@ -72,7 +72,7 @@ void Game_Reset()
     score = 0;
     ScoreReset();
     MainGameTimer = 0.0f;
-
+	Timer_Reset(MainGameTimer);
 
     gameState = 0;
     gameFadeTimer = 1.0f;
@@ -86,6 +86,8 @@ void Game_Reset()
 
 void Game_Update()
 {
+	Timer_Update(MainGameTimer, 1 / 60.0f,gameState);
+
     delta = GetDeltaTime_DxLib(g_prevMs);
     vegetableSpawnTimer--;
     enemySpawnTimer--;
@@ -97,7 +99,6 @@ void Game_Update()
 
     Updatehook(delta, mouseX, mouseY, { mousePosX,mousePosY },isRight);
    
-    GameTimer();
 	
     for (int i = 0; i < VEGETABLE_NUM; i++)
     {
@@ -122,14 +123,6 @@ void Game_Update()
     Game_Fade();
 }
 
-void GameTimer()
-{
-    MainGameTimer += 1 / 60.0f;;
-    if (MainGameTimer >= TIME_LIMIT)
-    {
-        gameState = 3;//ゲームおわり
-    }
-}
 
 
 
@@ -141,6 +134,7 @@ void Game_Render()
 
     //背景
     GameBackDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
+	Timer_Draw(MainGameTimer);
     GameFloorDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
     ScoreDraw(score);
 

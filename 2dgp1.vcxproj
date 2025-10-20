@@ -188,6 +188,7 @@
     <ClInclude Include="Result.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="Score.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Vegetable.h" />
     <ClInclude Include="WinMain.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="Score.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Vegetable.cpp" />
     <ClCompile Include="WinMain.cpp" />

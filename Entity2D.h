@@ -32,6 +32,7 @@ struct Entity2D
 	float  baseY = {};        // 基準高
 	float JumpPower = 10.0f;
 	int moveVegetable = 0;//0通常,1フックに捕まった,2フックに捕まった後放たれた
+	int vegAnimNum = -1;
 
 
 	//mouse
@@ -69,6 +70,7 @@ const int PLAYER_NUM = 9;
 
 const int VEGETABLE_TYPE = 8; // 0:キャベツ
 const int VEGETABLE_NUM = 5 * VEGETABLE_TYPE;
+const int VEG_ANIM_NUM = 3; //アニメーションフレーム数
 
 const int MOUSE_ANIM_NUM = 4;//アニメーションフレーム数
 const int UFO_ANIM_NUM = 3;//アニメーションフレーム数

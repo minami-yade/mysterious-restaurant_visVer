@@ -15,7 +15,7 @@ int ufoSprite = -1;
 
 const int UFO_SPAWN_PERCENT = 100;
 const float MOUSE_ANIM_INTERVAL = 3.0f;
-const float UFO_MOVE_SPEED = 3.0f;
+const float UFO_MOVE_SPEED = 2.0f;
 const float UFO_LIGHT_INTERVAL = 3.0f;
 
 const float UFO_DROP_DURATION = 10.0f;

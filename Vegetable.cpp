@@ -6,12 +6,25 @@ Entity2D vegetable[VEGETABLE_NUM];
 extern Entity2D enemy[ENEMY_NUM];
 extern Entity2D hook;
 
-
+int vegAnim[VEG_ANIM_NUM];
+const float VEG_ANIM_INTERVAL = 6.0f; // アニメーション間隔（秒）
+const DxPlus::Vec2 wingCenter = { 7.0f, 80.0f };
 
 // --- 画像読み込み関係 ---
 void VegetableImage()
-{
-       
+{  
+    const wchar_t* vagPaths[VEG_ANIM_NUM] = {
+       L"./Data/images/W1.png",
+       L"./Data/images/W2.png",
+       L"./Data/images/W3.png",
+    };
+    for (int j = 0; j < VEG_ANIM_NUM; ++j) {
+        vegAnim[j] = LoadGraph(vagPaths[j]);
+        if (vegAnim[j] == -1) {
+            DxPlus::Utils::FatalError((std::wstring(L"failed to load sprite : ") + vagPaths[j]).c_str());
+        }
+    }
+
     for (int i = 0; i < VEGETABLE_NUM; ++i)
     {
         switch (i % VEGETABLE_TYPE) {
@@ -67,19 +80,20 @@ void VegetableImage()
             DxPlus::Utils::FatalError(L"野菜の画像が存在しません！");
             break;
         };
-
     }
-
    
 }
 
 // --- リセット関数（初期配置や状態の初期化） ---
 void VegetableReset()
 {
+    
     for (int i = 0; i < VEGETABLE_NUM; ++i)
     {
         vegetable[i].isActive = false;
         vegetable[i].havescore = 50;
+        vegetable[i].vegAnimNum = 0;
+        vegetable[i].timer = 0.0f;
     
         switch (i % VEGETABLE_TYPE) {
 		case 0: //　キャベツ
@@ -88,54 +102,53 @@ void VegetableReset()
             vegetable[i].speed = 3.0f; // 100 ピクセル/秒
             vegetable[i].JumpPower = 15.0f;
             vegetable[i].moveVegetable = 0;
-
             break;
         case 1://肉
             vegetable[i].scale = { 0.5f, 0.5f };
             vegetable[i].center = { 49.0f, 49.0f };
-            vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+            vegetable[i].speed = 3.0f;
             vegetable[i].JumpPower = 15.0f;
             vegetable[i].moveVegetable = 0;
 			break;
         case 2://パプリカ
             vegetable[i].scale = { 0.5f, 0.5f };
             vegetable[i].center = { 49.0f, 49.0f };
-            vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+            vegetable[i].speed = 3.0f;
             vegetable[i].JumpPower = 15.0f;
             vegetable[i].moveVegetable = 0;
 			break;
         case 3://毒キノコ
             vegetable[i].scale = { 0.5f, 0.5f };
             vegetable[i].center = { 49.0f, 49.0f };
-            vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+            vegetable[i].speed = 3.0f;
             vegetable[i].JumpPower = 15.0f;
             vegetable[i].moveVegetable = 0;
 			break;
          case 4://ニンジン
             vegetable[i].scale = { 0.5f, 0.5f };
             vegetable[i].center = { 49.0f, 49.0f };
-            vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+            vegetable[i].speed = 3.0f;
             vegetable[i].JumpPower = 15.0f;
 			vegetable[i].moveVegetable = 0;
             break;
         case 5: //ナス
             vegetable[i].scale = { 0.5f, 0.5f };
             vegetable[i].center = { 49.0f, 49.0f };
-            vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+            vegetable[i].speed = 3.0f;
 			vegetable[i].JumpPower = 15.0f;
             vegetable[i].moveVegetable = 0;
 			break;
-            case 6://トマト
+        case 6://トマト
             vegetable[i].scale = { 0.5f, 0.5f };
             vegetable[i].center = { 49.0f, 49.0f };
-			vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+			vegetable[i].speed = 3.0f;
             vegetable[i].JumpPower = 15.0f;
 			vegetable[i].moveVegetable = 0;
             break;
         case 7://ピーマン
             vegetable[i].scale = { 0.5f, 0.5f };
             vegetable[i].center = { 49.0f, 49.0f };
-            vegetable[i].speed = 3.0f; // 100 ピクセル/秒
+            vegetable[i].speed = 3.0f;
 			vegetable[i].JumpPower = 15.0f;
 			vegetable[i].moveVegetable = 0;
 			break;
@@ -159,7 +172,13 @@ void UpdateVegetable(int i, float deltaTime,HookState hookState)
     {
     case 0: // 通常
 
-       
+        // wing アニメ更新（vegetable ごとの timer / vegAnimNum を使う）
+        vegetable[i].timer += deltaTime;
+        if (vegetable[i].timer >= VEG_ANIM_INTERVAL) {
+            vegetable[i].timer -= VEG_ANIM_INTERVAL;
+            vegetable[i].vegAnimNum = (vegetable[i].vegAnimNum + 1) % VEG_ANIM_NUM;
+        }
+
         // 前進
         vegetable[i].position.x += vegetable[i].speed * deltaTime;
 
@@ -167,7 +186,6 @@ void UpdateVegetable(int i, float deltaTime,HookState hookState)
         vegetable[i].velocity.y += vegetable[i].gravity * deltaTime;
 
         // 地面（baseY）に到達したら跳ね返る
-        // velocity.y > 0（下向きに落下中）のときだけ跳ね返る
         if (vegetable[i].position.y >= vegetable[i].baseY && vegetable[i].velocity.y > 0)
         {
             vegetable[i].position.y = vegetable[i].baseY;
@@ -191,27 +209,22 @@ void UpdateVegetable(int i, float deltaTime,HookState hookState)
         break;
     case 3:
     {
-  
         const float ByeByeSpeed = 5.0f;
         const float AngleSpeed = 0.5f;
         if (vegetable[i].position.x > DxPlus::CLIENT_WIDTH / 2)
         {
-            vegetable[i].position.x -= ByeByeSpeed * deltaTime * 1;
-            vegetable[i].position.y += ByeByeSpeed * deltaTime * 1.1;
+            vegetable[i].position.x -= ByeByeSpeed * deltaTime * 1.0f;
+            vegetable[i].position.y += ByeByeSpeed * deltaTime * 1.1f;
             vegetable[i].angle += AngleSpeed;
         }
         else
         {
-            vegetable[i].position.x += ByeByeSpeed * deltaTime * 1;
-            vegetable[i].position.y += ByeByeSpeed * deltaTime * 1.1;
+            vegetable[i].position.x += ByeByeSpeed * deltaTime * 1.0f;
+            vegetable[i].position.y += ByeByeSpeed * deltaTime * 1.1f;
             vegetable[i].angle += AngleSpeed;
-
         }
-
-
         break;
     }
-
 
     default:
         break;
@@ -238,25 +251,24 @@ void SpawnTimeVegetable(int i , int* Timer) {
         vegetable[i].isActive        = true;
 		*Timer                       = GetRand(60) + 60;
         vegetable[i].baseY           = vegetable[i].position.y;      // 基準高
-		vegetable[i].velocity.y = 0;                            // 初期速度
+		vegetable[i].velocity.y = 0;                            // 速度
 		vegetable[i].angle = 0;
 
     } 
 }
 
-void onHookHit(const DxPlus::Vec2& targetPos, Entity2D* hook, int i)
+void onHookHit(const DxPlus::Vec2& targetPos, Entity2D* hookPtr, int i)
 {
     // 安全性チェック
     if (i < 0 || i >= VEGETABLE_NUM) return;
 
     // 野菜をフックにくっつける
-    hook->isCarryingVegetable = true;
-    hook->carriedVegetable = &vegetable[i];
+    hookPtr->isCarryingVegetable = true;
+    hookPtr->carriedVegetable = &vegetable[i];
 
     if (vegetable[i].moveVegetable == 0) {
         vegetable[i].moveVegetable = 1;
         vegetable[i].velocity = { 0, 0 }; // 必要なら初期化
-        // vegetable[i].angle = 0; // 状況に応じて
     }
 }
 
@@ -266,11 +278,28 @@ void VegetableDraw(int i)
 {
     if (!vegetable[i].isActive) return;
 	if (vegetable[i].spriteID == -1) return;
+
+    int frame = vegetable[i].vegAnimNum;
+    if (frame < 0) frame = 0;
+    frame %= VEG_ANIM_NUM;
+
+    int sprite = vegAnim[frame];
+    if (sprite == -1) return;
+
+	// 野菜の描画
     if(vegetable[i].speed > 0)
-    DxPlus::Sprite::Draw(vegetable[i].spriteID, vegetable[i].position, vegetable[i].scale, vegetable[i].center,vegetable[i].angle);
+        DxPlus::Sprite::Draw(vegetable[i].spriteID, vegetable[i].position, vegetable[i].scale, vegetable[i].center,vegetable[i].angle);
     else
         DxPlus::Sprite::Draw(vegetable[i].spriteID, vegetable[i].position, { -vegetable[i].scale.x ,vegetable[i].scale.y }, vegetable[i].center,-vegetable[i].angle);
+
+
+    //羽の描画（アニメ）
+    if (vegetable[i].speed < 0)
+        DxPlus::Sprite::Draw(sprite, vegetable[i].position, vegetable[i].scale, wingCenter, vegetable[i].angle);
+    else
+        DxPlus::Sprite::Draw(sprite, vegetable[i].position, { -vegetable[i].scale.x, vegetable[i].scale.y }, wingCenter, vegetable[i].angle);
 }
+
 
 // --- 解放関数 ---
 void VegetableDelete(int i)
