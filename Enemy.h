@@ -12,9 +12,11 @@ void EnemyReset();
 
 
 // --- “®‚«‚ÌXV ---
-void UpdateEnemy(int i, float deltaTime);
+void UpdateEnemy(int i, float deltaTime,HookState& hookState);
 
 void SpawnTimeEnemy(int i, int* Timer);
+
+void onHookEnemyHit(const DxPlus::Vec2& targetPos, Entity2D* hook, int i);
 
 // --- •`‰æŠÖ” ---
 void EnemyDraw(int i);

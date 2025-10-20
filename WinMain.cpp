@@ -11,8 +11,9 @@
 
 int currentScene = SceneNone;
 int nextScene = SceneTitle;
-
+ 
 int fontID1 = -1;
+
 
 float deltaTime = 0.0f;
 static unsigned int g_prevMs = 0;

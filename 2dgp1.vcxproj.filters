@@ -61,6 +61,9 @@
     <Filter Include="00_MainData\hook">
       <UniqueIdentifier>{21ec4b8b-6192-4246-ae4f-555cbbcdd737}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_MainData\bowl">
+      <UniqueIdentifier>{0277dff4-d7da-4292-ba65-50bd9559a76d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DxPlus\Animation.h">
@@ -156,6 +159,9 @@
     <ClInclude Include="Score.h">
       <Filter>00_MainData\Score</Filter>
     </ClInclude>
+    <ClInclude Include="bowl.h">
+      <Filter>00_MainData\bowl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxPlus\Animation.cpp">
@@ -232,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="Score.cpp">
       <Filter>00_MainData\Score</Filter>
+    </ClCompile>
+    <ClCompile Include="bowl.cpp">
+      <Filter>00_MainData\bowl</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

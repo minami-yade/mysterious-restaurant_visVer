@@ -1,5 +1,10 @@
 #include "AllManager.h"
 
+extern Entity2D hook;
+extern Entity2D player;
+extern HookState hookState;
+extern int score;
+
 
 void GameAllLoad() {
 	PlayerImage();
@@ -7,6 +12,7 @@ void GameAllLoad() {
 	VegetableImage();
 	hookImage();
 	EnemyImage();
+	bowlImage();
 }
 
 void GameAllDelete() {
@@ -19,6 +25,7 @@ void GameAllDelete() {
 	for (int i = 0; i < ENEMY_NUM; ++i) {
 		EnemyDelete(i);
 	}
+	bowlDelete();
 
 }
 
@@ -30,6 +37,10 @@ float GetDeltaTime_DxLib(int g_prevMs)
     float deltaTime = diff / 1000.0f;
     if (deltaTime > 0.5f) deltaTime = 0.5f;
     return deltaTime;
+}
+
+void Score(int haveScore) {
+	score += haveScore;
 }
 
 DxPlus::Vec2 randamSpawn() {
