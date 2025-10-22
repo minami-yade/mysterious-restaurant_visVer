@@ -18,8 +18,8 @@ const float MOUSE_ANIM_INTERVAL = 3.0f;
 const float UFO_MOVE_SPEED = 2.0f;
 const float UFO_LIGHT_INTERVAL = 3.0f;
 
-const float UFO_DROP_DURATION = 10.0f;
-const float UFO_DROP_DISTANCE = 120.0f;
+const float UFO_DROP_DURATION = 30.0f;//‚¶‚©‚ñ
+const float UFO_DROP_DISTANCE = 300.0f;
 const float UFO_ASCEND_SPEED = 240.0f;
 const float DEFAULT_FADE_SPEED = 1.5f;
 
@@ -272,7 +272,7 @@ void SpawnTimeEnemy(int i, int* Timer) {
             enemy[i].isUFO = true;
             enemy[i].ufoVegetableIndex = -1;
             enemy[i].ufoHasVegetable = false;
-            enemy[i].position.y = 80.0f;
+            enemy[i].position.y = 200.0f;
             enemy[i].speed = fromRight ? -UFO_MOVE_SPEED : UFO_MOVE_SPEED;
             enemy[i].spriteID = ufoSprite;
             enemy[i].scale = { 1.0f, 1.0f };
@@ -280,7 +280,7 @@ void SpawnTimeEnemy(int i, int* Timer) {
             enemy[i].havescore = 30;
         } else {
             enemy[i].isUFO = false;
-            enemy[i].speed = 0.7f;
+            enemy[i].speed = 1.5f;
             enemy[i].speed = (enemy[i].position.x < DxPlus::CLIENT_WIDTH / 2) ? enemy[i].speed : -enemy[i].speed;
             if (enemy[i].mouseAnim < 0 || enemy[i].mouseAnim >= MOUSE_ANIM_NUM) enemy[i].mouseAnim = 0;
             enemy[i].spriteID = mouseAnimDeg[enemy[i].mouseAnim];

@@ -58,10 +58,10 @@ namespace DxPlus
             y += lineSpacing;
         }
 
-        Clear();
+        Setting();
     }
 
-    void Debug::Clear()
+    void Debug::Setting()
     {
         debugMessages.clear();
     }

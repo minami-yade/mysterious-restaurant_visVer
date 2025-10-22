@@ -16,6 +16,7 @@ struct Entity2D
 	bool isActive = false;
 	float radius = 30.0f; // 当たり判定用の半径
 	
+	
 	//フックで使う
 	float angle = 0;
 	DxPlus::Vec2 target = {};
@@ -68,7 +69,7 @@ struct Entity2D
 };
 const int PLAYER_NUM = 9;
 
-const int VEGETABLE_TYPE = 8; // 0:キャベツ
+const int VEGETABLE_TYPE = 7; // 0:キャベツ
 const int VEGETABLE_NUM = 5 * VEGETABLE_TYPE;
 const int VEG_ANIM_NUM = 3; //アニメーションフレーム数
 
@@ -78,6 +79,10 @@ const int ENEMY_TYPE = 2; // 0:ねずみ
 const int ENEMY_NUM = 5 * ENEMY_TYPE;
 
 const int BOWL_EFFECT_NUM = 3;
+
+const int TITLE_BACK_NUM = 5;
+const int TITLE_BACKPLAY_NUM = 8;
+const int TITLE_BUTTON_NUM = 4;
 
 enum HookState {
 	FlyingOut,

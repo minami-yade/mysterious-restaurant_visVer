@@ -26,6 +26,7 @@ extern int nextScene;
 
 int score = 0;
 
+
 static unsigned int g_prevMs = 0;
 
 extern DxPlus::Vec2 playerBasePosition;
@@ -63,6 +64,7 @@ void Game_Reset()
     vegetableSpawnTimer = 0;
     enemySpawnTimer = 300;
     isReturning = false;
+	GameBackReset();
 
 	PlayerReset();
 	VegetableReset();
@@ -87,6 +89,7 @@ void Game_Reset()
 void Game_Update()
 {
 	Timer_Update(MainGameTimer, 1 / 60.0f,gameState);
+    GameBackUpdate();
 
     delta = GetDeltaTime_DxLib(g_prevMs);
     vegetableSpawnTimer--;
@@ -138,7 +141,7 @@ void Game_Render()
     GameFloorDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
     ScoreDraw(score);
 
-
+  
     //player
     if (hookState == Idle) {
         if (!(mousePosX > DxPlus::CLIENT_WIDTH / 3 && mousePosX < DxPlus::CLIENT_WIDTH - DxPlus::CLIENT_WIDTH / 3)) {

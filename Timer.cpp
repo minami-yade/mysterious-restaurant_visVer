@@ -46,14 +46,16 @@ void Timer_DrawGauge(float timeLeft) {
 	const int segments = 600;
 
 	float ratio = timeLeft / TIME_LIMIT;
-	float startAngle = 360.0f * (1.0f - ratio);
+	float endAngle = 360.0f * ratio;
 
 	for (int i = 0; i < segments; ++i) {
-		float angleStart = 360.0f - (360.0f / segments) * i;
-		float angleEnd = 360.0f - (360.0f / segments) * (i + 1);
+		float angleStart = (360.0f / segments) * i;
+		float angleEnd = (360.0f / segments) * (i + 1);
+
+		// 時計回りに減らすため、360から引いた範囲を描画
+		if (angleStart >= (360.0f - endAngle)) break;
 
 
-		if (angleEnd < startAngle) continue;
 
 		// スタート地点を上に
 		float radStart = DX_PI * (angleStart - 90.0f) / 180.0f;

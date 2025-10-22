@@ -1,6 +1,7 @@
 #include "DxPlus/DxPlus.h"
 #include "Title.h"
 #include "WinMain.h"
+#include "Back.h"
 
 //---------------------------------------------------------------------- 
 // 定数 
@@ -21,7 +22,16 @@ int titleState;
 
 float titleFadeTimer;
 
+extern DxPlus::Vec2 buttonBase;
+
 int startbutton;
+const DxPlus::Vec2 startButtonPos   = { buttonBase.x + 100.0f ,	 buttonBase.y + 2 * 140.0f };
+int settingbutton;
+const DxPlus::Vec2 settingButtonPos = { buttonBase.x + 100.0f ,	 buttonBase.y + 3 * 140.0f + 5 };
+int finbutton;
+const DxPlus::Vec2 finButtonPos     = { buttonBase.x + 100.0f ,  buttonBase.y + 4 * 140.0f + 10 };
+
+
 int mouseX, mouseY;
 int mouseInput;
 
@@ -31,8 +41,7 @@ int mouseInput;
 //----------------------------------------------------------------------
 void Title_Init() {
 
-	// Game と区別するために背景の色を変える
-	DxLib::SetBackgroundColor(0, 0, 0);
+	TitleBackImage();
 
 	Title_Reset();
 }
@@ -44,6 +53,8 @@ void Title_Reset() {
 
 	frameCount = 0;
 
+	TitleBackReset();
+	
 	titleState = 0;
 	titleFadeTimer = 1.0f;
 
@@ -53,13 +64,24 @@ void Title_Reset() {
 //----------------------------------------------------------------------
 void Title_Update() {
 
+	TitleBackUpdate();
 	Title_Fade();
 
-	startbutton = mouseX >= DxPlus::CLIENT_WIDTH * 0.5f - 150 && mouseX <= DxPlus::CLIENT_WIDTH * 0.5f + 150 &&
-		mouseY >= DxPlus::CLIENT_HEIGHT * 0.7f - 40 && mouseY <= DxPlus::CLIENT_HEIGHT * 0.7f + 40;
+	if ((mouseInput & MOUSE_INPUT_LEFT) &&startbutton)
+		titleState = 2;
+	if ((mouseInput & MOUSE_INPUT_LEFT) && settingbutton)
+		titleState = 3;
+	if ((mouseInput & MOUSE_INPUT_LEFT) && finbutton)
+		titleState = 4;
+
 	mouseInput = DxLib::GetMouseInput();
 	DxLib::GetMousePoint(&mouseX, &mouseY);
+	
 
+
+	startbutton = ButtonPosition({ startButtonPos }, { (float)mouseX,(float)mouseY });
+	settingbutton = ButtonPosition({ settingButtonPos }, { (float)mouseX,(float)mouseY });
+	finbutton = ButtonPosition({ finButtonPos }, { (float)mouseX,(float)mouseY });
 
 
 
@@ -74,28 +96,29 @@ void Title_Update() {
 //----------------------------------------------------------------------
 void Title_Render() {
 
+	TitleBackDraw({0,0},{1.0f,1.0f},{0.0f,0.0f},startbutton,settingbutton,finbutton);
 
-
-
-	// スタートボタンの描画
+#if _DEBUG
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);  // 半透明モードをセット
 	DxPlus::Primitive2D::DrawRect(
-		{ DxPlus::CLIENT_WIDTH * 0.5f - 150, DxPlus::CLIENT_HEIGHT * 0.7f - 40 }, // 中央基準に修正
-		{ 300, 80 },
+		{ startButtonPos },
+		{ 370, 90 },
 		DxLib::GetColor(255, 255, 255), startbutton);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);  // 元に戻す
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);  // 半透明モードをセット
+	DxPlus::Primitive2D::DrawRect(
+		{ settingButtonPos },
+		{ 370, 90 },
+		DxLib::GetColor(255, 255, 255), settingbutton);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);  // 元に戻す
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);  // 半透明モードをセット
+	DxPlus::Primitive2D::DrawRect(
+		{ finButtonPos },
+		{ 370, 90 },
+		DxLib::GetColor(255, 255, 255), finbutton);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);  // 元に戻す
 
-
-	// タイトルの描画 
-	DxPlus::Text::DrawString(L"2D GameProgramming I",
-		{ DxPlus::CLIENT_WIDTH * 0.5f, DxPlus::CLIENT_HEIGHT * 0.33f },
-		BlackGreen, DxPlus::Text::TextAlign::MIDDLE_center, { 3.0f, 3.0f });
-
-	DxPlus::Text::DrawString(L"Start Game",
-		{ DxPlus::CLIENT_WIDTH * 0.5f, DxPlus::CLIENT_HEIGHT * 0.7f },
-		BlackGreen,
-		DxPlus::Text::TextAlign::MIDDLE_center,
-		{ 2.0f, 2.0f });
+#endif
 
 
 	FadeDrawTitle();
@@ -123,8 +146,7 @@ void Title_Fade() {
 	}
 	case 1: // 通常時 
 	{
-		if ((mouseInput & MOUSE_INPUT_LEFT) &&
-			startbutton && titleState == 1) titleState++;
+		
 		break;
 	}
 	case 2: // フェードアウト中
@@ -136,10 +158,25 @@ void Title_Fade() {
 		}
 		break;
 	}
+	case 3: // フェードアウト中
+	{
+		titleFadeTimer += 1 / 60.0f;
+		if (titleFadeTimer > 1.0f) {
+			titleFadeTimer = 1.0f;
+			nextScene = SceneSetting;
+		}
+		break;
+	}
+	case 4: // フェードアウト中
+	{
+			PostQuitMessage(0);
+		
+		break;
+	}
 	}
 	frameCount++;
 
 }
 void Title_End() {
-
+	TitleBackDelete();
 }

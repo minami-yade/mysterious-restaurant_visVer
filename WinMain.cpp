@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "Title.h"
 #include "Result.h"
-#include "Clear.h"
+#include "Setting.h"
 #include "Battle.h"
 #include "Mouse.h"
 #include "AllManager.h"
@@ -100,8 +100,8 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 			case SceneBattle:
 				Battle_End();
 				break;
-			case SceneClear:
-				Clear_End();
+			case SceneSetting:
+				Setting_End();
 				break;
 			}
 
@@ -124,8 +124,8 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 				Battle_Init();
 				break;
 
-			case SceneClear:
-				Clear_Init();
+			case SceneSetting:
+				Setting_Init();
 				break;
 
 			}
@@ -155,9 +155,9 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 			Result_Render();
 			break;
 
-		case SceneClear:
-			Clear_Update();
-			Clear_Render();
+		case SceneSetting:
+			Setting_Update();
+			Setting_Render();
 			break;
 
 		case SceneBattle:
@@ -189,8 +189,8 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 		Result_End();
 		break;
 
-	case SceneClear:
-		Clear_End();
+	case SceneSetting:
+		Setting_End();
 		break;
 
 	case SceneBattle:
@@ -225,6 +225,7 @@ void HandleScreenToggle()
 //ウインドウブロシ ー ジャ
 LRESULT CALLBACK CustomWinProc(HWND, UINT msg, WPARAM wParam, LPARAM)
 {
+#if _DEBUG
 	switch (msg)
 	{
 	case WM_KEYDOWN:
@@ -234,5 +235,7 @@ LRESULT CALLBACK CustomWinProc(HWND, UINT msg, WPARAM wParam, LPARAM)
 		}
 		break;
 	}
+
+#endif
 	return 0;
 }
