@@ -64,7 +64,7 @@ void Game_Reset()
     vegetableSpawnTimer = 0;
     enemySpawnTimer = 300;
     isReturning = false;
-	GameBackReset();
+	
 
 	PlayerReset();
 	VegetableReset();
@@ -90,6 +90,7 @@ void Game_Update()
 {
 	Timer_Update(MainGameTimer, 1 / 60.0f,gameState);
     GameBackUpdate();
+	ScoreUpdate(score);
 
     delta = GetDeltaTime_DxLib(g_prevMs);
     vegetableSpawnTimer--;
@@ -179,16 +180,7 @@ void Game_Render()
          
     }
    
-    
-#if _DEBUG
-    wchar_t buf[64];
-    swprintf(buf, 64, L"vegetableSpawnTimer: %d", vegetableSpawnTimer);
-    DxPlus::Text::DrawString(buf,
-        {250,400},
-        GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_center, { 1.0f, 1.0f });
-    wchar_t buf2[64];
 
-#endif
     
 
     FadeDrawGame();

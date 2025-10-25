@@ -13,9 +13,9 @@ int mouseAnimDeg[MOUSE_ANIM_NUM] = {};
 int ufoAnimDeg[UFO_ANIM_NUM] = {};
 int ufoSprite = -1;
 
-const int UFO_SPAWN_PERCENT = 100;
+const int UFO_SPAWN_PERCENT = 30;
 const float MOUSE_ANIM_INTERVAL = 3.0f;
-const float UFO_MOVE_SPEED = 2.0f;
+const float UFO_MOVE_SPEED = 2.5f;
 const float UFO_LIGHT_INTERVAL = 3.0f;
 
 const float UFO_DROP_DURATION = 30.0f;//じかん
@@ -106,7 +106,7 @@ void EnemyReset()
             enemy[i].center = { 71.0f, 62.0f };
             enemy[i].speed = 0.4f;
             enemy[i].moveenemy = 0;
-            enemy[i].havescore = 30;
+            enemy[i].havescore = -100;
             enemy[i].helpEnemy = false;
             enemy[i].mouseAnim = -1;
             enemy[i].isUFO = false;
@@ -149,9 +149,27 @@ void UpdateEnemy(int i, float deltaTime, HookState& hookState)
         }
     }
 
-    switch (enemy[i].moveenemy)
-    {
+    switch (enemy[i].moveenemy) {
     case 0:
+        if (enemy[i].ufoDropState == 4) { // 野菜を回転させながら取る処理
+            enemy[i].ufoDropTimer += deltaTime;
+            float duration = 2.0f; // アニメーションの長さ（秒）
+            if (enemy[i].ufoDropTimer < duration) {
+                float progress = enemy[i].ufoDropTimer / duration;
+                vegetable[enemy[i].ufoVegetableIndex].position = {
+                    DxPlus::CLIENT_WIDTH / 2.0f,
+                    DxPlus::CLIENT_HEIGHT - 100.0f + (1.0f - progress) * 200.0f
+                };
+                vegetable[enemy[i].ufoVegetableIndex].angle += 360.0f * deltaTime; // 回転
+            } else {
+                enemy[i].ufoDropState = 0; // アニメーション終了
+                enemy[i].speed = UFO_MOVE_SPEED; // UFOを再び動かす
+                enemy[i].ufoVegetableIndex = -1;
+                enemy[i].ufoHasVegetable = false;
+            }
+            break;
+        }
+
         if (enemy[i].ufoDropState != 3) {
             enemy[i].position.x += enemy[i].speed * deltaTime;
         } else {
@@ -177,61 +195,17 @@ void UpdateEnemy(int i, float deltaTime, HookState& hookState)
 
         enemy[i].position.y += enemy[i].velocity.y * deltaTime;
 
-		if (!enemy[i].isUFO) {
+        if (!enemy[i].isUFO) {
             enemy[i].timer += deltaTime;
             if (enemy[i].timer >= MOUSE_ANIM_INTERVAL) {
                 enemy[i].timer -= MOUSE_ANIM_INTERVAL;
                 enemy[i].mouseAnim = (enemy[i].mouseAnim + 1) % MOUSE_ANIM_NUM;
             }
-        }
-		else {
+        } else {
             enemy[i].ufoLightTimer += deltaTime;
             if (enemy[i].ufoLightTimer >= UFO_LIGHT_INTERVAL) {
                 enemy[i].ufoLightTimer -= UFO_LIGHT_INTERVAL;
                 enemy[i].ufoLightAnim = (enemy[i].ufoLightAnim + 1) % UFO_ANIM_NUM;
-            }
-
-            if (enemy[i].ufoDropState == 1) {
-                enemy[i].ufoDropTimer += deltaTime;
-                float half = UFO_DROP_DURATION * 0.5f;
-                if (enemy[i].ufoDropTimer < half) {
-                    float v = (UFO_DROP_DISTANCE / half) * deltaTime;
-                    enemy[i].position.y += v;
-                } else if (enemy[i].ufoDropTimer < UFO_DROP_DURATION) {
-                    float v = (UFO_DROP_DISTANCE / half) * deltaTime;
-                    enemy[i].position.y -= v;
-                } else {
-                    enemy[i].ufoDropState = 0;
-                    enemy[i].ufoDropTimer = 0.0f;
-                }
-            }
-
-            float centerX = DxPlus::CLIENT_WIDTH * 0.5f;
-            if (!enemy[i].ufoHasVegetable && enemy[i].ufoDropState == 0) {
-                bool crossedCenter = false;
-                if (enemy[i].speed > 0 && enemy[i].position.x >= centerX - 1.0f) crossedCenter = true;
-                if (enemy[i].speed < 0 && enemy[i].position.x <= centerX + 1.0f) crossedCenter = true;
-
-                if (crossedCenter) {
-                    enemy[i].ufoVegetableIndex = GetRand(VEGETABLE_TYPE);
-                    enemy[i].ufoHasVegetable = true;
-                    enemy[i].ufoDropState = 1;
-                    enemy[i].ufoDropTimer = 0.0f;
-                }
-            }
-
-            if (enemy[i].ufoDropState == 2) {
-                enemy[i].position.y -= UFO_ASCEND_SPEED * deltaTime;
-                if (enemy[i].position.y < -200.0f) {
-                    enemy[i].isActive = false;
-                    enemy[i].moveenemy = 0;
-                    enemy[i].velocity = { 0,0 };
-                    enemy[i].isUFO = false;
-                    enemy[i].ufoVegetableIndex = -1;
-                    enemy[i].ufoHasVegetable = false;
-                    enemy[i].ufoDropState = 0;
-                    enemy[i].ufoBeingTaken = false;
-                }
             }
         }
         break;
@@ -248,8 +222,7 @@ void UpdateEnemy(int i, float deltaTime, HookState& hookState)
     }
 
     if (enemy[i].position.x < -200 || enemy[i].position.x > DxPlus::CLIENT_WIDTH + 200
-        || enemy[i].position.y < -200 || enemy[i].position.y > DxPlus::CLIENT_HEIGHT + 200)
-    {
+        || enemy[i].position.y < -200 || enemy[i].position.y > DxPlus::CLIENT_HEIGHT + 200) {
         enemy[i].isActive = false;
         enemy[i].moveenemy = 0;
         enemy[i].velocity = { 0,0 };
@@ -275,7 +248,7 @@ void SpawnTimeEnemy(int i, int* Timer) {
             enemy[i].position.y = 200.0f;
             enemy[i].speed = fromRight ? -UFO_MOVE_SPEED : UFO_MOVE_SPEED;
             enemy[i].spriteID = ufoSprite;
-            enemy[i].scale = { 1.0f, 1.0f };
+            enemy[i].scale = { 0.8f, 0.8f }; // スケールを少し小さくする
             enemy[i].center = { 71.0f, 62.0f };
             enemy[i].havescore = 30;
         } else {
@@ -316,13 +289,9 @@ void onHookEnemyHit(const DxPlus::Vec2& targetPos, Entity2D* hook, int i) {
         float dx = targetPos.x - vegPos.x;
         float dy = targetPos.y - vegPos.y;
         if (dx*dx + dy*dy <= VEG_HIT_RADIUS * VEG_HIT_RADIUS) {
-            enemy[i].ufoDropState = 2;
-            enemy[i].ufoBeingTaken = true;
-            enemy[i].fading = true;
-            enemy[i].fadeSpeed = DEFAULT_FADE_SPEED * 1.2f;
-            enemy[i].moveenemy = 1;
-            enemy[i].helpEnemy = true;
-            Score(-100);
+            enemy[i].ufoDropState = 4; // 新しい状態：野菜を回転させながら取る
+            enemy[i].ufoDropTimer = 0.0f;
+            enemy[i].speed = 0.0f; // UFOを停止
             return;
         }
     }

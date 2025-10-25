@@ -45,6 +45,7 @@ void hookReset(DxPlus::Vec2 playerBasePosition)
     hook.upHookRight = { hook.HomePositionRight.x ,DxPlus::CLIENT_HEIGHT - 48 - 50 };  //âEë§ÇÃà¯Ç´è„Ç∞ínì_
 
     hook.angle = 12;
+	hookState = Idle;
 }
 
 

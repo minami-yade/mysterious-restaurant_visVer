@@ -2,16 +2,17 @@
 
 
 Entity2D player[PLAYER_NUM];
-
-const int PART_BODY            = 0;
-const int PART_RIGHT_ARM       = 1;
-const int PART_RIGHT_ARM_LONG  = 2;
-const int PART_RIGHT_HAND      = 3;
-const int PART_LEFT_ARM        = 4;
-const int PART_LEFT_ARM_LONG   = 5;
-const int PART_LEFT_HAND       = 6;
-const int PART_ROD_RIGHT       = 7;
-const int PART_ROD_LEFT        = 8;
+enum PartType {
+    PART_BODY,
+    PART_RIGHT_ARM,
+    PART_RIGHT_ARM_LONG,
+    PART_RIGHT_HAND,
+    PART_LEFT_ARM,
+    PART_LEFT_ARM_LONG,
+    PART_LEFT_HAND,
+    PART_ROD_RIGHT,
+    PART_ROD_LEFT,
+};
 
 const float playerSize = 0.75f;
 

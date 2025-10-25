@@ -1,5 +1,6 @@
 #include "Timer.h"
 
+
 int TimerSpriteID = -1;
 int needleSpriteID = -1;
 float needleAngle = 0;
@@ -7,6 +8,8 @@ float needleSpeed = 0;
 const float TIME_LIMIT = 120.0f; // タイムリミット（秒）
 const DxPlus::Vec2 TimerPos = { 640.0f,150.0f };
 const DxPlus::Vec2 TimerScale = { 0.5f,0.5f };
+
+extern int fontID1;
 
 void Timer_Image() {
 	TimerSpriteID = LoadGraph(L"./Data/Images/not_needle.png");
@@ -69,12 +72,13 @@ void Timer_DrawGauge(float timeLeft) {
 		DrawTriangle(TimerPos.x + 2, TimerPos.y, x1, y1, x2, y2, GetColor(255, 0, 0), TRUE);
 	}
 }
-
+     
 void Timer_Draw(float timeLeft) {
-	
-	DxPlus::Sprite::Draw(TimerSpriteID,  TimerPos, TimerScale, { 176.0f,250.0f });
+
+	// タイマーの背景と針を描画
+	DxPlus::Sprite::Draw(TimerSpriteID, TimerPos, TimerScale, { 176.0f, 250.0f });
 	Timer_DrawGauge(timeLeft);
-	DxPlus::Sprite::Draw(needleSpriteID, TimerPos, TimerScale * 1.2, { 7.0f,74.0f },  needleAngle,GetColor(255,255,255));
+	DxPlus::Sprite::Draw(needleSpriteID, TimerPos, TimerScale * 1.2, { 7.0f, 74.0f }, needleAngle, GetColor(255, 255, 255));
 
 }
 

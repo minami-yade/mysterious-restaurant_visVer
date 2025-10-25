@@ -7,7 +7,7 @@ void ScoreImage();
 void ScoreReset();
 
 // --- 動きの更新（単純な三角波で上下） ---
-void UpdateScore(float deltaTime);
+void ScoreUpdate(int score);
 
 // --- 描画関数 ---
 void ScoreDraw(int score);

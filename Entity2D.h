@@ -84,6 +84,8 @@ const int TITLE_BACK_NUM = 5;
 const int TITLE_BACKPLAY_NUM = 8;
 const int TITLE_BUTTON_NUM = 4;
 
+const int RESULT_ANIM_COUNT = 7;
+
 enum HookState {
 	FlyingOut,
 	Returning,
