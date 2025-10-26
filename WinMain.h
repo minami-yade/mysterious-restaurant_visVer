@@ -6,7 +6,7 @@ enum Scene
 	SceneGame,
 	SceneResult,
 	SceneBattle,
-	SceneClear,
+	SceneSetting,
 };
 
 

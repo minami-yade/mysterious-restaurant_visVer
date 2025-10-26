@@ -21,7 +21,7 @@ namespace DxPlus
         static void SetFormatString(const wchar_t* format, ...);
         static void Draw();
     private:
-        static void Clear();
+        static void Setting();
 
         static std::vector<std::wstring> debugMessages;
         static int startX;

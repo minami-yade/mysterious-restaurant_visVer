@@ -1,6 +1,7 @@
 #include "DxPlus/DxPlus.h"
 #include "Title.h"
 #include "WinMain.h"
+#include "Back.h"
 
 //---------------------------------------------------------------------- 
 // 定数 
@@ -16,12 +17,21 @@ extern int nextScene;
 unsigned int semiTransparentWhite = GetColor(255, 255, 255) | (128 << 24);  // 128 は透明度
 int BlackGreen = GetColor(0, 100, 0);
 
-
+bool gamePlay  = false;
 int titleState;
 
 float titleFadeTimer;
 
+extern DxPlus::Vec2 buttonBase;
+
 int startbutton;
+const DxPlus::Vec2 startButtonPos   = { buttonBase.x + 100.0f ,	 buttonBase.y + 2 * 140.0f };
+int settingbutton;
+const DxPlus::Vec2 settingButtonPos = { buttonBase.x + 100.0f ,	 buttonBase.y + 3 * 140.0f + 5 };
+int finbutton;
+const DxPlus::Vec2 finButtonPos     = { buttonBase.x + 100.0f ,  buttonBase.y + 4 * 140.0f + 10 };
+
+
 int mouseX, mouseY;
 int mouseInput;
 
@@ -31,8 +41,7 @@ int mouseInput;
 //----------------------------------------------------------------------
 void Title_Init() {
 
-	// Game と区別するために背景の色を変える
-	DxLib::SetBackgroundColor(0, 0, 0);
+	TitleBackImage();
 
 	Title_Reset();
 }
@@ -44,6 +53,8 @@ void Title_Reset() {
 
 	frameCount = 0;
 
+	TitleBackReset();
+	gamePlay = false;
 	titleState = 0;
 	titleFadeTimer = 1.0f;
 
@@ -55,11 +66,21 @@ void Title_Update() {
 
 	Title_Fade();
 
-	startbutton = mouseX >= DxPlus::CLIENT_WIDTH * 0.5f - 150 && mouseX <= DxPlus::CLIENT_WIDTH * 0.5f + 150 &&
-		mouseY >= DxPlus::CLIENT_HEIGHT * 0.7f - 40 && mouseY <= DxPlus::CLIENT_HEIGHT * 0.7f + 40;
+	if ((mouseInput & MOUSE_INPUT_LEFT) &&startbutton)
+		titleState = 2;
+	if ((mouseInput & MOUSE_INPUT_LEFT) && settingbutton)
+		titleState = 3;
+	if ((mouseInput & MOUSE_INPUT_LEFT) && finbutton)
+		titleState = 4;
+
 	mouseInput = DxLib::GetMouseInput();
 	DxLib::GetMousePoint(&mouseX, &mouseY);
+	
 
+
+	startbutton = ButtonPosition({ startButtonPos }, { (float)mouseX,(float)mouseY });
+	settingbutton = ButtonPosition({ settingButtonPos }, { (float)mouseX,(float)mouseY });
+	finbutton = ButtonPosition({ finButtonPos }, { (float)mouseX,(float)mouseY });
 
 
 
@@ -74,28 +95,29 @@ void Title_Update() {
 //----------------------------------------------------------------------
 void Title_Render() {
 
+	TitleBackDraw({ 362.0f,473.0f },{1.0f,1.0f},{362.0f,473.0f},startbutton,settingbutton,finbutton, &gamePlay);
 
-
-
-	// スタートボタンの描画
+#if _DEBUG
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);  // 半透明モードをセット
 	DxPlus::Primitive2D::DrawRect(
-		{ DxPlus::CLIENT_WIDTH * 0.5f - 150, DxPlus::CLIENT_HEIGHT * 0.7f - 40 }, // 中央基準に修正
-		{ 300, 80 },
+		{ startButtonPos },
+		{ 370, 90 },
 		DxLib::GetColor(255, 255, 255), startbutton);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);  // 元に戻す
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);  // 半透明モードをセット
+	DxPlus::Primitive2D::DrawRect(
+		{ settingButtonPos },
+		{ 370, 90 },
+		DxLib::GetColor(255, 255, 255), settingbutton);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);  // 元に戻す
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);  // 半透明モードをセット
+	DxPlus::Primitive2D::DrawRect(
+		{ finButtonPos },
+		{ 370, 90 },
+		DxLib::GetColor(255, 255, 255), finbutton);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);  // 元に戻す
 
-
-	// タイトルの描画 
-	DxPlus::Text::DrawString(L"2D GameProgramming I",
-		{ DxPlus::CLIENT_WIDTH * 0.5f, DxPlus::CLIENT_HEIGHT * 0.33f },
-		BlackGreen, DxPlus::Text::TextAlign::MIDDLE_center, { 3.0f, 3.0f });
-
-	DxPlus::Text::DrawString(L"Start Game",
-		{ DxPlus::CLIENT_WIDTH * 0.5f, DxPlus::CLIENT_HEIGHT * 0.7f },
-		BlackGreen,
-		DxPlus::Text::TextAlign::MIDDLE_center,
-		{ 2.0f, 2.0f });
+#endif
 
 
 	FadeDrawTitle();
@@ -106,7 +128,7 @@ void FadeDrawTitle()
 	if (titleFadeTimer > 0.0f) {
 		DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255 * titleFadeTimer));
 		DxPlus::Primitive2D::DrawRect({ 0,0 }, { DxPlus::CLIENT_WIDTH, DxPlus::CLIENT_HEIGHT },
-			DxLib::GetColor(0, 0, 0)); DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+			DxLib::GetColor(125, 125, 0)); DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	}
 }
 
@@ -115,25 +137,42 @@ void Title_Fade() {
 	switch (titleState) {
 	case 0:// フェードイン中 
 	{
-		titleFadeTimer -= 1 / 60.0f;
+		titleFadeTimer = 0.0f;
+		/*titleFadeTimer -= 1 / 60.0f;
 		if (titleFadeTimer < 0.0f) {
 			titleFadeTimer = 0.0f;
 			titleState++;
-		} break;
+		}*/
+		break;
 	}
 	case 1: // 通常時 
 	{
-		if ((mouseInput & MOUSE_INPUT_LEFT) &&
-			startbutton && titleState == 1) titleState++;
+	//	gamePlay = false;
 		break;
 	}
 	case 2: // フェードアウト中
 	{
+		titleFadeTimer += 1 / 100.0f;
+		gamePlay = true;
+		if (titleFadeTimer > 0.5f) {
+			titleFadeTimer = 0.5f;
+			nextScene = SceneGame;
+		}
+		break;
+	}
+	case 3: // フェードアウト中
+	{
 		titleFadeTimer += 1 / 60.0f;
 		if (titleFadeTimer > 1.0f) {
 			titleFadeTimer = 1.0f;
-			nextScene = SceneGame;
+			nextScene = SceneSetting;
 		}
+		break;
+	}
+	case 4: // フェードアウト中
+	{
+			PostQuitMessage(0);
+		
 		break;
 	}
 	}
@@ -141,5 +180,5 @@ void Title_Fade() {
 
 }
 void Title_End() {
-
+	TitleBackDelete();
 }

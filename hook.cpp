@@ -29,22 +29,23 @@ void hookReset(DxPlus::Vec2 playerBasePosition)
     hook.HomePositionLeft.x = playerBasePosition.x - Xoffset;
     hook.HomePositionLeft.y = playerBasePosition.y - Yoffset;
 
-	hook.HomePositionRight.x = playerBasePosition.x + Xoffset;
+    hook.HomePositionRight.x = playerBasePosition.x + Xoffset;
     hook.HomePositionRight.y = playerBasePosition.y - Yoffset;
-    hook.position = hook.HomePositionRight;
-	hook.target = hook.HomePositionRight;
 
-	hook.scale = { 0.5f,0.5f };
-	hook.center = { 49.0f, 62.0f };
-	hook.velocity = { 0.0f, 0.0f };
-	hook.gravity = 0.98f;
+    hook.position = hook.HomePositionRight;
+    hook.target = hook.HomePositionRight;
+
+    hook.scale = { 0.5f, 0.5f };
+    hook.center = { 49.0f, 62.0f };
+    hook.velocity = { 0.0f, 0.0f };
+    hook.gravity = 0.98f;
 
     hook.reachedUpHook = false;
-	//int UpHookOffsetX = 100;
-    hook.upHookLeft  = { hook.HomePositionLeft.x  ,DxPlus::CLIENT_HEIGHT - 48 - 50 };   //左側の引き上げ地点
-    hook.upHookRight = { hook.HomePositionRight.x ,DxPlus::CLIENT_HEIGHT - 48 - 50 };  //右側の引き上げ地点
+    hook.upHookLeft = { hook.HomePositionLeft.x, DxPlus::CLIENT_HEIGHT - 48 - 50 };
+    hook.upHookRight = { hook.HomePositionRight.x, DxPlus::CLIENT_HEIGHT - 48 - 50 };
 
     hook.angle = 12;
+    hookState = Idle;
 }
 
 
@@ -54,6 +55,8 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
     pointer = { static_cast<float>(x), static_cast<float>(y) };
 
     hook.angle += 0.3f;//回転
+
+
 
   
     if (hookState == Idle)
@@ -98,35 +101,26 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
             }
         }
 
+
     }
 
 
 
     if (hookState == Returning)
     {
-        // 目的地の選択：まず upHook、到達後に Home に切り替え
-		
         DxPlus::Vec2 CheckPoint = !hook.reachedUpHook
             ? (left ? hook.upHookRight : hook.upHookLeft)
-            : (left ? hook.HomePositionRight:hook.HomePositionLeft );
+            : (left ? hook.HomePositionRight : hook.HomePositionLeft);
 
         DxPlus::Vec2 dir = CheckPoint - hook.position;
         float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
 
-
         if (len > 20.0f) // まだ遠い
         {
-            if (hook.position.x == CheckPoint.x) {
-                hook.position.y += 5.0f;
-
-            }
-
-            else {
-                dir.x /= len;
-                dir.y /= len;
-                float returnSpeed = 40.0f;
-                hook.velocity = { dir.x * returnSpeed, dir.y * returnSpeed };
-            }
+            dir.x /= len;
+            dir.y /= len;
+            float returnSpeed = 40.0f;
+            hook.velocity = { dir.x * returnSpeed, dir.y * returnSpeed };
         }
         else // 近づいたら
         {
@@ -138,6 +132,7 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
             }
         }
     }
+    
 
 
 
@@ -216,16 +211,14 @@ void hookDraw(bool left)
     DxPlus::Vec2 start = left ? hook.HomePositionRight : hook.HomePositionLeft;
     DxPlus::Vec2 end = hook.position;
 
-    // 糸の長さに応じてたわみ量を調整
     float length = std::sqrt((end - start).x * (end - start).x + (end - start).y * (end - start).y);
-    float swayAmount = std::min(40.0f, length * 0.2f); // 最大40pxまでたわむ
+    float swayAmount = std::min(40.0f, length * 0.2f);
 
-    // 中間点：たわみ＋揺れ
+    // 中間点：
     DxPlus::Vec2 mid = (start + end) * 0.5f;
     mid.y += swayAmount;
-    mid.x += std::sin(time * 6.0f) * 8.0f; // 横揺れ（引いてる感じ）
+    mid.x += std::sin(time * 6.0f) * 8.0f; // 横揺れ
 
-    // ベジェ曲線で描画（滑らか）
     const int segmentCount = 24;
     for (int i = 0; i < segmentCount; ++i) {
         float t1 = static_cast<float>(i) / segmentCount;

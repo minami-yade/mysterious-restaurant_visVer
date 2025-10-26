@@ -1,5 +1,5 @@
 #include "DxPlus/DxPlus.h"
-#include "Clear.h"
+#include "Setting.h"
 #include "WinMain.h"
 
 /*
@@ -16,55 +16,65 @@ memo
 // 変数
 //----------------------------------------------------------------------
 
-int clearState;
-float clearFadeTimer;
+int SettingState;
+float SettingFadeTimer;
 extern int nextScene;
 
 //----------------------------------------------------------------------
 // 初期設定
 //----------------------------------------------------------------------
-void Clear_Init()
+void Setting_Init()
 {
     SetBackgroundColor(120, 123, 74);
 
-    Clear_Reset();
+    Setting_Reset();
 }
 
 //----------------------------------------------------------------------
 // リセット
 //----------------------------------------------------------------------
-void Clear_Reset()
+void Setting_Reset()
 {
-    clearState = 0;
-    clearFadeTimer = 1.0f;
+    SettingState = 0;
+    SettingFadeTimer = 1.0f;
 
 }
 //----------------------------------------------------------------------
 // 更新処理
 //----------------------------------------------------------------------
-void Clear_Update()
+void Setting_Update()
 {
-
-    Clear_Fade();
+ 
+    Setting_Fade();
 
 }
 
 //----------------------------------------------------------------------
 // 描画処理
 //----------------------------------------------------------------------
-void Clear_Render()
+void Setting_Render()
 {
 
-    DxPlus::Text::DrawString(L"くりあ",
+    DxPlus::Text::DrawString(L"せっていやで",
         { DxPlus::CLIENT_WIDTH * 0.5f, DxPlus::CLIENT_HEIGHT * 0.33f },
         DxLib::GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_center, { 3.0f, 3.0f });
 
+    if (DxPlus::Input::GetButtonDown(DxPlus::Input::PLAYER1) & DxPlus::Input::BUTTON_TRIGGER1) {
 
+
+        SettingState = 2;
+    }
+    else
+    {
+        DxPlus::Text::DrawString(L"SPACEでぇもどるよ",
+            { DxPlus::CLIENT_WIDTH * 0.5f, DxPlus::CLIENT_HEIGHT * 0.66f },
+            DxLib::GetColor(255, 255, 0), DxPlus::Text::TextAlign::MIDDLE_center, { 2.0f, 2.0f });
+	}
 
     // フェードイン / フェードアウト用 
-    if (clearFadeTimer > 0.0f) {
+    if (SettingFadeTimer > 0.0f) {
         //画面
-        DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255 * clearFadeTimer));
+        DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255 * SettingFadeTimer));
         DxPlus::Primitive2D::DrawRect({ 0,0 }, { DxPlus::CLIENT_WIDTH, DxPlus::CLIENT_HEIGHT },
             DxLib::GetColor(0, 0, 0)); DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
@@ -76,15 +86,15 @@ void Clear_Render()
 
 
 
-void Clear_Fade()
+void Setting_Fade()
 {
-    switch (clearState) {
+    switch (SettingState) {
     case 0: // フェードイン中 
     {
-        clearFadeTimer -= 1 / 60.0f;
-        if (clearFadeTimer < 0.0f) {
-            clearFadeTimer = 0.0f;
-            clearState++;
+        SettingFadeTimer -= 1 / 60.0f;
+        if (SettingFadeTimer < 0.0f) {
+            SettingFadeTimer = 0.0f;
+            SettingState++;
         }
         break;
     }
@@ -93,15 +103,15 @@ void Clear_Fade()
         // BackSpace キーが押されたらタイトルに戻す 
         int input = DxPlus::Input::GetButtonDown(DxPlus::Input::PLAYER1);
         if (input & DxPlus::Input::BUTTON_SELECT) {
-            clearState++;
+            SettingState++;
         }
         break;
     }
     case 2: // フェードアウト中
     {
-        clearFadeTimer += 1 / 60.0f;
-        if (clearFadeTimer > 1.0f) {
-            clearFadeTimer = 1.0f;
+        SettingFadeTimer += 1 / 60.0f;
+        if (SettingFadeTimer > 1.0f) {
+            SettingFadeTimer = 1.0f;
             nextScene = SceneTitle;
         }
         break;
@@ -110,9 +120,9 @@ void Clear_Fade()
     //ゲームオーバー
     case 3:
     {
-        clearFadeTimer += 1 / 60.0f;
-        if (clearFadeTimer > 1.0f) {
-            clearFadeTimer = 1.0f;
+        SettingFadeTimer += 1 / 60.0f;
+        if (SettingFadeTimer > 1.0f) {
+            SettingFadeTimer = 1.0f;
             nextScene = SceneResult;
         }
         break;
@@ -120,9 +130,9 @@ void Clear_Fade()
     //Game
     case 4:
     {
-        clearFadeTimer += 1 / 60.0f;
-        if (clearFadeTimer > 1.0f) {
-            clearFadeTimer = 1.0f;
+        SettingFadeTimer += 1 / 60.0f;
+        if (SettingFadeTimer > 1.0f) {
+            SettingFadeTimer = 1.0f;
             nextScene = SceneGame;
         }
         break;
@@ -130,10 +140,10 @@ void Clear_Fade()
     //バトル
     case 5:
     {
-        clearFadeTimer += 1 / 60.0f;
-        if (clearFadeTimer > 1.0f) {
-            clearFadeTimer = 1.0f;
-            nextScene = SceneClear;
+        SettingFadeTimer += 1 / 60.0f;
+        if (SettingFadeTimer > 1.0f) {
+            SettingFadeTimer = 1.0f;
+            nextScene = SceneSetting;
         }
         break;
     }
@@ -144,7 +154,7 @@ void Clear_Fade()
 
 
 //----------------------------------------------------------------------
-void Clear_End()
+void Setting_End()
 {
 
 }

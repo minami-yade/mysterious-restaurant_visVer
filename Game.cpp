@@ -26,6 +26,7 @@ extern int nextScene;
 
 int score = 0;
 
+
 static unsigned int g_prevMs = 0;
 
 extern DxPlus::Vec2 playerBasePosition;
@@ -63,6 +64,7 @@ void Game_Reset()
     vegetableSpawnTimer = 0;
     enemySpawnTimer = 300;
     isReturning = false;
+	
 
 	PlayerReset();
 	VegetableReset();
@@ -86,7 +88,9 @@ void Game_Reset()
 
 void Game_Update()
 {
-	Timer_Update(MainGameTimer, 1 / 60.0f,gameState);
+	Timer_Update(MainGameTimer, 1 / 60.0f,&gameState);
+    GameBackUpdate();
+	ScoreUpdate(score);
 
     delta = GetDeltaTime_DxLib(g_prevMs);
     vegetableSpawnTimer--;
@@ -115,7 +119,7 @@ void Game_Update()
         SpawnTimeEnemy(i, &enemySpawnTimer);
         checkbowlCollider(enemy[i], i);
         checkHookCollider(enemy[i].position, enemy[i].radius, i,veg);
-		UpdateEnemy(i, delta, hookState);
+		UpdateEnemy(i, delta, hookState,&score);
     }
 
 
@@ -138,7 +142,7 @@ void Game_Render()
     GameFloorDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
     ScoreDraw(score);
 
-
+  
     //player
     if (hookState == Idle) {
         if (!(mousePosX > DxPlus::CLIENT_WIDTH / 3 && mousePosX < DxPlus::CLIENT_WIDTH - DxPlus::CLIENT_WIDTH / 3)) {
@@ -176,16 +180,7 @@ void Game_Render()
          
     }
    
-    
-#if _DEBUG
-    wchar_t buf[64];
-    swprintf(buf, 64, L"vegetableSpawnTimer: %d", vegetableSpawnTimer);
-    DxPlus::Text::DrawString(buf,
-        {250,400},
-        GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_center, { 1.0f, 1.0f });
-    wchar_t buf2[64];
 
-#endif
     
 
     FadeDrawGame();

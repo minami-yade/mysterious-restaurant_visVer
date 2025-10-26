@@ -70,11 +70,7 @@ void VegetableImage()
                 DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/tomato.png");
 			}   
 			break;
-        case 7://ピーマン
-            vegetable[i].spriteID = LoadGraph(L"./Data/images/pepper.png");
-            if (vegetable[i].spriteID == -1) {
-                DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/pepper.png");
-            }
+      
 			break;
         default:
             DxPlus::Utils::FatalError(L"野菜の画像が存在しません！");
@@ -94,6 +90,7 @@ void VegetableReset()
         vegetable[i].havescore = 50;
         vegetable[i].vegAnimNum = 0;
         vegetable[i].timer = 0.0f;
+		vegetable[i].position = { -100.0f,-100.0f };
     
         switch (i % VEGETABLE_TYPE) {
 		case 0: //　キャベツ
@@ -145,14 +142,7 @@ void VegetableReset()
             vegetable[i].JumpPower = 15.0f;
 			vegetable[i].moveVegetable = 0;
             break;
-        case 7://ピーマン
-            vegetable[i].scale = { 0.5f, 0.5f };
-            vegetable[i].center = { 49.0f, 49.0f };
-            vegetable[i].speed = 3.0f;
-			vegetable[i].JumpPower = 15.0f;
-			vegetable[i].moveVegetable = 0;
-			break;
-
+     
 		default:
 			DxPlus::Utils::FatalError(L"野菜の画像が存在しません！");
 			break;

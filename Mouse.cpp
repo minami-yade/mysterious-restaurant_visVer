@@ -15,7 +15,7 @@ void Mouse_Image() {
 }
 
 void Mouse_Reset() {
-    mouse.scale = { 0.75f, 0.75f };
+    mouse.scale = { 0.5f, 0.5f };
     mouse.center = { 1.0f,3.0f };
     mouse.position = { -100.0f, -100.0f }; // ‰ŠúˆÊ’u‚ğ‰æ–ÊŠO‚É
     mouse.click = false;
@@ -50,7 +50,7 @@ void Mouse_Update(float delta)
 void Mouse_Draw() {
     DxPlus::Sprite::Draw(mouse.spriteID, mouse.pointer, mouse.scale, mouse.center);
     if(mouse.click) {
-        DxPlus::Sprite::Draw(mouse.effectID, { mouse.pointer.x ,mouse.pointer.y -40 }, mouse.scale, mouse.center);
+        DxPlus::Sprite::Draw(mouse.effectID, { mouse.pointer.x ,mouse.pointer.y -30 }, mouse.scale, mouse.center);
 	}
 }
 

@@ -120,7 +120,7 @@ void Battle_Fade()
         battleFadeTimer += 1 / 60.0f;
         if (battleFadeTimer > 1.0f) {
             battleFadeTimer = 1.0f;
-            nextScene = SceneClear;
+            nextScene = SceneSetting;
         }
         break;
     }
