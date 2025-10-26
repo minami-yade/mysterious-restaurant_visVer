@@ -34,6 +34,9 @@ void ScoreReset()
     subScore = { {0.0f, 0.0f}, 0.0f, 0 }; // SubScoreの初期化
 }
 
+bool isHap = false;
+bool isSad = false;
+
 // --- 更新関数 ---
 void ScoreUpdate(int score)
 {
@@ -45,10 +48,17 @@ void ScoreUpdate(int score)
     else isMoveScore = false;
 
     if (isMoveScore) {
-		int ofsX = 450;
-		int ofsY = 300;
+        int ofsX = 450;
+        int ofsY = 300;
         int randomX = ofsX + rand() % (1280 - ofsX * 2); 
         int randomY = ofsY + rand() % (720 -  48 - ofsY);  
+        if (value > 0) {
+            isHap = true; // スコアが増えたときにisHapをtrueに設定
+            isSad = false; // isSadをリセット
+        } else {
+           isSad = true; // スコアが減ったときにisSadをtrueに設定
+           isHap = false; // isHapをリセット
+        }
 
         subScore.position = { static_cast<float>(randomX), static_cast<float>(randomY) }; // ランダムな位置を設定
         subScore.alpha = 1.0f; // 不透明
@@ -101,6 +111,9 @@ void ScoreDraw(int score)
  
     if (subScore.lifetime > 0) {
         wchar_t subScoreText[16];
+        if(value < 0)
+            swprintf(subScoreText, sizeof(subScoreText) / sizeof(wchar_t), L"%d", value); // 差分スコアをテキストに変換
+		else
         swprintf(subScoreText, sizeof(subScoreText) / sizeof(wchar_t), L"+%d", value); // 差分スコアをテキストに変換
 
         int alphaColor = DxLib::GetColor(128, 0, 0) | (static_cast<int>(subScore.alpha * 255) << 24); // アルファ値を適用

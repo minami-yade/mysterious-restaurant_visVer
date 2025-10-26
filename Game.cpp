@@ -88,7 +88,7 @@ void Game_Reset()
 
 void Game_Update()
 {
-	Timer_Update(MainGameTimer, 1 / 60.0f,gameState);
+	Timer_Update(MainGameTimer, 1 / 60.0f,&gameState);
     GameBackUpdate();
 	ScoreUpdate(score);
 
@@ -119,7 +119,7 @@ void Game_Update()
         SpawnTimeEnemy(i, &enemySpawnTimer);
         checkbowlCollider(enemy[i], i);
         checkHookCollider(enemy[i].position, enemy[i].radius, i,veg);
-		UpdateEnemy(i, delta, hookState);
+		UpdateEnemy(i, delta, hookState,&score);
     }
 
 

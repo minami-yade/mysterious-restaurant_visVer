@@ -67,7 +67,7 @@ struct Entity2D
     // 回転（落下時の回転速度を保持）
     float angularVelocity = 0.0f; // deg/s
 };
-const int PLAYER_NUM = 9;
+const int PLAYER_NUM = 11;
 
 const int VEGETABLE_TYPE = 7; // 0:キャベツ
 const int VEGETABLE_NUM = 5 * VEGETABLE_TYPE;

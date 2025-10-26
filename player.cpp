@@ -3,7 +3,9 @@
 
 Entity2D player[PLAYER_NUM];
 enum PartType {
-    PART_BODY,
+    PART_BODY_DEF,
+    PART_BODY_HAP,
+    PART_BODY_SAD,
     PART_RIGHT_ARM,
     PART_RIGHT_ARM_LONG,
     PART_RIGHT_HAND,
@@ -25,9 +27,17 @@ DxPlus::Vec2 playerBasePosition = {
 void PlayerImage()
 {
     // ëÃÇÃâÊëú
-    player[PART_BODY].spriteID = LoadGraph(L"./Data/images/character.png");
-    if (player[PART_BODY].spriteID == -1) {
-        DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/character.png");
+    player[PART_BODY_DEF].spriteID = LoadGraph(L"./Data/images/normal.png");
+    if (player[PART_BODY_DEF].spriteID == -1) {
+        DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/normal.png");
+    }
+    player[PART_BODY_HAP].spriteID = LoadGraph(L"./Data/images/happy.png");
+    if (player[PART_BODY_HAP].spriteID == -1) {
+        DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/happy.png");
+    }
+    player[PART_BODY_SAD].spriteID = LoadGraph(L"./Data/images/sad.png");
+    if (player[PART_BODY_SAD].spriteID == -1) {
+        DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/sad.png");
     }
 
     // âEòrÇÃâÊëú
@@ -91,7 +101,23 @@ void PlayerReset() {
 
         switch (i) {
 
-        case PART_BODY:
+        case PART_BODY_DEF:
+            player[i].position = {
+                playerBasePosition.x,
+                playerBasePosition.y + 147.0f * player[i].scale.y
+            };
+            player[i].center = { 84.0f, 294.0f };
+            break;
+
+        case PART_BODY_HAP:
+            player[i].position = {
+                playerBasePosition.x,
+                playerBasePosition.y + 147.0f * player[i].scale.y
+            };
+            player[i].center = { 84.0f, 294.0f };
+            break;
+
+        case PART_BODY_SAD:
             player[i].position = {
                 playerBasePosition.x,
                 playerBasePosition.y + 147.0f * player[i].scale.y
@@ -163,11 +189,13 @@ void PlayerReset() {
         }
     }
 }
+// ï\èÓÉtÉâÉO
+extern bool isHap;
+extern bool isSad;
 
 void PlayerDraw(bool right) {
    if(right){
        // âEå¸Ç´
-       DxPlus::Sprite::Draw(player[PART_BODY].spriteID, player[PART_BODY].position, player[PART_BODY].scale, player[PART_BODY].center);
        DxPlus::Sprite::Draw(player[PART_LEFT_HAND].spriteID, player[PART_LEFT_HAND].position, player[PART_LEFT_HAND].scale, player[PART_LEFT_HAND].center);
        DxPlus::Sprite::Draw(player[PART_LEFT_ARM_LONG].spriteID, player[PART_LEFT_ARM_LONG].position, player[PART_LEFT_ARM_LONG].scale, player[PART_LEFT_ARM_LONG].center);
        DxPlus::Sprite::Draw(player[PART_RIGHT_ARM].spriteID, player[PART_RIGHT_ARM].position, player[PART_RIGHT_ARM].scale, player[PART_RIGHT_ARM].center);
@@ -176,13 +204,33 @@ void PlayerDraw(bool right) {
    }
    else {
        // ç∂å¸Ç´
-       DxPlus::Sprite::Draw(player[PART_BODY].spriteID, player[PART_BODY].position, player[PART_BODY].scale, player[PART_BODY].center);
        DxPlus::Sprite::Draw(player[PART_RIGHT_HAND].spriteID, player[PART_RIGHT_HAND].position, player[PART_RIGHT_HAND].scale, player[PART_RIGHT_HAND].center);
        DxPlus::Sprite::Draw(player[PART_RIGHT_ARM_LONG].spriteID, player[PART_RIGHT_ARM_LONG].position, player[PART_RIGHT_ARM_LONG].scale, player[PART_RIGHT_ARM_LONG].center);
        DxPlus::Sprite::Draw(player[PART_LEFT_ARM].spriteID, player[PART_LEFT_ARM].position, player[PART_LEFT_ARM].scale, player[PART_LEFT_ARM].center);
        DxPlus::Sprite::Draw(player[PART_LEFT_ARM].spriteID, player[PART_LEFT_ARM].position, player[PART_LEFT_ARM].scale, player[PART_LEFT_ARM].center);
        DxPlus::Sprite::Draw(player[PART_ROD_LEFT].spriteID, player[PART_ROD_LEFT].position, player[PART_ROD_LEFT].scale, player[PART_ROD_LEFT].center);
    }
+
+   //ï\èÓ
+   int OjiFace = PART_BODY_DEF;
+   static float isFaceTimer = 0.0f;
+   if (isFaceTimer > 90.0f) {//ÇPÅDÇTïbåoâﬂÇ≈å≥Ç…ñﬂÇÈ
+	   isHap = false;
+	   isSad = false;
+	   isFaceTimer = 0.0f;
+   }
+   if(isHap){
+       OjiFace = PART_BODY_HAP;
+       isFaceTimer++;
+   }
+   else if(isSad){
+       OjiFace = PART_BODY_SAD;
+       isFaceTimer++;
+   }
+   else {
+       OjiFace = PART_BODY_DEF;
+   }
+   DxPlus::Sprite::Draw(player[OjiFace].spriteID, player[OjiFace].position, player[OjiFace].scale, player[OjiFace].center);
 }
 
 void PlayerDelete() {

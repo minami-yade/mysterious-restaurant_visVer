@@ -12,7 +12,7 @@ void EnemyReset();
 
 
 // --- “®‚«‚ÌXV ---
-void UpdateEnemy(int i, float deltaTime,HookState& hookState);
+void UpdateEnemy(int i, float deltaTime,HookState& hookState,int *score);
 
 void SpawnTimeEnemy(int i, int* Timer);
 

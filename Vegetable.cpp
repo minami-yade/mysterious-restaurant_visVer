@@ -90,6 +90,7 @@ void VegetableReset()
         vegetable[i].havescore = 50;
         vegetable[i].vegAnimNum = 0;
         vegetable[i].timer = 0.0f;
+		vegetable[i].position = { -100.0f,-100.0f };
     
         switch (i % VEGETABLE_TYPE) {
 		case 0: //　キャベツ

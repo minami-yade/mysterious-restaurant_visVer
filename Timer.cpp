@@ -5,7 +5,7 @@ int TimerSpriteID = -1;
 int needleSpriteID = -1;
 float needleAngle = 0;
 float needleSpeed = 0;
-const float TIME_LIMIT = 120.0f; // タイムリミット（秒）
+const float TIME_LIMIT = 150.0f; // タイムリミット（秒）13,14はなぜかバグる
 const DxPlus::Vec2 TimerPos = { 640.0f,150.0f };
 const DxPlus::Vec2 TimerScale = { 0.5f,0.5f };
 
@@ -28,7 +28,7 @@ void Timer_Reset(float& timeLeft) {
 	needleSpeed = 360 / (TIME_LIMIT * 60)* 1.05; // 1秒あたりの針の回転速度
 }
 
-void Timer_Update(float& timeLeft, float deltaTime, int& gameState) {
+void Timer_Update(float& timeLeft, float deltaTime, int* gameState) {
 	
 	if(needleAngle > 6.3) {
 		needleAngle = 6.3;
@@ -38,7 +38,7 @@ void Timer_Update(float& timeLeft, float deltaTime, int& gameState) {
 
 	if (timeLeft < 0.0f) {
 		timeLeft = 0.0f;
-		gameState = 3;//ゲームおわり
+		*gameState = 3;//ゲームおわり
 	}
 	needleAngle += needleSpeed * deltaTime;
 	

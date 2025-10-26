@@ -96,9 +96,9 @@ void TitleBackReset() {
 
 
 void GameBackImage() {
-    gameBack.spriteID = LoadGraph(L"./Data/images/haikei.png");
+    gameBack.spriteID = LoadGraph(L"./Data/images/h1.png");
     if (gameBack.spriteID == -1) {
-        DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/haikei.png");
+        DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/h1.png");
     }
     gameFloor.spriteID = LoadGraph(L"./Data/images/front_lane.png");
     if (gameFloor.spriteID == -1) {

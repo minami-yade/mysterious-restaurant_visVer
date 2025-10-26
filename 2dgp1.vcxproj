@@ -184,7 +184,6 @@
     <ClInclude Include="Entity2D.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Mouse.h" />
-    <ClInclude Include="playerData.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="Score.h" />
