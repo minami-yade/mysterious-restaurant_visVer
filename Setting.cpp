@@ -1,17 +1,30 @@
 #include "DxPlus/DxPlus.h"
 #include "Setting.h"
 #include "WinMain.h"
+#include "Entity2D.h"
+#include "Back.h"
 
-/*
-memo
 
-*/
 
+Entity2D settingBack[TITLE_BACK_NUM];
+constexpr int SETTING_BUTTON_NUM = 6;// ボタンの数
+enum SettingButtonType {
+    VolUp,
+    VolDown,
+    easy,
+	normal,
+	hard,
+    BackToTitle
+};
+Entity2D settingButton[SETTING_BUTTON_NUM];//学校の自分にいいます。ここまでしかやってません
 //----------------------------------------------------------------------
 // 定数
 //----------------------------------------------------------------------
 
-
+// アニメーション用
+float settingBackAnimTimer = 0.0f;
+int settingBackAnimFrame = 0;
+float settingBackAnimSpeed = 0.05f; // 秒（小さいほど）
 //----------------------------------------------------------------------
 // 変数
 //----------------------------------------------------------------------
@@ -25,8 +38,20 @@ extern int nextScene;
 //----------------------------------------------------------------------
 void Setting_Init()
 {
-    SetBackgroundColor(120, 123, 74);
-
+    const wchar_t* setBackPaths[TITLE_BACK_NUM] = {
+        L"./Data/images/b1 (1).png",
+        L"./Data/images/b2 (1).png",
+        L"./Data/images/b3 (1).png",
+        L"./Data/images/b4 (1).png",
+        L"./Data/images/b5 (1).png"
+    };
+    for (int j = 0; j < TITLE_BACK_NUM; ++j)
+    {
+        settingBack[j].spriteID = LoadGraph(setBackPaths[j]);
+        if (settingBack[j].spriteID == -1) {
+            DxPlus::Utils::FatalError((std::wstring(L"failed to load sprite : ") + setBackPaths[j]).c_str());
+        }
+	}
     Setting_Reset();
 }
 
@@ -35,6 +60,11 @@ void Setting_Init()
 //----------------------------------------------------------------------
 void Setting_Reset()
 {
+    // アニメーション用変数のリセット
+    settingBackAnimTimer = 0.0f;
+    settingBackAnimFrame = 0;
+
+
     SettingState = 0;
     SettingFadeTimer = 1.0f;
 
@@ -43,33 +73,61 @@ void Setting_Reset()
 // 更新処理
 //----------------------------------------------------------------------
 void Setting_Update()
-{
- 
-    Setting_Fade();
+{   
+	// アニメーション更新
+	settingBackAnimTimer += settingBackAnimSpeed;
+	if (settingBackAnimTimer >= 1.0f) {
+		settingBackAnimTimer = 0.0f;
+		settingBackAnimFrame = (settingBackAnimFrame + 1) % TITLE_BACK_NUM;
 
+	}
+	// フェードイン / フェードアウト処理
+    Setting_Fade();
 }
+
+void Setting_Button(DxPlus::Vec2 pos, float radius, int *upDown, bool plus) {
+    // マウスの位置を取得
+    int mouseX, mouseY;
+    GetMousePoint(&mouseX, &mouseY);
+    DxPlus::Vec2 mousePos = { static_cast<float>(mouseX), static_cast<float>(mouseY) };
+
+    // マウスとボタンの中心の距離を計算
+    float distance = std::sqrt(std::pow(mousePos.x - pos.x, 2) + std::pow(mousePos.y - pos.y, 2));
+
+    // 当たり判定
+    bool isHit = distance <= radius;
+
+    // デバッグ表示: ボタンの円形境界を描画
+    int color = isHit ? GetColor(255, 255, 255) : GetColor(255, 0, 0); 
+    DrawCircle(static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(radius), color, TRUE);
+
+    // マウスクリック状態を取得
+    static bool wasMousePressed = false; // 前回のクリック状態を保持
+    int mouseInput = GetMouseInput();
+    bool isMouseClicked = (mouseInput & MOUSE_INPUT_LEFT) != 0;
+
+    // 当たり判定が成立し、かつクリックが押された瞬間のみ処理を実行
+    if (isHit && isMouseClicked && !wasMousePressed && SettingState == 1) {
+        *upDown += plus ? 1 : -1;
+    }
+
+    // 現在のクリック状態を保存
+    wasMousePressed = isMouseClicked;
+}
+
 
 //----------------------------------------------------------------------
 // 描画処理
 //----------------------------------------------------------------------
 void Setting_Render()
 {
-
-    DxPlus::Text::DrawString(L"せっていやで",
-        { DxPlus::CLIENT_WIDTH * 0.5f, DxPlus::CLIENT_HEIGHT * 0.33f },
-        DxLib::GetColor(255, 255, 255), DxPlus::Text::TextAlign::MIDDLE_center, { 3.0f, 3.0f });
-
-    if (DxPlus::Input::GetButtonDown(DxPlus::Input::PLAYER1) & DxPlus::Input::BUTTON_TRIGGER1) {
-
-
-        SettingState = 2;
+    int frames = settingBackAnimFrame % TITLE_BACK_NUM;
+    if (settingBack[frames].spriteID != -1) {
+        DxPlus::Sprite::Draw(settingBack[frames].spriteID, {0.0f,0.0f}, { 1.0f,1.0f }, { 0.0f,0.0f });
     }
-    else
-    {
-        DxPlus::Text::DrawString(L"SPACEでぇもどるよ",
-            { DxPlus::CLIENT_WIDTH * 0.5f, DxPlus::CLIENT_HEIGHT * 0.66f },
-            DxLib::GetColor(255, 255, 0), DxPlus::Text::TextAlign::MIDDLE_center, { 2.0f, 2.0f });
-	}
+
+	//これを使ってボタン作成
+    Setting_Button({ 200.0f, 300.0f }, 50.0f, &SettingState, true);
 
     // フェードイン / フェードアウト用 
     if (SettingFadeTimer > 0.0f) {
@@ -109,46 +167,18 @@ void Setting_Fade()
     }
     case 2: // フェードアウト中
     {
-        SettingFadeTimer += 1 / 60.0f;
+        SettingFadeTimer += 1 / 10.0f;
         if (SettingFadeTimer > 1.0f) {
             SettingFadeTimer = 1.0f;
             nextScene = SceneTitle;
         }
         break;
     }
-    
-    //ゲームオーバー
-    case 3:
-    {
-        SettingFadeTimer += 1 / 60.0f;
-        if (SettingFadeTimer > 1.0f) {
-            SettingFadeTimer = 1.0f;
-            nextScene = SceneResult;
-        }
+    default:
+        DxPlus::Utils::FatalError(L"Invalid SettingState value.");
         break;
+
     }
-    //Game
-    case 4:
-    {
-        SettingFadeTimer += 1 / 60.0f;
-        if (SettingFadeTimer > 1.0f) {
-            SettingFadeTimer = 1.0f;
-            nextScene = SceneGame;
-        }
-        break;
-    }
-    //バトル
-    case 5:
-    {
-        SettingFadeTimer += 1 / 60.0f;
-        if (SettingFadeTimer > 1.0f) {
-            SettingFadeTimer = 1.0f;
-            nextScene = SceneSetting;
-        }
-        break;
-    }
-    }
-  
 
 }
 
@@ -156,5 +186,10 @@ void Setting_Fade()
 //----------------------------------------------------------------------
 void Setting_End()
 {
-
+    for (int i = 0; i < TITLE_BACK_NUM; ++i) {
+        if (settingBack[i].spriteID != -1) {
+            DxPlus::Sprite::Delete(settingBack[i].spriteID);
+            settingBack[i].spriteID = -1; // 解放後に初期化
+        }
+    }
 }

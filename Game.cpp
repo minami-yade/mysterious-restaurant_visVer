@@ -40,12 +40,26 @@ extern HookState hookState;
 extern Entity2D enemy[ENEMY_NUM];
 bool veg = true;
 
+//そうさせつめええええええええええええええええええええええおおおおおおおおおおおおいいい
+bool GamePlayStart = false;
+Entity2D GamePlays[2];
+DxPlus::Vec2 ButtonBasePos = { 1145.0f,650.0f };
+int offsetX = 112;
+int offsetY = 46;
+
 //----------------------------------------------------------------------
 // 
 //----------------------------------------------------------------------
 void Game_Init()
 {
-
+	GamePlays[0].spriteID = DxLib::LoadGraph(L"./Data/Images/operation.png");
+    if (GamePlays[0].spriteID == -1) {
+        DxPlus::Utils::FatalError(L"Failed to load start game image.");
+	}
+	GamePlays[1].spriteID = DxLib::LoadGraph(L"./Data/Images/start_game.png");
+    if (GamePlays[1].spriteID == -1) {
+        DxPlus::Utils::FatalError(L"Failed to load start game image.");
+	}
 
  
 	//今の時間を取得
@@ -73,12 +87,18 @@ void Game_Reset()
 	bowlReset();
     score = 0;
     ScoreReset();
-    MainGameTimer = 0.0f;
 	Timer_Reset(MainGameTimer);
 
     gameState = 0;
     gameFadeTimer = 1.0f;
 	veg = true;
+
+	//ゲームスタート時のそうさせつめええええええええええええええええええええええおおおおおおおおおおおおいいい
+    GamePlayStart = true;
+	GamePlays[1].scale = {1.0f,1.0f};
+	GamePlays[1].center = { 115.0f,60.0f };
+	GamePlays[1].position = { ButtonBasePos.x,ButtonBasePos.y };
+	GamePlays[1].angle = 0.2f;
 }
 
 
@@ -88,42 +108,73 @@ void Game_Reset()
 
 void Game_Update()
 {
-	Timer_Update(MainGameTimer, 1 / 60.0f,&gameState);
-    GameBackUpdate();
-	ScoreUpdate(score);
-
-    delta = GetDeltaTime_DxLib(g_prevMs);
-    vegetableSpawnTimer--;
-    enemySpawnTimer--;
-
     int mouseX, mouseY;
     DxLib::GetMousePoint(&mouseX, &mouseY);
     mousePosX = { static_cast<float>(mouseX) };
     mousePosY = { static_cast<float>(mouseY) };
 
-    Updatehook(delta, mouseX, mouseY, { mousePosX,mousePosY },isRight);
-   
-	
-    for (int i = 0; i < VEGETABLE_NUM; i++)
-    {
-		veg = true;
-        SpawnTimeVegetable(i, &vegetableSpawnTimer);
-        UpdateVegetable(i ,delta,hookState);
-        checkHookCollider(vegetable[i].position, vegetable[i].radius, i,veg);
-        checkbowlCollider(vegetable[i], i);
-       
+
+	//ゲームスタート時のそうさせつめい]
+    if (GamePlayStart) {
+
+        int left = ButtonBasePos.x - offsetX;
+        int right = ButtonBasePos.x + offsetX;
+        int top = ButtonBasePos.y - offsetY;
+        int bottom = ButtonBasePos.y + offsetY;
+
+        bool isMouseOver = (mousePosX > left && mousePosX < right &&
+            mousePosY > top && mousePosY < bottom);
+
+        if(isMouseOver) {
+
+            GamePlays[1].angle = 0.0f;
+            if (GetMouseInput() & MOUSE_INPUT_LEFT) {
+				gameFadeTimer = 1.1f;
+				gameState = 0; // フェード
+				if (gameFadeTimer >= 0.0f)
+	            GamePlayStart = false; 
+            }
+           
+		}
+        else
+            GamePlays[1].angle = 0.2f;
+
+
     }
-    for (size_t i = 0; i < ENEMY_NUM; i++)
-    {
-		veg = false;
-        SpawnTimeEnemy(i, &enemySpawnTimer);
-        checkbowlCollider(enemy[i], i);
-        checkHookCollider(enemy[i].position, enemy[i].radius, i,veg);
-		UpdateEnemy(i, delta, hookState,&score);
+    else {
+      
+      
+        ScoreUpdate(score);
+        Timer_Update(MainGameTimer, 1 / 60.0f, &gameState);
+        delta = GetDeltaTime_DxLib(g_prevMs);
+        vegetableSpawnTimer--;
+        enemySpawnTimer--;
+
+		if (gameFadeTimer == 0.0f)
+        Updatehook(delta, mouseX, mouseY, { mousePosX,mousePosY }, isRight);
+
+
+        for (int i = 0; i < VEGETABLE_NUM; i++)
+        {
+            veg = true;
+            SpawnTimeVegetable(i, &vegetableSpawnTimer);
+            UpdateVegetable(i, delta, hookState);
+            checkHookCollider(vegetable[i].position, vegetable[i].radius, i, veg);
+            checkbowlCollider(vegetable[i], i);
+
+        }
+        for (size_t i = 0; i < ENEMY_NUM; i++)
+        {
+            veg = false;
+            SpawnTimeEnemy(i, &enemySpawnTimer);
+            checkbowlCollider(enemy[i], i);
+            checkHookCollider(enemy[i].position, enemy[i].radius, i, veg);
+            UpdateEnemy(i, delta, hookState, &score);
+        }
+
+
     }
-
-
-
+    GameBackUpdate();
     Game_Fade();
 }
 
@@ -135,54 +186,82 @@ void Game_Update()
 //----------------------------------------------------------------------
 void Game_Render()
 {
+    if (GamePlayStart) {
+        DxPlus::Sprite::Draw(GamePlays[0].spriteID,
+            { 0.0f, 0.0f },
+            {GamePlays[0].scale},
+            { 0.0f, 0.0f },
+            0.0f,
+			DxLib::GetColor(255, 255, 255));
 
-    //背景
-    GameBackDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
-	Timer_Draw(MainGameTimer);
-    GameFloorDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
-    ScoreDraw(score);
+        DxPlus::Sprite::Draw(GamePlays[1].spriteID,
+            GamePlays[1].position,
+            {GamePlays[1].scale},
+            GamePlays[1].center,
+			GamePlays[1].angle,
+			DxLib::GetColor(255, 255, 255));
+ 
+#if _DEBUG
+        int left = ButtonBasePos.x - offsetX;
+        int right = ButtonBasePos.x + offsetX;
+        int top = ButtonBasePos.y - offsetY;
+        int bottom = ButtonBasePos.y + offsetY;
 
-  
-    //player
-    if (hookState == Idle) {
-        if (!(mousePosX > DxPlus::CLIENT_WIDTH / 3 && mousePosX < DxPlus::CLIENT_WIDTH - DxPlus::CLIENT_WIDTH / 3)) {
+        // ボタン描画（マウスが乗っているときは色を変える）
+        int boxColor = (mousePosX > left && mousePosX < right &&
+            mousePosY > top && mousePosY < bottom) ? GetColor(255, 200, 200) : GetColor(200, 200, 255);
+        DrawBox(left, top, right, bottom, boxColor, false);
 
-        
-            if (mousePosX > DxPlus::CLIENT_WIDTH / 2)
-            {
-                isRight = true;
-            }
-            else {
-                isRight = false;
+#endif
+    }
+    else {
+        //背景
+        GameBackDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
+        Timer_Draw(MainGameTimer);
+        GameFloorDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
+        ScoreDraw(score);
+
+
+        //player
+        if (hookState == Idle) {
+            if (!(mousePosX > DxPlus::CLIENT_WIDTH / 3 && mousePosX < DxPlus::CLIENT_WIDTH - DxPlus::CLIENT_WIDTH / 3)) {
+
+
+                if (mousePosX > DxPlus::CLIENT_WIDTH / 2)
+                {
+                    isRight = true;
+                }
+                else {
+                    isRight = false;
+                }
             }
         }
-    }
 
-  
-	
-       PlayerDraw(isRight);
-	   bowlDraw();
 
-    //hook
-    hookDraw(isRight);
-    for (int i = 0; i < ENEMY_NUM; i++)
-    {
-        EnemyDraw(i);
-	}
-	
-    
-    
 
-	//Vegetable
-    for (int i = 0; i < VEGETABLE_NUM; i++)
-    {
+        PlayerDraw(isRight);
+        bowlDraw();
+
+        //hook
+        hookDraw(isRight);
+        for (int i = 0; i < ENEMY_NUM; i++)
+        {
+            EnemyDraw(i);
+        }
+
+
+
+
+        //Vegetable
+        for (int i = 0; i < VEGETABLE_NUM; i++)
+        {
             VegetableDraw(i);
-         
+
+        }
+
+
+
     }
-   
-
-    
-
     FadeDrawGame();
 }
 

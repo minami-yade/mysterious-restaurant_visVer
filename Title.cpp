@@ -138,16 +138,13 @@ void Title_Fade() {
 	case 0:// フェードイン中 
 	{
 		titleFadeTimer = 0.0f;
-		/*titleFadeTimer -= 1 / 60.0f;
-		if (titleFadeTimer < 0.0f) {
-			titleFadeTimer = 0.0f;
-			titleState++;
-		}*/
+		titleState++;
+
 		break;
 	}
 	case 1: // 通常時 
 	{
-	//	gamePlay = false;
+		//	gamePlay = false;
 		break;
 	}
 	case 2: // フェードアウト中
@@ -162,17 +159,17 @@ void Title_Fade() {
 	}
 	case 3: // フェードアウト中
 	{
-		titleFadeTimer += 1 / 60.0f;
-		if (titleFadeTimer > 1.0f) {
-			titleFadeTimer = 1.0f;
+		
+		if (settingbutton) {
+		
 			nextScene = SceneSetting;
 		}
 		break;
 	}
 	case 4: // フェードアウト中
 	{
-			PostQuitMessage(0);
-		
+		PostQuitMessage(0);
+
 		break;
 	}
 	}
