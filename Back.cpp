@@ -13,10 +13,20 @@ Entity2D gameBack;
 Entity2D gameFloor;
 DxPlus::Vec2 buttonBase = { 700.0f, 0.0f };
 
+DxPlus::Vec2 karipos{};
+Entity2D kari[ANI_SOMESHING_NUM];
+
 // アニメーション用
 float titleBackAnimTimer = 0.0f;
 int titleBackAnimFrame = 0;
 float titleBackAnimSpeed = 0.05f; // 秒（小さいほど）
+
+//AniSomething用
+//アニメーション
+float aniSomeTimer = 0.0f;     
+int aniSomeFrame = 0;          
+float aniSomeSpeed = 0.2f;    
+bool aniSomePlayOnce = false;  
 
 // スケール補間用変数
 DxPlus::Vec2 currentScale = { 1.0f, 1.0f }; // 初期スケール
@@ -60,7 +70,7 @@ void TitleBackImage() {
     };
     for (int j = 0; j < TITLE_BACK_NUM; ++j)
     {
-        titleBack[j].spriteID = LoadGraph(BacksPaths[j]);
+        titleBack[j].spriteID = LoadGraph(BacksPaths[j]);//
         if (titleBack[j].spriteID == -1) {
             DxPlus::Utils::FatalError((std::wstring(L"failed to load sprite : ") + BacksPaths[j]).c_str());
         }
@@ -381,6 +391,62 @@ void ResultBackDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 cent
 
 }
 
+void AnimeSomething()
+{
+    const wchar_t* AniSome[ANI_SOMESHING_NUM] =
+    {
+        L"./Data/Images/re1.png",
+        L"./Data/Images/re2.png",
+        L"./Data/Images/re3.png",
+        L"./Data/Images/re4.png",
+        L"./Data/Images/re5.png",
+    };
+
+    for (int i = 0;i < ANI_SOMESHING_NUM;++i)
+    {
+        kari[i].spriteID = LoadGraph(AniSome[i]);
+        if (kari[i].spriteID == -1)
+        {
+            DxPlus::Utils::FatalError((std::wstring(L"failed to laod sprite :")+AniSome[i]).c_str());
+        }
+    }
+}
+
+
+void AniSomethingUpdate(bool *gameplay)
+{
+    if (*gameplay)
+    {
+        int AniFrame = aniSomeFrame;
+        if (aniSomeFrame < ANI_SOMESHING_NUM - 1)
+        {
+            aniSomeTimer += animSpeed * 3;
+            if (aniSomeTimer >= 1.0f)
+            {
+                aniSomeTimer -= 1.0f;
+                aniSomeFrame++;
+            }
+        }
+
+        if (kari[AniFrame].spriteID != -1)
+        {
+            DxPlus::Sprite::Draw(kari[AniFrame].spriteID, { 640.0f, 360.0f },{ 0.5f, 0.5f },{ 0.0f, 0.0f });
+        }
+    }
+    else
+    {
+        aniSomeTimer += aniSomeSpeed;
+        if (aniSomeTimer >= 1.0f)
+        {
+            aniSomeTimer -= 1.0f;
+            aniSomeFrame = (aniSomeFrame + 1) % ANI_SOMESHING_NUM;
+        }
+    }
+    DrawFormatString(0, 0, GetColor(255, 255, 255), L"Frame: %d", aniSomeFrame);
+}
+
+
+
 void ResultBackDelete() {
     for (int i = 0; i < RESULT_ANIM_COUNT; ++i) {
         if (ResultAnimation[i] != -1) {
@@ -389,3 +455,4 @@ void ResultBackDelete() {
         }
     }
 }
+

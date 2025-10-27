@@ -86,6 +86,9 @@ const int TITLE_BUTTON_NUM = 4;
 
 const int RESULT_ANIM_COUNT = 7;
 
+const int ANI_SOMESHING_NUM = 5;//何かのアニメーション予定
+
+
 enum HookState {
 	FlyingOut,
 	Returning,

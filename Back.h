@@ -8,6 +8,12 @@ int ButtonPosition(DxPlus::Vec2 pos, DxPlus::Vec2 mousePos);
 void TitleBackDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 center, bool start, bool set, bool fin, bool* gamePlay);
 void TitleBackDelete();
 
+void AnimeSomething();
+void AniSomethingUpdate(bool* gameplay);
+void AniSomethingDraw();
+
+
+
 // GameŠÖ˜A
 void GameBackImage();
 void GameBackUpdate();
