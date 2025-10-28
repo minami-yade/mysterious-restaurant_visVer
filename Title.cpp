@@ -52,6 +52,10 @@ void Title_Init() {
 void Title_Reset() {
 
 	frameCount = 0;
+	mouseInput = -1;
+	mouseX = 0;
+	mouseY = 0;
+
 
 	TitleBackReset();
 	gamePlay = false;
@@ -64,27 +68,24 @@ void Title_Reset() {
 //----------------------------------------------------------------------
 void Title_Update() {
 
-	Title_Fade();
+    Title_Fade();
 
-	if ((mouseInput & MOUSE_INPUT_LEFT) &&startbutton)
-		titleState = 2;
-	if ((mouseInput & MOUSE_INPUT_LEFT) && settingbutton)
-		titleState = 3;
-	if ((mouseInput & MOUSE_INPUT_LEFT) && finbutton)
-		titleState = 4;
+    // マウス入力の取得
+    mouseInput = DxLib::GetMouseInput();
+    DxLib::GetMousePoint(&mouseX, &mouseY);
 
-	mouseInput = DxLib::GetMouseInput();
-	DxLib::GetMousePoint(&mouseX, &mouseY);
-	
+    // ボタンの位置判定
+    startbutton = ButtonPosition({ startButtonPos }, { (float)mouseX,(float)mouseY });
+    settingbutton = ButtonPosition({ settingButtonPos }, { (float)mouseX,(float)mouseY });
+    finbutton = ButtonPosition({ finButtonPos }, { (float)mouseX,(float)mouseY });
 
-
-	startbutton = ButtonPosition({ startButtonPos }, { (float)mouseX,(float)mouseY });
-	settingbutton = ButtonPosition({ settingButtonPos }, { (float)mouseX,(float)mouseY });
-	finbutton = ButtonPosition({ finButtonPos }, { (float)mouseX,(float)mouseY });
-
-
-
-
+    // ボタンのクリック処理
+    if ((mouseInput & MOUSE_INPUT_LEFT) && startbutton)
+        titleState = 2;
+    if ((mouseInput & MOUSE_INPUT_LEFT) && settingbutton)
+        titleState = 3; // 設定画面に遷移する状態に変更
+    if ((mouseInput & MOUSE_INPUT_LEFT) && finbutton)
+        titleState = 4;
 }
 
 
@@ -162,7 +163,8 @@ void Title_Fade() {
 		
 		if (settingbutton) {
 		
-			nextScene = SceneSetting;
+
+			nextScene = SceneSetting;	
 		}
 		break;
 	}

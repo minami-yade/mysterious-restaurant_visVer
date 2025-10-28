@@ -73,9 +73,9 @@ void Result_Fade()
     }
     case 2: // フェードアウト中
     {
-        resultFadeTimer += 1 / 60.0f;
-        if (resultFadeTimer > 1.0f) {
-            resultFadeTimer = 1.0f;
+        resultFadeTimer += 1 / 100.0f;
+        if (resultFadeTimer > 0.68f) {
+            resultFadeTimer = 0.68f;
             nextScene = SceneTitle;
         }
         break;

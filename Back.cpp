@@ -13,8 +13,9 @@ Entity2D gameBack;
 Entity2D gameFloor;
 DxPlus::Vec2 buttonBase = { 700.0f, 0.0f };
 
-DxPlus::Vec2 karipos{};
-Entity2D kari[ANI_SOMESHING_NUM];
+//game背景
+Entity2D gameAnimBack[ANI_SOMESHING_NUM];
+float animSomeSpeed = 0.05f;
 
 // アニメーション用
 float titleBackAnimTimer = 0.0f;
@@ -123,6 +124,23 @@ void GameBackImage() {
         DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/front_lane.png");
     }
 
+    const wchar_t* AniSome[ANI_SOMESHING_NUM] =
+    {
+        L"./Data/Images/game/1.png",
+        L"./Data/Images/game/2.png",
+        L"./Data/Images/game/3.png",
+        L"./Data/Images/game/4.png",
+        L"./Data/Images/game/5.png",
+    };
+
+    for (int i = 0; i < ANI_SOMESHING_NUM; ++i)
+    {
+        gameAnimBack[i].spriteID = LoadGraph(AniSome[i]);
+        if (gameAnimBack[i].spriteID == -1)
+        {
+            DxPlus::Utils::FatalError((std::wstring(L"failed to laod sprite :") + AniSome[i]).c_str());
+        }
+    }
 }
 
 
@@ -223,8 +241,26 @@ void TitleBackDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 cente
     }
 }
 
-void GameBackDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 center) {
-    DxPlus::Sprite::Draw(gameBack.spriteID,position, scale, center);
+void GameBackDraw() {
+
+    int AnisFrame = aniSomeFrame;
+
+    aniSomeTimer += animSomeSpeed;
+    if (aniSomeTimer >= 1.0f)
+    {
+        aniSomeTimer -= 1.0f;
+        aniSomeFrame++;
+		aniSomeFrame %= ANI_SOMESHING_NUM;
+    }
+
+
+    if (gameAnimBack[AnisFrame].spriteID != -1)
+    {
+        DxPlus::Sprite::Draw(gameAnimBack[AnisFrame].spriteID, { 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 0.0f });
+    }
+
+
+
 }
 
 void GameFloorDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 center) {
@@ -260,6 +296,11 @@ void TitleBackDelete() {
 void GameBackDelete() {
     if (gameBack.spriteID != -1) {
         DxPlus::Sprite::Delete(gameBack.spriteID);
+    }
+    for (int i = 0; i < ANI_SOMESHING_NUM; ++i) {
+        if (gameAnimBack[i].spriteID != -1) {
+            DxPlus::Sprite::Delete(gameAnimBack[i].spriteID);
+        }
     }
 }
 
@@ -516,60 +557,6 @@ void ResultBackDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 cent
         );
     }
 
-}
-
-void AnimeSomething()
-{
-    const wchar_t* AniSome[ANI_SOMESHING_NUM] =
-    {
-        L"./Data/Images/re1.png",
-        L"./Data/Images/re2.png",
-        L"./Data/Images/re3.png",
-        L"./Data/Images/re4.png",
-        L"./Data/Images/re5.png",
-    };
-
-    for (int i = 0;i < ANI_SOMESHING_NUM;++i)
-    {
-        kari[i].spriteID = LoadGraph(AniSome[i]);
-        if (kari[i].spriteID == -1)
-        {
-            DxPlus::Utils::FatalError((std::wstring(L"failed to laod sprite :")+AniSome[i]).c_str());
-        }
-    }
-}
-
-
-void AniSomethingUpdate(bool *gameplay)
-{
-    if (*gameplay)
-    {
-        int AniFrame = aniSomeFrame;
-        if (aniSomeFrame < ANI_SOMESHING_NUM - 1)
-        {
-            aniSomeTimer += animSpeed * 3;
-            if (aniSomeTimer >= 1.0f)
-            {
-                aniSomeTimer -= 1.0f;
-                aniSomeFrame++;
-            }
-        }
-
-        if (kari[AniFrame].spriteID != -1)
-        {
-            DxPlus::Sprite::Draw(kari[AniFrame].spriteID, { 640.0f, 360.0f },{ 0.5f, 0.5f },{ 0.0f, 0.0f });
-        }
-    }
-    else
-    {
-        aniSomeTimer += aniSomeSpeed;
-        if (aniSomeTimer >= 1.0f)
-        {
-            aniSomeTimer -= 1.0f;
-            aniSomeFrame = (aniSomeFrame + 1) % ANI_SOMESHING_NUM;
-        }
-    }
-    DrawFormatString(0, 0, GetColor(255, 255, 255), L"Frame: %d", aniSomeFrame);
 }
 
 

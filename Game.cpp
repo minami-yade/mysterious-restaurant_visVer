@@ -216,7 +216,7 @@ void Game_Render()
     }
     else {
         //背景
-        GameBackDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
+        GameBackDraw();
         Timer_Draw(MainGameTimer);
         GameFloorDraw({ 0,0 }, { 1.0f,1.0f }, { 0,0 });
         ScoreDraw(score);

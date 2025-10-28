@@ -5,7 +5,7 @@ int TimerSpriteID = -1;
 int needleSpriteID = -1;
 float needleAngle = 0;
 float needleSpeed = 0;
-const float TIME_LIMIT = 120.0f; // タイムリミット（秒）13,14はなぜかバグる
+const float TIME_LIMIT = 12.0f; // タイムリミット（秒）13,14はなぜかバグる
 const DxPlus::Vec2 TimerPos = { 640.0f,150.0f };
 const DxPlus::Vec2 TimerScale = { 0.5f,0.5f };
 

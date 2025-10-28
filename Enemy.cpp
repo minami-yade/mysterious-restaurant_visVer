@@ -4,6 +4,7 @@
 // --------------------------------------------------
 // Enemy.cpp - エネミー（UFO含む）処理
 // --------------------------------------------------
+extern int GameMode;
 
 Entity2D enemy[ENEMY_NUM];
 extern Entity2D hook;
@@ -13,9 +14,10 @@ int mouseAnimDeg[MOUSE_ANIM_NUM] = {};
 int ufoAnimDeg[UFO_ANIM_NUM] = {};
 int ufoSprite = -1;
 
-const int UFO_SPAWN_PERCENT = 100;
+const int UFO_SPAWN_PERCENT = 40;
 const float MOUSE_ANIM_INTERVAL = 3.0f;
-const float UFO_MOVE_SPEED = 2.5f;
+
+float UFO_MOVE_SPEED = 2.5f;
 const float UFO_LIGHT_INTERVAL = 3.0f;
 
 const float UFO_DROP_DURATION = 30.0f;//じかん
@@ -28,6 +30,10 @@ const float VEG_HIT_RADIUS = 40.0f;
 
 const float UFO_FALL_SPEED = 3.0f;
 const float UFO_FALL_ROT_SPEED = 720.0f;
+
+int modeSpeed = 0;
+
+
 
 void EnemyImage()
 {
@@ -125,6 +131,17 @@ void EnemyReset()
             DxPlus::Utils::FatalError(L"敵の画像が存在しません！");
             break;
         }
+       
+        if (GameMode == 0) {
+            modeSpeed = 1.0f;
+        }
+        else if (GameMode == 1) {
+            modeSpeed = 1.5f;
+        }
+        else if (GameMode == 2) {
+            modeSpeed = 3.0f;
+        }
+
     }
 }
 
@@ -214,13 +231,13 @@ void UpdateEnemy(int i, float deltaTime, HookState& hookState, int *score)
         break;
     }
 
-    // UFOが野菜を持っている場合、野菜の位置を更新
+    // UFOが野菜を持っている場合、野菜の画像のみ表示するため、位置更新や当たり判定を無効化
     if (enemy[i].isUFO && enemy[i].ufoHasVegetable && enemy[i].ufoVegetableIndex >= 0) {
+        // 野菜の位置をUFOの位置に固定（移動ロジックは削除）
         vegetable[enemy[i].ufoVegetableIndex].position = {
             enemy[i].position.x,
             enemy[i].position.y + 96.0f
         };
-        // 野菜の状態を更新するだけで、フックの状態に影響を与えない
     }
 
     // UFOのアニメーションを更新
@@ -229,6 +246,13 @@ void UpdateEnemy(int i, float deltaTime, HookState& hookState, int *score)
         if (enemy[i].ufoLightTimer >= UFO_LIGHT_INTERVAL) {
             enemy[i].ufoLightTimer -= UFO_LIGHT_INTERVAL;
             enemy[i].ufoLightAnim = (enemy[i].ufoLightAnim + 1) % UFO_ANIM_NUM;
+        }
+    } else { // ネズミのみ
+        enemy[i].timer += deltaTime;
+        if (enemy[i].timer >= MOUSE_ANIM_INTERVAL) {
+            enemy[i].timer -= MOUSE_ANIM_INTERVAL;
+            enemy[i].mouseAnim = (enemy[i].mouseAnim + 1) % MOUSE_ANIM_NUM;
+            enemy[i].spriteID = mouseAnimDeg[enemy[i].mouseAnim];
         }
     }
 
@@ -258,14 +282,14 @@ void SpawnTimeEnemy(int i, int* Timer) {
             enemy[i].ufoVegetableIndex = -1;
             enemy[i].ufoHasVegetable = false;
             enemy[i].position.y = 200.0f;
-            enemy[i].speed = fromRight ? -UFO_MOVE_SPEED : UFO_MOVE_SPEED;
+            enemy[i].speed = fromRight ? -UFO_MOVE_SPEED  * modeSpeed : UFO_MOVE_SPEED * modeSpeed;
             enemy[i].spriteID = ufoSprite;
             enemy[i].scale = { 0.8f, 0.8f }; // スケールを少し小さくする
             enemy[i].center = { 71.0f, 62.0f };
             enemy[i].havescore = 30;
         } else {
             enemy[i].isUFO = false;
-            enemy[i].speed = 1.5f;
+            enemy[i].speed = fromRight ? -UFO_MOVE_SPEED* modeSpeed : UFO_MOVE_SPEED * modeSpeed;
             enemy[i].speed = (enemy[i].position.x < DxPlus::CLIENT_WIDTH / 2) ? enemy[i].speed : -enemy[i].speed;
             if (enemy[i].mouseAnim < 0 || enemy[i].mouseAnim >= MOUSE_ANIM_NUM) enemy[i].mouseAnim = 0;
             enemy[i].spriteID = mouseAnimDeg[enemy[i].mouseAnim];
@@ -291,22 +315,8 @@ void SpawnTimeEnemy(int i, int* Timer) {
 void onHookEnemyHit(const DxPlus::Vec2& targetPos, Entity2D* hook, int i) {
     if (enemy[i].helpEnemy) return;
 
-    if (!enemy[i].isUFO) {
-        enemy[i].moveenemy = 1;
-        enemy[i].helpEnemy = true;
-        return;
-    }
-
-    // UFOが野菜を持っている場合、野菜の当たり判定を無効化
-    if (enemy[i].isUFO && enemy[i].ufoHasVegetable && enemy[i].ufoVegetableIndex >= 0) {
-        return; // 野菜の当たり判定をスキップ
-    }
-
-    // UFO本体にフックが当たった場合
-    DxPlus::Vec2 bodyPos = enemy[i].position;
-    float dx = targetPos.x - bodyPos.x;
-    float dy = targetPos.y - bodyPos.y;
-    if (dx * dx + dy * dy <= UFO_HIT_RADIUS * UFO_HIT_RADIUS) {
+    // UFO本体にフックが当たった場合、問答無用で撃墜状態にする
+    if (enemy[i].isUFO) {
         enemy[i].fading = false;
         enemy[i].ufoDropState = 3; // 落下状態
         enemy[i].ufoBeingTaken = false;
@@ -315,6 +325,10 @@ void onHookEnemyHit(const DxPlus::Vec2& targetPos, Entity2D* hook, int i) {
         enemy[i].helpEnemy = true;
         return;
     }
+
+    // UFO以外の敵に対する処理
+    enemy[i].moveenemy = 1;
+    enemy[i].helpEnemy = true;
 }
 
 void EnemyDraw(int i)
@@ -357,6 +371,7 @@ void EnemyDraw(int i)
     }
 
     int frame = enemy[i].mouseAnim;
+
     if (frame < 0) frame = 0;
     frame %= MOUSE_ANIM_NUM;
 
