@@ -2,7 +2,6 @@
 #include "Title.h"
 #include "WinMain.h"
 #include "Back.h"
-#include"vol.h"
 
 //---------------------------------------------------------------------- 
 // 定数 
@@ -36,31 +35,11 @@ const DxPlus::Vec2 finButtonPos     = { buttonBase.x + 100.0f ,  buttonBase.y + 
 int mouseX, mouseY;
 int mouseInput;
 
-//音
-int vol_button;
-int vol_title_BGM;
-
 
 //---------------------------------------------------------------------- 
 // 初期設定 
 //----------------------------------------------------------------------
 void Title_Init() {
-
-	vol_button = DxLib::LoadSoundMem(L"./Data/Sounds/shush.mp3");
-	if (vol_button == -1)
-	{
-		DxPlus::Utils::FatalError(L"ss./Data/Sounds/shush.mp3");
-	}
-	 vol_title_BGM = DxLib::LoadSoundMem(L"./Data/Sounds/Push.mp3");
-	if (vol_title_BGM == -1)
-	{
-		DxPlus::Utils::FatalError(L"kk./Data/Sounds/Push.mp3");
-
-	}
-	ChangeVolumeSoundMem((int)GetVolume, vol_button);
-	
-	ChangeVolumeSoundMem((int)GetVolume, vol_title_BGM);
-
 
 	TitleBackImage();
 
@@ -73,6 +52,10 @@ void Title_Init() {
 void Title_Reset() {
 
 	frameCount = 0;
+	mouseInput = -1;
+	mouseX = 0;
+	mouseY = 0;
+
 
 	TitleBackReset();
 	gamePlay = false;
@@ -85,40 +68,24 @@ void Title_Reset() {
 //----------------------------------------------------------------------
 void Title_Update() {
 
-	Title_Fade();
+    Title_Fade();
 
-	//if ((mouseInput & MOUSE_INPUT_LEFT) &&startbutton)
-	//	titleState = 2;
-	//if ((mouseInput & MOUSE_INPUT_LEFT) && settingbutton)
-	//	titleState = 3;
-	//if ((mouseInput & MOUSE_INPUT_LEFT) && finbutton)
-	//	titleState = 4;
+    // マウス入力の取得
+    mouseInput = DxLib::GetMouseInput();
+    DxLib::GetMousePoint(&mouseX, &mouseY);
 
-	if (mouseInput & MOUSE_INPUT_LEFT)
-	{
-		if (startbutton || settingbutton || finbutton)
-		{
-			PlaySoundMem(vol_button, DX_PLAYTYPE_BACK);
-		}
+    // ボタンの位置判定
+    startbutton = ButtonPosition({ startButtonPos }, { (float)mouseX,(float)mouseY });
+    settingbutton = ButtonPosition({ settingButtonPos }, { (float)mouseX,(float)mouseY });
+    finbutton = ButtonPosition({ finButtonPos }, { (float)mouseX,(float)mouseY });
 
-		if (startbutton)titleState = 2;
-		if (settingbutton)titleState = 3;
-		if (finbutton)titleState = 4;
-
-	}
-
-	mouseInput = DxLib::GetMouseInput();
-	DxLib::GetMousePoint(&mouseX, &mouseY);
-	
-
-
-	startbutton = ButtonPosition({ startButtonPos }, { (float)mouseX,(float)mouseY });
-	settingbutton = ButtonPosition({ settingButtonPos }, { (float)mouseX,(float)mouseY });
-	finbutton = ButtonPosition({ finButtonPos }, { (float)mouseX,(float)mouseY });
-
-
-
-
+    // ボタンのクリック処理
+    if ((mouseInput & MOUSE_INPUT_LEFT) && startbutton)
+        titleState = 2;
+    if ((mouseInput & MOUSE_INPUT_LEFT) && settingbutton)
+        titleState = 3; // 設定画面に遷移する状態に変更
+    if ((mouseInput & MOUSE_INPUT_LEFT) && finbutton)
+        titleState = 4;
 }
 
 
@@ -172,16 +139,13 @@ void Title_Fade() {
 	case 0:// フェードイン中 
 	{
 		titleFadeTimer = 0.0f;
-		/*titleFadeTimer -= 1 / 60.0f;
-		if (titleFadeTimer < 0.0f) {
-			titleFadeTimer = 0.0f;
-			titleState++;
-		}*/
+		titleState++;
+
 		break;
 	}
 	case 1: // 通常時 
 	{
-	//	gamePlay = false;
+		//	gamePlay = false;
 		break;
 	}
 	case 2: // フェードアウト中
@@ -196,17 +160,18 @@ void Title_Fade() {
 	}
 	case 3: // フェードアウト中
 	{
-		titleFadeTimer += 1 / 60.0f;
-		if (titleFadeTimer > 1.0f) {
-			titleFadeTimer = 1.0f;
-			nextScene = SceneSetting;
+		
+		if (settingbutton) {
+		
+
+			nextScene = SceneSetting;	
 		}
 		break;
 	}
 	case 4: // フェードアウト中
 	{
-			PostQuitMessage(0);
-		
+		PostQuitMessage(0);
+
 		break;
 	}
 	}

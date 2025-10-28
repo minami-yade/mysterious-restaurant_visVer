@@ -194,20 +194,30 @@ extern bool isHap;
 extern bool isSad;
 
 void PlayerDraw(bool right) {
+
+    static float armAngle = - 0.2f;
+    static float armSpeed = 0.025f;
+
+    armAngle += armSpeed;
+    if (armAngle > 0.3f || armAngle < -0.3f) {
+        armSpeed *= -1; // ’[‚Ü‚Ås‚Á‚½‚ç”½“]
+    }
+
+    player[PART_LEFT_ARM].angle = armAngle +0.2f;
+    player[PART_RIGHT_ARM].angle = -armAngle -0.2f;
+
    if(right){
        // ‰EŒü‚«
        DxPlus::Sprite::Draw(player[PART_LEFT_HAND].spriteID, player[PART_LEFT_HAND].position, player[PART_LEFT_HAND].scale, player[PART_LEFT_HAND].center);
        DxPlus::Sprite::Draw(player[PART_LEFT_ARM_LONG].spriteID, player[PART_LEFT_ARM_LONG].position, player[PART_LEFT_ARM_LONG].scale, player[PART_LEFT_ARM_LONG].center);
-       DxPlus::Sprite::Draw(player[PART_RIGHT_ARM].spriteID, player[PART_RIGHT_ARM].position, player[PART_RIGHT_ARM].scale, player[PART_RIGHT_ARM].center);
-       DxPlus::Sprite::Draw(player[PART_RIGHT_ARM].spriteID, player[PART_RIGHT_ARM].position, player[PART_RIGHT_ARM].scale, player[PART_RIGHT_ARM].center);
+       DxPlus::Sprite::Draw(player[PART_RIGHT_ARM].spriteID, player[PART_RIGHT_ARM].position, player[PART_RIGHT_ARM].scale, player[PART_RIGHT_ARM].center,player[PART_RIGHT_ARM].angle);
        DxPlus::Sprite::Draw(player[PART_ROD_RIGHT].spriteID, player[PART_ROD_RIGHT].position, player[PART_ROD_RIGHT].scale, player[PART_ROD_RIGHT].center);
    }
    else {
        // ¶Œü‚«
        DxPlus::Sprite::Draw(player[PART_RIGHT_HAND].spriteID, player[PART_RIGHT_HAND].position, player[PART_RIGHT_HAND].scale, player[PART_RIGHT_HAND].center);
        DxPlus::Sprite::Draw(player[PART_RIGHT_ARM_LONG].spriteID, player[PART_RIGHT_ARM_LONG].position, player[PART_RIGHT_ARM_LONG].scale, player[PART_RIGHT_ARM_LONG].center);
-       DxPlus::Sprite::Draw(player[PART_LEFT_ARM].spriteID, player[PART_LEFT_ARM].position, player[PART_LEFT_ARM].scale, player[PART_LEFT_ARM].center);
-       DxPlus::Sprite::Draw(player[PART_LEFT_ARM].spriteID, player[PART_LEFT_ARM].position, player[PART_LEFT_ARM].scale, player[PART_LEFT_ARM].center);
+       DxPlus::Sprite::Draw(player[PART_LEFT_ARM].spriteID, player[PART_LEFT_ARM].position, player[PART_LEFT_ARM].scale, player[PART_LEFT_ARM].center,player[PART_LEFT_ARM].angle);
        DxPlus::Sprite::Draw(player[PART_ROD_LEFT].spriteID, player[PART_ROD_LEFT].position, player[PART_ROD_LEFT].scale, player[PART_ROD_LEFT].center);
    }
 

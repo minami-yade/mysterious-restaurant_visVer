@@ -13,10 +13,21 @@ Entity2D gameBack;
 Entity2D gameFloor;
 DxPlus::Vec2 buttonBase = { 700.0f, 0.0f };
 
+//game背景
+Entity2D gameAnimBack[ANI_SOMESHING_NUM];
+float animSomeSpeed = 0.05f;
+
 // アニメーション用
 float titleBackAnimTimer = 0.0f;
 int titleBackAnimFrame = 0;
 float titleBackAnimSpeed = 0.05f; // 秒（小さいほど）
+
+//AniSomething用
+//アニメーション
+float aniSomeTimer = 0.0f;     
+int aniSomeFrame = 0;          
+float aniSomeSpeed = 0.2f;    
+bool aniSomePlayOnce = false;  
 
 // スケール補間用変数
 DxPlus::Vec2 currentScale = { 1.0f, 1.0f }; // 初期スケール
@@ -26,12 +37,20 @@ const float scaleSpeed = 0.3f; // スケール補間速度（小さいほどゆっくり）
 
 //リザルト--------------------------
 int ResultAnimation[RESULT_ANIM_COUNT];
+int ResultStar0Animation[RESULT_ANIM_COUNT];
+int ResultStar1Animation[RESULT_ANIM_COUNT];
+int ResultStar2Animation[RESULT_ANIM_COUNT];
+int ResultStar3Animation[RESULT_ANIM_COUNT];
 // アニメーション用の変数
 int currentFrame = 0; // 現在のフレーム
 float animTimer = 0.0f; // アニメーションタイマー
 const float animSpeed = 0.1f; // アニメーション速度（秒）
+// アニメーション用の変数
+int TitleToFrame = 0; // 現在のフレーム(GOTITLE)
+float animTitleToTimer = 0.0f; // アニメーションタイマー
+const float animTitleToSpeed = 0.1f; // アニメーション速度（秒）
 
-
+extern int fontID1;
 
 
 void TitleBackImage() {
@@ -60,7 +79,7 @@ void TitleBackImage() {
     };
     for (int j = 0; j < TITLE_BACK_NUM; ++j)
     {
-        titleBack[j].spriteID = LoadGraph(BacksPaths[j]);
+        titleBack[j].spriteID = LoadGraph(BacksPaths[j]);//
         if (titleBack[j].spriteID == -1) {
             DxPlus::Utils::FatalError((std::wstring(L"failed to load sprite : ") + BacksPaths[j]).c_str());
         }
@@ -105,6 +124,23 @@ void GameBackImage() {
         DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/front_lane.png");
     }
 
+    const wchar_t* AniSome[ANI_SOMESHING_NUM] =
+    {
+        L"./Data/Images/game/1.png",
+        L"./Data/Images/game/2.png",
+        L"./Data/Images/game/3.png",
+        L"./Data/Images/game/4.png",
+        L"./Data/Images/game/5.png",
+    };
+
+    for (int i = 0; i < ANI_SOMESHING_NUM; ++i)
+    {
+        gameAnimBack[i].spriteID = LoadGraph(AniSome[i]);
+        if (gameAnimBack[i].spriteID == -1)
+        {
+            DxPlus::Utils::FatalError((std::wstring(L"failed to laod sprite :") + AniSome[i]).c_str());
+        }
+    }
 }
 
 
@@ -205,8 +241,26 @@ void TitleBackDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 cente
     }
 }
 
-void GameBackDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 center) {
-    DxPlus::Sprite::Draw(gameBack.spriteID,position, scale, center);
+void GameBackDraw() {
+
+    int AnisFrame = aniSomeFrame;
+
+    aniSomeTimer += animSomeSpeed;
+    if (aniSomeTimer >= 1.0f)
+    {
+        aniSomeTimer -= 1.0f;
+        aniSomeFrame++;
+		aniSomeFrame %= ANI_SOMESHING_NUM;
+    }
+
+
+    if (gameAnimBack[AnisFrame].spriteID != -1)
+    {
+        DxPlus::Sprite::Draw(gameAnimBack[AnisFrame].spriteID, { 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 0.0f });
+    }
+
+
+
 }
 
 void GameFloorDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 center) {
@@ -243,6 +297,11 @@ void GameBackDelete() {
     if (gameBack.spriteID != -1) {
         DxPlus::Sprite::Delete(gameBack.spriteID);
     }
+    for (int i = 0; i < ANI_SOMESHING_NUM; ++i) {
+        if (gameAnimBack[i].spriteID != -1) {
+            DxPlus::Sprite::Delete(gameAnimBack[i].spriteID);
+        }
+    }
 }
 
 struct Rank {
@@ -263,10 +322,12 @@ enum RankType {
 Rank ResultRank[5];
 Rank TitleTo;
 
-const int MIN_SCORE_FOR_1_STAR  = 500;    // 1つ星を獲得するための最小スコア
-const int MIN_SCORE_FOR_2_STARS = 1000;  // 2つ星を獲得するための最小スコア
-const int MIN_SCORE_FOR_3_STARS = 2000;  // 3つ星を獲得するための最小スコア
+const int MIN_SCORE_FOR_1_STAR  = 100;    // 1つ星を獲得するための最小スコア
+const int MIN_SCORE_FOR_2_STARS = 200;  // 2つ星を獲得するための最小スコア
+const int MIN_SCORE_FOR_3_STARS = 300;  // 3つ星を獲得するための最小スコア
 
+
+bool TitleToClicked = false;
 
 // Result関連--------------------------
 void ResultBackImage() {
@@ -286,6 +347,67 @@ void ResultBackImage() {
             DxPlus::Utils::FatalError((std::wstring(L"Failed to load sprite: ") + animPaths[i]).c_str());
         }
     }
+    const wchar_t* animStar0Paths[RESULT_ANIM_COUNT] = {
+        L"./Data/images/star0/1.png",
+        L"./Data/images/star0/2.png",
+        L"./Data/images/star0/3.png",
+        L"./Data/images/star0/4.png",
+        L"./Data/images/star0/5.png",
+        L"./Data/images/star0/6.png",
+        L"./Data/images/star0/7.png"
+    };
+
+    for (int i = 0; i < RESULT_ANIM_COUNT; ++i) {
+        ResultStar0Animation[i] = LoadGraph(animStar0Paths[i]);
+        if (ResultStar0Animation[i] == -1) {
+            DxPlus::Utils::FatalError((std::wstring(L"Failed to load sprite: ") + animStar0Paths[i]).c_str());
+        }
+    }
+    const wchar_t* animStar1Paths[RESULT_ANIM_COUNT] = {
+        L"./Data/images/star1/1.png",
+        L"./Data/images/star1/2.png",
+        L"./Data/images/star1/3.png",
+        L"./Data/images/star1/4.png",
+        L"./Data/images/star1/5.png",
+        L"./Data/images/star1/6.png",
+        L"./Data/images/star1/7.png"
+	};
+    for (int i = 0; i < RESULT_ANIM_COUNT; ++i) {
+        ResultStar1Animation[i] = LoadGraph(animStar1Paths[i]);
+        if (ResultStar1Animation[i] == -1) {
+            DxPlus::Utils::FatalError((std::wstring(L"Failed to load sprite: ") + animStar1Paths[i]).c_str());
+        }
+	}
+    const wchar_t* animStar2Paths[RESULT_ANIM_COUNT] = {
+        L"./Data/images/star2/1.png",
+        L"./Data/images/star2/2.png",
+        L"./Data/images/star2/3.png",
+        L"./Data/images/star2/4.png",
+        L"./Data/images/star2/5.png",
+        L"./Data/images/star2/6.png",
+        L"./Data/images/star2/7.png"
+	};
+    for (int i = 0; i < RESULT_ANIM_COUNT; ++i) {
+        ResultStar2Animation[i] = LoadGraph(animStar2Paths[i]);
+        if (ResultStar2Animation[i] == -1) {
+            DxPlus::Utils::FatalError((std::wstring(L"Failed to load sprite: ") + animStar2Paths[i]).c_str());
+		}
+	}
+    const wchar_t* animStar3Paths[RESULT_ANIM_COUNT] = {
+        L"./Data/images/star3/1.png",
+        L"./Data/images/star3/2.png",
+        L"./Data/images/star3/3.png",
+        L"./Data/images/star3/4.png",
+        L"./Data/images/star3/5.png",
+        L"./Data/images/star3/6.png",
+		L"./Data/images/star3/7.png"
+	};
+    for (int i = 0; i < RESULT_ANIM_COUNT; ++i) {
+        ResultStar3Animation[i] = LoadGraph(animStar3Paths[i]);
+        if (ResultStar3Animation[i] == -1) {
+			DxPlus::Utils::FatalError((std::wstring(L"Failed to load sprite: ") + animStar3Paths[i]).c_str());
+		}
+	}
 
     //結果
     //星０
@@ -320,22 +442,37 @@ void ResultBackImage() {
 	ResultRank[Star3].center = { 269.5f, 330.0f };
 
 	TitleTo.center = { 89.5f, 11.0f };
+
+    
 }
 
 void ResultBackReset() {
     currentFrame = 0;
     animTimer = 0.0f;
+
+    TitleToFrame = 0;
+    animTitleToTimer = 0.0f;
+
 	TitleTo.scale = { 1.0f,1.0f };
+	TitleToClicked = false;
 }
 
 void ResultBackUpdate(int mouX,int mouY,int *resultState) {
     animTimer += animSpeed;
+	if (TitleToClicked)
+	animTitleToTimer += animTitleToSpeed;
+
         static int prevMouseInput = 0;
         int currentMouseInput = GetMouseInput();
     // フレームを進める
     if (animTimer >= 1.0f) {
         animTimer -= 1.0f;
         currentFrame = (currentFrame + 1) % RESULT_ANIM_COUNT; // ループ
+    }
+    // フレームを進める
+    if (animTitleToTimer >= 1.0f) {
+        animTitleToTimer -= 1.0f;
+        TitleToFrame = (TitleToFrame + 1) % RESULT_ANIM_COUNT; // ループ
     }
 	int titletoWidth = 179 * TitleTo.scale.x; // タイトルへボタンの幅
     int titletoHeight = 22 * TitleTo.scale.y; // タイトルへボタンの高さ
@@ -345,7 +482,9 @@ void ResultBackUpdate(int mouX,int mouY,int *resultState) {
 
 
         if ((currentMouseInput & MOUSE_INPUT_LEFT) && !(prevMouseInput & MOUSE_INPUT_LEFT)) {
+            TitleToClicked = true; 
             *resultState = 2;
+
         }
 
  
@@ -363,23 +502,64 @@ void ResultBackDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 cent
     if (ResultAnimation[currentFrame] != -1) {
 		DxPlus::Sprite::Draw(ResultAnimation[currentFrame], position, scale, center);
     }
+
+
+
+
     //スコアによって表示を変える
     if (score >= MIN_SCORE_FOR_3_STARS) {
-        DxPlus::Sprite::Draw(ResultRank[Star3].spriteID, ResultRank[Star3].pos, ResultRank[Star3].scale, ResultRank[Star3].center);
+
+        if (TitleToClicked) {
+            DxPlus::Sprite::Draw(ResultStar3Animation[TitleToFrame], position, scale, center);
+        }
+        else
+            DxPlus::Sprite::Draw(ResultRank[Star3].spriteID, ResultRank[Star3].pos, ResultRank[Star3].scale, ResultRank[Star3].center);
     }
     else if (score >= MIN_SCORE_FOR_2_STARS) {
-        DxPlus::Sprite::Draw(ResultRank[Star2].spriteID, ResultRank[Star2].pos, ResultRank[Star2].scale, ResultRank[Star2].center);
+
+        if (TitleToClicked) {
+            DxPlus::Sprite::Draw(ResultStar2Animation[TitleToFrame], position, scale, center);
+        }
+        else
+            DxPlus::Sprite::Draw(ResultRank[Star2].spriteID, ResultRank[Star2].pos, ResultRank[Star2].scale, ResultRank[Star2].center);
     }
     else if (score >= MIN_SCORE_FOR_1_STAR) {
-        DxPlus::Sprite::Draw(ResultRank[Star1].spriteID, ResultRank[Star1].pos, ResultRank[Star1].scale, ResultRank[Star1].center);
+     
+        if (TitleToClicked) {
+            DxPlus::Sprite::Draw(ResultStar1Animation[TitleToFrame], position, scale, center);
+        }  
+        else
+            DxPlus::Sprite::Draw(ResultRank[Star1].spriteID, ResultRank[Star1].pos, ResultRank[Star1].scale, ResultRank[Star1].center);
     }
     else {
-        DxPlus::Sprite::Draw(ResultRank[Star0].spriteID, ResultRank[Star0].pos, ResultRank[Star0].scale, ResultRank[Star0].center);
+    
+        if (TitleToClicked) {
+            DxPlus::Sprite::Draw(ResultStar0Animation[TitleToFrame], position, scale, center);
+        }   
+        else
+            DxPlus::Sprite::Draw(ResultRank[Star0].spriteID, ResultRank[Star0].pos, ResultRank[Star0].scale, ResultRank[Star0].center);
 	}
 
 	DxPlus::Sprite::Draw(TitleTo.spriteID, TitleTo.pos, TitleTo.scale, TitleTo.center);
 
+    if (!TitleToClicked) {
+        // スコアの描画
+        wchar_t scoreText[16];
+        swprintf(scoreText, sizeof(scoreText) / sizeof(wchar_t), L"%d", score);
+        DxPlus::Text::DrawString(
+            scoreText,
+            { 450.0f,240.0f },
+            GetColor(160, 82, 45),
+            DxPlus::Text::TextAlign::MIDDLE_RIGHT,
+            { 1.0f, 1.0f },
+            0.0,
+            fontID1
+        );
+    }
+
 }
+
+
 
 void ResultBackDelete() {
     for (int i = 0; i < RESULT_ANIM_COUNT; ++i) {
@@ -388,4 +568,23 @@ void ResultBackDelete() {
             ResultAnimation[i] = -1;
         }
     }
+    for (int i = 0; i < RESULT_ANIM_COUNT; ++i) {
+        if (ResultStar0Animation[i] != -1) {
+            DxPlus::Sprite::Delete(ResultStar0Animation[i]);
+            ResultStar0Animation[i] = -1;
+        }
+        if (ResultStar1Animation[i] != -1) {
+            DxPlus::Sprite::Delete(ResultStar1Animation[i]);
+            ResultStar1Animation[i] = -1;
+        }
+        if (ResultStar2Animation[i] != -1) {
+            DxPlus::Sprite::Delete(ResultStar2Animation[i]);
+            ResultStar2Animation[i] = -1;
+        }
+        if (ResultStar3Animation[i] != -1) {
+            DxPlus::Sprite::Delete(ResultStar3Animation[i]);
+            ResultStar3Animation[i] = -1;
+        }
+    }
 }
+
