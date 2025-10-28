@@ -70,6 +70,9 @@
     <Filter Include="Scene\01_Setting">
       <UniqueIdentifier>{0e5e6c06-8ac1-466a-99a9-e8e845cdafad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_MainData\volume">
+      <UniqueIdentifier>{a4adfae0-8466-4b8c-8ef3-1f63f497d049}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DxPlus\Animation.h">
@@ -150,9 +153,6 @@
     <ClInclude Include="Mouse.h">
       <Filter>00_MainData\Mouse</Filter>
     </ClInclude>
-    <ClInclude Include="playerData.h">
-      <Filter>01_Status</Filter>
-    </ClInclude>
     <ClInclude Include="Enemy.h">
       <Filter>00_MainData\Enemy</Filter>
     </ClInclude>
@@ -170,6 +170,9 @@
     </ClInclude>
     <ClInclude Include="Setting.h">
       <Filter>Scene\01_Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="vol.h">
+      <Filter>00_MainData\volume</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +256,9 @@
     </ClCompile>
     <ClCompile Include="Setting.cpp">
       <Filter>Scene\01_Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="vol.cpp">
+      <Filter>00_MainData\volume</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

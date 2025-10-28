@@ -2,6 +2,7 @@
 #include "Title.h"
 #include "WinMain.h"
 #include "Back.h"
+#include"vol.h"
 
 //---------------------------------------------------------------------- 
 // íËêî 
@@ -35,11 +36,31 @@ const DxPlus::Vec2 finButtonPos     = { buttonBase.x + 100.0f ,  buttonBase.y + 
 int mouseX, mouseY;
 int mouseInput;
 
+//âπ
+int vol_button;
+int vol_title_BGM;
+
 
 //---------------------------------------------------------------------- 
 // èâä˙ê›íË 
 //----------------------------------------------------------------------
 void Title_Init() {
+
+	vol_button = DxLib::LoadSoundMem(L"./Data/Sounds/shush.mp3");
+	if (vol_button == -1)
+	{
+		DxPlus::Utils::FatalError(L"ss./Data/Sounds/shush.mp3");
+	}
+	 vol_title_BGM = DxLib::LoadSoundMem(L"./Data/Sounds/Push.mp3");
+	if (vol_title_BGM == -1)
+	{
+		DxPlus::Utils::FatalError(L"kk./Data/Sounds/Push.mp3");
+
+	}
+	ChangeVolumeSoundMem((int)GetVolume, vol_button);
+	
+	ChangeVolumeSoundMem((int)GetVolume, vol_title_BGM);
+
 
 	TitleBackImage();
 
@@ -66,12 +87,25 @@ void Title_Update() {
 
 	Title_Fade();
 
-	if ((mouseInput & MOUSE_INPUT_LEFT) &&startbutton)
-		titleState = 2;
-	if ((mouseInput & MOUSE_INPUT_LEFT) && settingbutton)
-		titleState = 3;
-	if ((mouseInput & MOUSE_INPUT_LEFT) && finbutton)
-		titleState = 4;
+	//if ((mouseInput & MOUSE_INPUT_LEFT) &&startbutton)
+	//	titleState = 2;
+	//if ((mouseInput & MOUSE_INPUT_LEFT) && settingbutton)
+	//	titleState = 3;
+	//if ((mouseInput & MOUSE_INPUT_LEFT) && finbutton)
+	//	titleState = 4;
+
+	if (mouseInput & MOUSE_INPUT_LEFT)
+	{
+		if (startbutton || settingbutton || finbutton)
+		{
+			PlaySoundMem(vol_button, DX_PLAYTYPE_BACK);
+		}
+
+		if (startbutton)titleState = 2;
+		if (settingbutton)titleState = 3;
+		if (finbutton)titleState = 4;
+
+	}
 
 	mouseInput = DxLib::GetMouseInput();
 	DxLib::GetMousePoint(&mouseX, &mouseY);

@@ -12,6 +12,7 @@ void Mouse_Image() {
     if (mouse.effectID == -1) {
         DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/effect.png");
     }
+
 }
 
 void Mouse_Reset() {
