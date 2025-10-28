@@ -16,7 +16,8 @@ enum SettingButtonType {
 	hard,
     BackToTitle
 };
-Entity2D settingButton[SETTING_BUTTON_NUM];//学校の自分にいいます。ここまでしかやってません
+Entity2D settingButton[SETTING_BUTTON_NUM];//学校の自分にいいます。ここまでしかやってません//hai
+Entity2D setBackground;
 //----------------------------------------------------------------------
 // 定数
 //----------------------------------------------------------------------
@@ -38,6 +39,11 @@ extern int nextScene;
 //----------------------------------------------------------------------
 void Setting_Init()
 {
+	setBackground.spriteID = LoadGraph(L"./Data/images/kanban.png");
+    if(setBackground.spriteID == -1){
+        DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/kanban.png");
+	}
+
     const wchar_t* setBackPaths[TITLE_BACK_NUM] = {
         L"./Data/images/b1 (1).png",
         L"./Data/images/b2 (1).png",
@@ -52,6 +58,35 @@ void Setting_Init()
             DxPlus::Utils::FatalError((std::wstring(L"failed to load sprite : ") + setBackPaths[j]).c_str());
         }
 	}
+    for(int i=0;i<SETTING_BUTTON_NUM;++i){
+        switch (i)
+        {
+            case VolUp:
+                settingButton[i].spriteID = LoadGraph(L"./Data/images/vol_up.png");
+				break;
+			case VolDown:
+				settingButton[i].spriteID = LoadGraph(L"./Data/images/vol_down.png");
+				break;
+			case easy:
+				settingButton[i].spriteID = LoadGraph(L"./Data/images/easy.png");
+				break;
+			case normal:
+				settingButton[i].spriteID = LoadGraph(L"./Data/images/normals.png");
+				break;
+			case hard:
+				settingButton[i].spriteID = LoadGraph(L"./Data/images/hard.png");
+				break;
+			case BackToTitle:
+				settingButton[i].spriteID = LoadGraph(L"./Data/images/back_to_title.png");
+				break;
+
+
+        default:
+			DxPlus::Utils::FatalError(L"Invalid SettingButtonType value.");
+            break;
+        }
+
+	}
     Setting_Reset();
 }
 
@@ -64,9 +99,39 @@ void Setting_Reset()
     settingBackAnimTimer = 0.0f;
     settingBackAnimFrame = 0;
 
+	//ボタン用変数のリセット
+    for (int i = 0; i < SETTING_BUTTON_NUM; ++i) {
+        switch (i)
+        {
+        case VolUp:
+            settingButton[i].position = { 900.0f, 200.0f };
+            break;
+        case VolDown:
+            settingButton[i].position = { 700.0f, 200.0f };
+            break;
+        case easy:
+            settingButton[i].position = { 400.0f, 200.0f };
+            break;
+        case normal:
+            settingButton[i].position = { 400.0f, 400.0f };
+            break;
+        case hard:
+            settingButton[i].position = { 400.0f, 600.0f };
+            break;
+        case BackToTitle:
+            settingButton[i].position = { 700.0f, 600.0f };
+            break;
 
+
+        default:
+            DxPlus::Utils::FatalError(L"Invalid SettingButtonType value.");
+            break;
+        }
+    }
+	// フェード用変数のリセット
     SettingState = 0;
     SettingFadeTimer = 1.0f;
+
 
 }
 //----------------------------------------------------------------------
@@ -81,6 +146,8 @@ void Setting_Update()
 		settingBackAnimFrame = (settingBackAnimFrame + 1) % TITLE_BACK_NUM;
 
 	}
+   
+
 	// フェードイン / フェードアウト処理
     Setting_Fade();
 }
@@ -125,8 +192,36 @@ void Setting_Render()
     if (settingBack[frames].spriteID != -1) {
         DxPlus::Sprite::Draw(settingBack[frames].spriteID, {0.0f,0.0f}, { 1.0f,1.0f }, { 0.0f,0.0f });
     }
+	DxPlus::Sprite::Draw(setBackground.spriteID, { 0.0f,0.0f }, { 1.0f,1.0f }, { 0.0f,0.0f });
 
-	//これを使ってボタン作成
+    for (int i = 0; i < SETTING_BUTTON_NUM; ++i) {
+        switch (i)
+        {
+        case VolUp:
+			DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { 1.0f,1.0f }, { 0.0f,0.0f });
+			break;
+		case VolDown:
+			DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { 1.0f,1.0f }, { 0.0f,0.0f });
+			break;
+		case easy:
+			DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { 1.0f,1.0f }, { 0.0f,0.0f });
+			break;
+		case normal:
+			DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { 1.0f,1.0f }, { 0.0f,0.0f });
+			break;
+		case hard:
+			DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { 1.0f,1.0f }, { 0.0f,0.0f });
+			break;
+		case BackToTitle:
+			DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { 1.0f,1.0f }, { 0.0f,0.0f });
+			break;
+
+        default:
+            DxPlus::Utils::FatalError(L"Invalid SettingButtonType value.");
+            break;
+        }
+    }
+    //これを使ってボタン作成
     Setting_Button({ 200.0f, 300.0f }, 50.0f, &SettingState, true);
 
     // フェードイン / フェードアウト用 
