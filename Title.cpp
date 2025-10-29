@@ -31,6 +31,8 @@ int settingbutton;
 const DxPlus::Vec2 settingButtonPos = { buttonBase.x + 100.0f ,	 buttonBase.y + 3 * 140.0f + 5 };
 int finbutton;
 const DxPlus::Vec2 finButtonPos     = { buttonBase.x + 100.0f ,  buttonBase.y + 4 * 140.0f + 10 };
+int CreditButton;
+const DxPlus::Vec2 CreditButtonPos = { 0.0f ,  650.0f };
 
 
 int mouseX, mouseY;
@@ -39,6 +41,7 @@ int mouseInput;
 int vol_title_button;
 int vol_title_BGM;
 
+Entity2D creditButton;
 
 int vol_kachi;
 
@@ -46,6 +49,7 @@ bool vol_prevStartHover = false;
 bool vol_prevSettingHover = false;
 bool vol_prevFinHover = false;
 
+bool wasMousePresseds = false;
 //---------------------------------------------------------------------- 
 // 初期設定 
 //----------------------------------------------------------------------
@@ -67,6 +71,12 @@ void Title_Init() {
 	{
 		DxPlus::Utils::FatalError(L"./Data/Sounds/shush.mp3");
 	}
+
+	creditButton.spriteID = LoadGraph(L"./Data/images/credit.png");
+	if (creditButton.spriteID == -1) {
+		DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/creditbutton.png");
+	}
+
 	TitleBackImage();
 
 	Title_Reset();
@@ -86,6 +96,9 @@ void Title_Reset() {
 	mouseX = 0;
 	mouseY = 0;
 
+	creditButton.position = CreditButtonPos;
+	creditButton.scale = { 1.0f, 1.0f };
+	creditButton.center = { 0.0f, 0.0f };
 
 	TitleBackReset();
 	gamePlay = false;
@@ -163,6 +176,41 @@ void Title_Render() {
 
 	TitleBackDraw({ 362.0f,473.0f },{1.0f,1.0f},{362.0f,473.0f},startbutton,settingbutton,finbutton, &gamePlay);
 
+	bool isHit = false;
+	// マウスの位置を取得
+	DxPlus::Vec2 mousePos = { static_cast<float>(mouseX), static_cast<float>(mouseY) };
+	DxPlus::Vec2 pos = CreditButtonPos;
+	DxPlus::Vec2 length = { 220.0f,55.0f };
+	// 当たり判定
+	isHit = (mousePos.x > pos.x && mousePos.x < pos.x + length.x &&
+		mousePos.y > pos.y && mousePos.y < pos.y + length.y);
+#if _DEBUG
+	// デバッグ表示: ボタンの矩形境界を描画
+	int color = isHit ? GetColor(255, 255, 255) : GetColor(255, 0, 0);
+	DrawBox(static_cast<int>(pos.x), static_cast<int>(pos.y),
+		static_cast<int>(pos.x + length.x), static_cast<int>(pos.y + length.y),
+		color, FALSE);
+#endif
+	// マウスクリック状態を取得
+	wasMousePresseds = false; // 前回のクリック状態を保持
+	int mouseInput = GetMouseInput();
+	bool isMouseClicked = (mouseInput & MOUSE_INPUT_LEFT) != 0;
+
+	//if (isHit && !prevHit[mode]) {
+	//	PlaySoundMem(vol_kachi2, DX_PLAYTYPE_BACK);
+	//}
+
+	
+	// 当たり判定が成立し、かつクリックが押された瞬間のみ処理を実行
+	if (isHit && isMouseClicked && !wasMousePresseds && titleState == 1) {
+		titleState = 5;
+	}
+
+	// 現在のクリック状態を保存
+	wasMousePresseds = isMouseClicked;
+
+	//prevHit[mode] = isHit;
+
 #if _DEBUG
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);  // 半透明モードをセット
 	DxPlus::Primitive2D::DrawRect(
@@ -184,7 +232,19 @@ void Title_Render() {
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);  // 元に戻す
 
 #endif
-
+	int alpha = 255.0f;
+	int crick = 100.0f;
+	if (isHit) {
+		alpha = crick; // 暗く
+	}
+	DxPlus::Sprite::Draw(
+		creditButton.spriteID,
+		creditButton.position,
+		creditButton.scale,
+		creditButton.center,
+		creditButton.angle,
+		GetColor(alpha,alpha,alpha)
+	);
 
 	FadeDrawTitle();
 }
@@ -225,11 +285,11 @@ void Title_Fade() {
 	}
 	case 3: // フェードアウト中
 	{
-		
-		if (settingbutton) {
-		
 
-			nextScene = SceneSetting;	
+		if (settingbutton) {
+
+
+			nextScene = SceneSetting;
 		}
 		break;
 	}
@@ -239,6 +299,15 @@ void Title_Fade() {
 
 		break;
 	}
+
+	case 5: // フェードアウト中
+	{
+		nextScene = SceneCredit;
+		break;
+	}
+	default:
+		DxPlus::Utils::FatalError(L"Invalid TitleState value.");
+		break;
 	}
 	frameCount++;
 

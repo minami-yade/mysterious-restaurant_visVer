@@ -73,6 +73,9 @@
     <Filter Include="00_MainData\volume">
       <UniqueIdentifier>{a4adfae0-8466-4b8c-8ef3-1f63f497d049}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\02_Credit">
+      <UniqueIdentifier>{982f1980-a079-482b-ac96-a40903968711}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DxPlus\Animation.h">
@@ -123,9 +126,6 @@
     <ClInclude Include="Game.h">
       <Filter>Scene\05_MainGame</Filter>
     </ClInclude>
-    <ClInclude Include="Battle.h">
-      <Filter>Scene\05_MainGame</Filter>
-    </ClInclude>
     <ClInclude Include="Entity2D.h">
       <Filter>01_Status</Filter>
     </ClInclude>
@@ -174,6 +174,9 @@
     <ClInclude Include="vol.h">
       <Filter>00_MainData\volume</Filter>
     </ClInclude>
+    <ClInclude Include="Credit.h">
+      <Filter>Scene\02_Credit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxPlus\Animation.cpp">
@@ -210,9 +213,6 @@
       <Filter>DxPlus\ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Scene\05_MainGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Battle.cpp">
       <Filter>Scene\05_MainGame</Filter>
     </ClCompile>
     <ClCompile Include="Title.cpp">
@@ -259,6 +259,9 @@
     </ClCompile>
     <ClCompile Include="vol.cpp">
       <Filter>00_MainData\volume</Filter>
+    </ClCompile>
+    <ClCompile Include="Credit.cpp">
+      <Filter>Scene\02_Credit</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
