@@ -224,11 +224,12 @@ void Setting_Button_SQ(DxPlus::Vec2 pos, DxPlus::Vec2 length, int mode) {
     int mouseInput = GetMouseInput();
     bool isMouseClicked = (mouseInput & MOUSE_INPUT_LEFT) != 0;
 
+    bool GoBack = false;
 
-
-    if (isHit && !prevHit[mode]) {
+    if (isHit && !prevHit[mode] && mode != BackToTitle) {
         PlaySoundMem(vol_kachi2, DX_PLAYTYPE_BACK);
     }
+ 
 
     if (isHit)
     {

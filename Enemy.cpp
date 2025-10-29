@@ -174,6 +174,8 @@ void EnemyReset()
 
 void UpdateEnemy(int i, float deltaTime, HookState& hookState, int *score)
 {
+    if (!enemy[i].isActive)return;
+
     if (!enemy[i].isActive) {
         if (enemy[i].isUFO && enemy[i].ufoHasVegetable && enemy[i].ufoVegetableIndex >= 0) {
             vegetable[enemy[i].ufoVegetableIndex].isActive = false; // 野菜を非アクティブ化
@@ -227,7 +229,7 @@ void UpdateEnemy(int i, float deltaTime, HookState& hookState, int *score)
                     PlaySoundMem(vol_UFO_height, DX_PLAYTYPE_BACK);
                 }
                 enemy[i].ufoDropTimer = 0.0f; // タイマーをリセット
-                *score -= 200; // 野菜を取られたペナルティ
+                *score -= 150; // 野菜を取られたペナルティ
             }
             break;
         }
@@ -245,10 +247,7 @@ void UpdateEnemy(int i, float deltaTime, HookState& hookState, int *score)
 
         // 通常移動中
         if (enemy[i].ufoDropState == 0) {
-            if (!CheckSoundMem(vol_UFO_width))
-            {
-                PlaySoundMem(vol_UFO_width, DX_PLAYTYPE_BACK);
-            }
+          
 
             enemy[i].position.x += enemy[i].speed * deltaTime; // 水平移動
         }

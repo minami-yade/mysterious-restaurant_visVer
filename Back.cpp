@@ -471,9 +471,9 @@ void ResultBackImage() {
         MIN_SCORE_FOR_3_STARS = 2500;  // 3つ星を獲得するための最小スコア
     }
 	else if (GameMode == 1) {//normal
-        MIN_SCORE_FOR_1_STAR  = 2000;  // 1つ星を獲得するための最小スコア
-        MIN_SCORE_FOR_2_STARS = 2500;  // 2つ星を獲得するための最小スコア
-        MIN_SCORE_FOR_3_STARS = 3200;  // 3つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_1_STAR  = 1500;  // 1つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_2_STARS = 2250;  // 2つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_3_STARS = 3000;  // 3つ星を獲得するための最小スコア
     }
 	else if (GameMode == 2) {//hard
         MIN_SCORE_FOR_1_STAR  = 1000;  // 1つ星を獲得するための最小スコア
