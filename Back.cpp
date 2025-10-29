@@ -322,11 +322,11 @@ enum RankType {
 Rank ResultRank[5];
 Rank TitleTo;
 
-const int MIN_SCORE_FOR_1_STAR  = 100;    // 1つ星を獲得するための最小スコア
-const int MIN_SCORE_FOR_2_STARS = 200;  // 2つ星を獲得するための最小スコア
-const int MIN_SCORE_FOR_3_STARS = 300;  // 3つ星を獲得するための最小スコア
+int MIN_SCORE_FOR_1_STAR  = 100;    // 1つ星を獲得するための最小スコア
+int MIN_SCORE_FOR_2_STARS = 200;  // 2つ星を獲得するための最小スコア
+int MIN_SCORE_FOR_3_STARS = 300;  // 3つ星を獲得するための最小スコア
 
-
+extern int GameMode;
 bool TitleToClicked = false;
 
 // Result関連--------------------------
@@ -443,7 +443,21 @@ void ResultBackImage() {
 
 	TitleTo.center = { 89.5f, 11.0f };
 
-    
+    if(GameMode == 0){
+        MIN_SCORE_FOR_1_STAR  = 100;    // 1つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_2_STARS = 200;  // 2つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_3_STARS = 300;  // 3つ星を獲得するための最小スコア
+    }
+    else if(GameMode == 1){
+        MIN_SCORE_FOR_1_STAR  = 150;    // 1つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_2_STARS = 300;  // 2つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_3_STARS = 450;  // 3つ星を獲得するための最小スコア
+    }
+    else if(GameMode == 2){
+        MIN_SCORE_FOR_1_STAR  = 200;    // 1つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_2_STARS = 400;  // 2つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_3_STARS = 600;  // 3つ星を獲得するための最小スコア
+	}
 }
 
 void ResultBackReset() {

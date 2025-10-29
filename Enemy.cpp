@@ -270,7 +270,8 @@ void UpdateEnemy(int i, float deltaTime, HookState& hookState, int *score)
     }
 }
 
-void SpawnTimeEnemy(int i, int* Timer) {
+
+void SpawnTimeEnemy(int i, float* Timer) {
     if (enemy[i].isActive) return;
     if (*Timer < 0) {
 

@@ -231,7 +231,7 @@ void UpdateVegetable(int i, float deltaTime,HookState hookState)
 }
 
 
-void SpawnTimeVegetable(int i , int* Timer) {
+void SpawnTimeVegetable(int i , float* Timer) {
 	if (vegetable[i].isActive) return;
     if (*Timer < 0) {
 	

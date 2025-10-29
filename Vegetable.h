@@ -13,7 +13,7 @@ void UpdateVegetable(int i,float deltaTime,HookState hookState);
 
 // ‰æ–ÊŠO‚©‚çƒ‰ƒ“ƒ_ƒ€‚ÉoŒ»
 
-void SpawnTimeVegetable(int i, int* Timer);
+void SpawnTimeVegetable(int i, float* Timer);
 
 
 void onHookHit(const DxPlus::Vec2& targetPos, Entity2D* hook, int i);
