@@ -31,7 +31,7 @@ const DxPlus::Vec2 settingButtonPos = { buttonBase.x + 100.0f ,	 buttonBase.y + 
 int finbutton;
 const DxPlus::Vec2 finButtonPos     = { buttonBase.x + 100.0f ,  buttonBase.y + 4 * 140.0f + 10 };
 int creditButtons;
-const DxPlus::Vec2 creditButtonPos     = { buttonBase.x - 700.0f ,  buttonBase.y + 4 * 140.0f + 10 };
+const DxPlus::Vec2 creditButtonPos     = { buttonBase.x - 700.0f , 650 };
 
 Entity2D creditButton;
 
@@ -46,7 +46,7 @@ int mouseInput;
 void Title_Init() {
 
 	TitleBackImage();
-	creditButton.spriteID = LoadGraph(L"./Data/images/creditbutton .png");
+	creditButton.spriteID = LoadGraph(L"./Data/images/credit.png");
 	if(creditButton.spriteID == -1){
 		DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/creditbutton .png");
 	}
@@ -65,8 +65,8 @@ void Title_Reset() {
 	mouseY = 0;
 	creditButton.position = creditButtonPos;
 	creditButton.scale = { 1.0f, 1.0f };
-	creditButton.center = { 0.0f, 30.0f };
-	creditButton.angle = 0.2f;
+	creditButton.center = { 0.0f, 0.0f };
+
 
 
 	TitleBackReset();
@@ -122,7 +122,7 @@ void Title_Render() {
 	DxPlus::Vec2 mousePos = { static_cast<float>(mouseX), static_cast<float>(mouseY) };
 
 	DxPlus::Vec2 pos = creditButton.position;
-	DxPlus::Vec2 length = { creditButton.scale.x * 200.0f, creditButton.scale.y * 100.0f };
+	DxPlus::Vec2 length = { creditButton.scale.x * 220.0f, creditButton.scale.y * 55.0f };
 	// 当たり判定
 	creditButtons = (mousePos.x > pos.x && mousePos.x < pos.x + length.x &&
 		mousePos.y > pos.y && mousePos.y < pos.y + length.y);
@@ -139,10 +139,6 @@ void Title_Render() {
 	wasMousePressed = false; // 前回のクリック状態を保持
 	int mouseInput = GetMouseInput();
 	bool isMouseClicked = (mouseInput & MOUSE_INPUT_LEFT) != 0;
-
-	// スケール変更
-	creditButton.angle = creditButtons ? creditButton.angle = 0.0f : creditButton.angle = 0.2f;
-
 	// 当たり判定が成立し、かつクリックが押された瞬間のみ処理を実行
 	if (creditButtons && isMouseClicked && !wasMousePressed && titleState == 1) {
 		titleState = 5; // TitleStateを変更
@@ -172,7 +168,12 @@ void Title_Render() {
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);  // 元に戻す
 
 #endif
-	DxPlus::Sprite::Draw(creditButton.spriteID, creditButton.position, creditButton.scale, creditButton.center,creditButton.angle);
+	float alpha = 255.0f;
+	float crick = 100.0f;
+	if (creditButtons) {
+		alpha = crick; // 暗く
+	}
+	DxPlus::Sprite::Draw(creditButton.spriteID, creditButton.position, creditButton.scale, creditButton.center,creditButton.angle,GetColor(alpha,alpha,alpha));
 
 
 	FadeDrawTitle();
