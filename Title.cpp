@@ -37,7 +37,7 @@ int mouseX, mouseY;
 int mouseInput;
 
 int vol_title_button;
-int vol_title_BGM;
+extern int vol_title_BGM;
 
 
 int vol_kachi;
@@ -57,11 +57,11 @@ void Title_Init() {
 	//	DxPlus::Utils::FatalError(L"./Data/Sounds/shush.mp3");
 	//}
 
-	vol_title_BGM = DxLib::LoadSoundMem(L"./Data/Sounds/BGMtitle.wav");
-	if (vol_title_BGM == -1)
-	{
-		DxPlus::Utils::FatalError(L"./Data/Sounds/BGMtitle.wav");
-	}
+	//vol_title_BGM = DxLib::LoadSoundMem(L"./Data/Sounds/BGMtitle.wav");
+	//if (vol_title_BGM == -1)
+	//{
+	//	DxPlus::Utils::FatalError(L"./Data/Sounds/BGMtitle.wav");
+	//}
 	vol_kachi = DxLib::LoadSoundMem(L"./Data/Sounds/shush.mp3");
 	if (vol_kachi == -1)
 	{

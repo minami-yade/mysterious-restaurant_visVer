@@ -6,3 +6,5 @@ extern float vol_Sounds;
 float GetVolume();
 
 void SetVolume(float newvolume);
+
+void Allvol();

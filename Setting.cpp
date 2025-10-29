@@ -1,4 +1,4 @@
-#include "DxPlus/DxPlus.h"
+ï»¿#include "DxPlus/DxPlus.h"
 #include "Setting.h"
 #include "WinMain.h"
 #include "Entity2D.h"
@@ -8,28 +8,30 @@
 
 
 Entity2D settingBack[TITLE_BACK_NUM];
-constexpr int SETTING_BUTTON_NUM = 6;// ƒ{ƒ^ƒ“‚Ì”
+constexpr int SETTING_BUTTON_NUM = 6;// ãƒœã‚¿ãƒ³ã®æ•°
 enum SettingButtonType {
     VolUp,
     VolDown,
     easy,
 	normal,
 	hard,
-    BackToTitle
+    BackToTitle,
+    vol_right,
+    vol_feft
 };
-Entity2D settingButton[SETTING_BUTTON_NUM];//ŠwZ‚Ì©•ª‚É‚¢‚¢‚Ü‚·B‚±‚±‚Ü‚Å‚µ‚©‚â‚Á‚Ä‚Ü‚¹‚ñ//hai
+Entity2D settingButton[SETTING_BUTTON_NUM];//å­¦æ ¡ã®è‡ªåˆ†ã«ã„ã„ã¾ã™ã€‚ã“ã“ã¾ã§ã—ã‹ã‚„ã£ã¦ã¾ã›ã‚“//hai
 Entity2D setBackground;
 //----------------------------------------------------------------------
-// ’è”
+// å®šæ•°
 //----------------------------------------------------------------------
 bool wasMousePressed = false;
 
-// ƒAƒjƒ[ƒVƒ‡ƒ“—p
+// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç”¨
 float settingBackAnimTimer = 0.0f;
 int settingBackAnimFrame = 0;
-float settingBackAnimSpeed = 0.05f; // •bi¬‚³‚¢‚Ù‚Çj
+float settingBackAnimSpeed = 0.05f; // ç§’ï¼ˆå°ã•ã„ã»ã©ï¼‰
 //----------------------------------------------------------------------
-// •Ï”
+// å¤‰æ•°
 //----------------------------------------------------------------------
 
 int GameMode = 1; // 0: easy, 1: normal, 2: hard
@@ -42,7 +44,7 @@ int vol_kachi2;
 
 bool prevHit[SETTING_BUTTON_NUM] = { false };
 //----------------------------------------------------------------------
-// ‰Šúİ’è
+// åˆæœŸè¨­å®š
 //----------------------------------------------------------------------
 void Setting_Init()
 {
@@ -103,15 +105,15 @@ void Setting_Init()
 }
 
 //----------------------------------------------------------------------
-// ƒŠƒZƒbƒg
+// ãƒªã‚»ãƒƒãƒˆ
 //----------------------------------------------------------------------
 void Setting_Reset()
 {
-    // ƒAƒjƒ[ƒVƒ‡ƒ“—p•Ï”‚ÌƒŠƒZƒbƒg
+    // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç”¨å¤‰æ•°ã®ãƒªã‚»ãƒƒãƒˆ
     settingBackAnimTimer = 0.0f;
     settingBackAnimFrame = 0;
 
-	//ƒ{ƒ^ƒ“—p•Ï”‚ÌƒŠƒZƒbƒg
+	//ãƒœã‚¿ãƒ³ç”¨å¤‰æ•°ã®ãƒªã‚»ãƒƒãƒˆ
     for (int i = 0; i < SETTING_BUTTON_NUM; ++i) {
         float baseX = 200.0f;
         switch (i)
@@ -141,18 +143,18 @@ void Setting_Reset()
             break;
         }
     }
-	// ƒtƒF[ƒh—p•Ï”‚ÌƒŠƒZƒbƒg
+	// ãƒ•ã‚§ãƒ¼ãƒ‰ç”¨å¤‰æ•°ã®ãƒªã‚»ãƒƒãƒˆ
     SettingState = 0;
     SettingFadeTimer = 1.0f;
 
 
 }
 //----------------------------------------------------------------------
-// XVˆ—
+// æ›´æ–°å‡¦ç†
 //----------------------------------------------------------------------
 void Setting_Update()
 {   
-	// ƒAƒjƒ[ƒVƒ‡ƒ“XV
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ›´æ–°
 	settingBackAnimTimer += settingBackAnimSpeed;
 	if (settingBackAnimTimer >= 1.0f) {
 		settingBackAnimTimer = 0.0f;
@@ -161,41 +163,41 @@ void Setting_Update()
 	}
    
 
-	// ƒtƒF[ƒhƒCƒ“ / ƒtƒF[ƒhƒAƒEƒgˆ—
+	// ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ / ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆå‡¦ç†
     Setting_Fade();
 }
 
 void Setting_Button_CI(DxPlus::Vec2 pos, float radius, int* upDown, bool plus) {
-    // ƒ}ƒEƒX‚ÌˆÊ’u‚ğæ“¾
+    // ãƒã‚¦ã‚¹ã®ä½ç½®ã‚’å–å¾—
     int mouseX, mouseY;
     GetMousePoint(&mouseX, &mouseY);
     DxPlus::Vec2 mousePos = { static_cast<float>(mouseX), static_cast<float>(mouseY) };
     bool isHit = false;
 
  
-        // ƒ}ƒEƒX‚Æƒ{ƒ^ƒ“‚Ì’†S‚Ì‹——£‚ğŒvZ
+        // ãƒã‚¦ã‚¹ã¨ãƒœã‚¿ãƒ³ã®ä¸­å¿ƒã®è·é›¢ã‚’è¨ˆç®—
         float distance = std::sqrt(std::pow(mousePos.x - pos.x, 2) + std::pow(mousePos.y - pos.y, 2));
 
-        // “–‚½‚è”»’è
+        // å½“ãŸã‚Šåˆ¤å®š
         isHit = distance <= radius;
 #if _DEBUG
-        // ƒfƒoƒbƒO•\¦: ƒ{ƒ^ƒ“‚Ì‰~Œ`‹«ŠE‚ğ•`‰æ
+        // ãƒ‡ãƒãƒƒã‚°è¡¨ç¤º: ãƒœã‚¿ãƒ³ã®å††å½¢å¢ƒç•Œã‚’æç”»
         int color = isHit ? GetColor(255, 255, 255) : GetColor(255, 0, 0);
         DrawCircle(static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(radius), color, FALSE);
 #endif
   
 
-        // ƒ}ƒEƒXƒNƒŠƒbƒNó‘Ô‚ğæ“¾
-        wasMousePressed = false; // ‘O‰ñ‚ÌƒNƒŠƒbƒNó‘Ô‚ğ•Û
+        // ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯çŠ¶æ…‹ã‚’å–å¾—
+        wasMousePressed = false; // å‰å›ã®ã‚¯ãƒªãƒƒã‚¯çŠ¶æ…‹ã‚’ä¿æŒ
         int mouseInput = GetMouseInput();
         bool isMouseClicked = (mouseInput & MOUSE_INPUT_LEFT) != 0;
 
-        // “–‚½‚è”»’è‚ª¬—§‚µA‚©‚ÂƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚½uŠÔ‚Ì‚İˆ—‚ğÀs
+        // å½“ãŸã‚Šåˆ¤å®šãŒæˆç«‹ã—ã€ã‹ã¤ã‚¯ãƒªãƒƒã‚¯ãŒæŠ¼ã•ã‚ŒãŸç¬é–“ã®ã¿å‡¦ç†ã‚’å®Ÿè¡Œ
         if (isHit && isMouseClicked && !wasMousePressed && SettingState == 1) {
             *upDown += plus ? 1 : -1;
         }
 
-        // Œ»İ‚ÌƒNƒŠƒbƒNó‘Ô‚ğ•Û‘¶
+        // ç¾åœ¨ã®ã‚¯ãƒªãƒƒã‚¯çŠ¶æ…‹ã‚’ä¿å­˜
         wasMousePressed = isMouseClicked;
 
     
@@ -203,22 +205,22 @@ void Setting_Button_CI(DxPlus::Vec2 pos, float radius, int* upDown, bool plus) {
 
 void Setting_Button_SQ(DxPlus::Vec2 pos, DxPlus::Vec2 length, int mode) {
     bool isHit = false;
-    // ƒ}ƒEƒX‚ÌˆÊ’u‚ğæ“¾
+    // ãƒã‚¦ã‚¹ã®ä½ç½®ã‚’å–å¾—
     int mouseX, mouseY;
     GetMousePoint(&mouseX, &mouseY);
     DxPlus::Vec2 mousePos = { static_cast<float>(mouseX), static_cast<float>(mouseY) };
-    // “–‚½‚è”»’è
+    // å½“ãŸã‚Šåˆ¤å®š
     isHit = (mousePos.x > pos.x && mousePos.x < pos.x + length.x &&
         mousePos.y > pos.y && mousePos.y < pos.y + length.y);
 #if _DEBUG
-    // ƒfƒoƒbƒO•\¦: ƒ{ƒ^ƒ“‚Ì‹éŒ`‹«ŠE‚ğ•`‰æ
+    // ãƒ‡ãƒãƒƒã‚°è¡¨ç¤º: ãƒœã‚¿ãƒ³ã®çŸ©å½¢å¢ƒç•Œã‚’æç”»
     int color = isHit ? GetColor(255, 255, 255) : GetColor(255, 0, 0);
     DrawBox(static_cast<int>(pos.x), static_cast<int>(pos.y),
         static_cast<int>(pos.x + length.x), static_cast<int>(pos.y + length.y),
         color, FALSE);
 #endif
-    // ƒ}ƒEƒXƒNƒŠƒbƒNó‘Ô‚ğæ“¾
-    wasMousePressed = false; // ‘O‰ñ‚ÌƒNƒŠƒbƒNó‘Ô‚ğ•Û
+    // ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯çŠ¶æ…‹ã‚’å–å¾—
+    wasMousePressed = false; // å‰å›ã®ã‚¯ãƒªãƒƒã‚¯çŠ¶æ…‹ã‚’ä¿æŒ
     int mouseInput = GetMouseInput();
     bool isMouseClicked = (mouseInput & MOUSE_INPUT_LEFT) != 0;
 
@@ -234,17 +236,17 @@ void Setting_Button_SQ(DxPlus::Vec2 pos, DxPlus::Vec2 length, int mode) {
     {
         settingButton[mode].scale = { 1.0f,1.0f };
     }
-    // “–‚½‚è”»’è‚ª¬—§‚µA‚©‚ÂƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚½uŠÔ‚Ì‚İˆ—‚ğÀs
+    // å½“ãŸã‚Šåˆ¤å®šãŒæˆç«‹ã—ã€ã‹ã¤ã‚¯ãƒªãƒƒã‚¯ãŒæŠ¼ã•ã‚ŒãŸç¬é–“ã®ã¿å‡¦ç†ã‚’å®Ÿè¡Œ
     if (isHit && isMouseClicked && !wasMousePressed && SettingState == 1) {
         if (mode == BackToTitle) {
-            SettingState = 2; // ƒtƒF[ƒhƒAƒEƒgó‘Ô‚É•ÏX
+            SettingState = 2; // ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆçŠ¶æ…‹ã«å¤‰æ›´
         }
         else {
-            GameMode = mode - 2; // ‘¼‚Ìƒ{ƒ^ƒ“‚Ìˆ—
+            GameMode = mode - 2; // ä»–ã®ãƒœã‚¿ãƒ³ã®å‡¦ç†
         }
     }
 
-    // Œ»İ‚ÌƒNƒŠƒbƒNó‘Ô‚ğ•Û‘¶
+    // ç¾åœ¨ã®ã‚¯ãƒªãƒƒã‚¯çŠ¶æ…‹ã‚’ä¿å­˜
     wasMousePressed = isMouseClicked;
 
     prevHit[mode] = isHit;
@@ -252,7 +254,7 @@ void Setting_Button_SQ(DxPlus::Vec2 pos, DxPlus::Vec2 length, int mode) {
 
 
 //----------------------------------------------------------------------
-// •`‰æˆ—
+// æç”»å‡¦ç†
 //----------------------------------------------------------------------
 void Setting_Render()
 {
@@ -263,36 +265,36 @@ void Setting_Render()
     DxPlus::Sprite::Draw(setBackground.spriteID, { 0.0f,0.0f }, { 1.0f,1.0f }, { 0.0f,0.0f });
 
     for (int i = 0; i < SETTING_BUTTON_NUM; ++i) {
-        // Œ»İ‚Ìƒ‚[ƒhˆÈŠO‚Ìƒ{ƒ^ƒ“‚ğ”–‚­‚·‚é
+        // ç¾åœ¨ã®ãƒ¢ãƒ¼ãƒ‰ä»¥å¤–ã®ãƒœã‚¿ãƒ³ã‚’è–„ãã™ã‚‹
         if (i == easy + GameMode) {
-            DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255); // ’Êí•`‰æ
+            DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255); // é€šå¸¸æç”»
         }
         else if (i == 2 || i == 3 || i == 4) {
-            
-            DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128); // ”¼“§–¾
-        }
-		if (i == BackToTitle)
-        DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { 1.0f,1.0f }, { 0.0f,0.0f });
-        else
-        DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { settingButton[i].scale }, { 0.0f,0.0f });
-        DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-    }
 
-    // ƒ{ƒ^ƒ“‚Ì“–‚½‚è”»’èˆ—
+            DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128); // åŠé€æ˜
+        }
+        if (i == BackToTitle)
+            DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { 1.0f,1.0f }, { 0.0f,0.0f });
+        else
+            DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { settingButton[i].scale }, { 0.0f,0.0f });
+        DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+    }
+    // ãƒœã‚¿ãƒ³ã®å½“ãŸã‚Šåˆ¤å®šå‡¦ç†
     Setting_Button_SQ(settingButton[easy].position, {230,50}, easy);
     Setting_Button_SQ(settingButton[normal].position, {170,50}, normal);
     Setting_Button_SQ(settingButton[hard].position, {300,50}, hard);
     
     DxPlus::Vec2 BaseSize = { 50,100 };
     DxPlus::Vec2 StartPos = settingButton[BackToTitle].position;
-    DxPlus::Vec2 Offset = { 20, 4 }; // ­‚µ‚¸‚Â‚¸‚ç‚·—Ê
+    DxPlus::Vec2 Offset = { 20, 4 }; // å°‘ã—ãšã¤ãšã‚‰ã™é‡
 
     for (int i = 0; i < 20; ++i) {
         DxPlus::Vec2 pos = StartPos + Offset * i;
         Setting_Button_SQ(pos, BaseSize, BackToTitle);
     }
 
-    // ƒtƒF[ƒhƒCƒ“ / ƒtƒF[ƒhƒAƒEƒg—p
+    // ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ / ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆç”¨
     if (SettingFadeTimer > 0.0f) {
         DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255 * SettingFadeTimer));
         DxPlus::Primitive2D::DrawRect({ 0,0 }, { DxPlus::CLIENT_WIDTH, DxPlus::CLIENT_HEIGHT },
@@ -306,7 +308,7 @@ void Setting_Render()
 void Setting_Fade()
 {
     switch (SettingState) {
-    case 0: // ƒtƒF[ƒhƒCƒ“’† 
+    case 0: // ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ä¸­ 
     {
         SettingFadeTimer -= 1 / 60.0f;
         if (SettingFadeTimer < 0.0f) {
@@ -315,16 +317,16 @@ void Setting_Fade()
         }
         break;
     }
-    case 1: // ’Êí
+    case 1: // é€šå¸¸æ™‚
     {
-        // BackSpace ƒL[‚ª‰Ÿ‚³‚ê‚½‚çƒ^ƒCƒgƒ‹‚É–ß‚· 
+        // BackSpace ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸã‚‰ã‚¿ã‚¤ãƒˆãƒ«ã«æˆ»ã™ 
         int input = DxPlus::Input::GetButtonDown(DxPlus::Input::PLAYER1);
         if (input & DxPlus::Input::BUTTON_SELECT) {
             SettingState++;
         }
         break;
     }
-    case 2: // ƒtƒF[ƒhƒAƒEƒg’†
+    case 2: // ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆä¸­
     {
         SettingFadeTimer += 1 / 10.0f;
         if (SettingFadeTimer > 1.0f) {
@@ -347,7 +349,7 @@ void Setting_End()
     for (int i = 0; i < TITLE_BACK_NUM; ++i) {
         if (settingBack[i].spriteID != -1) {
             DxPlus::Sprite::Delete(settingBack[i].spriteID);
-            settingBack[i].spriteID = -1; // ‰ğ•úŒã‚É‰Šú‰»
+            settingBack[i].spriteID = -1; // è§£æ”¾å¾Œã«åˆæœŸåŒ–
         }
     }
 }

@@ -1,6 +1,11 @@
 #include "vol.h"
+#include <DxLib.h>
+#include"DxPlus/DxPlus.h"
 
-float g_volume = 255.0f; // 実体はここに1つだけ！
+
+
+float g_volume = 255.0f; 
+ int vol_title_BGM;
 
 float GetVolume()
 {
@@ -12,4 +17,14 @@ void SetVolume(float newVolume)
     g_volume = std::clamp(newVolume, 0.0f, 255.0f);
 }
 //std::clamp（すたんだーど・くらんぷ）は、
-//「値を一定の範囲に収める」（はみ出さないようにする）ための関数です。
+//「値を一定の範囲に収める」（はみ出さないようにする）ための関数
+
+void Allvol()
+{
+	vol_title_BGM = DxLib::LoadSoundMem(L"./Data/Sounds/BGMtitle.wav");
+	if (vol_title_BGM == -1)
+	{
+		DxPlus::Utils::FatalError(L"./Data/Sounds/BGMtitle.wav");
+
+	}
+}
