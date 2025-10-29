@@ -1,6 +1,7 @@
 ﻿#include "Result.h"
 #include "Back.h"
 #include "winmain.h"
+#include "vol.h"
 
 
 int resultState;
@@ -9,11 +10,12 @@ extern int nextScene;
 extern int score;
 
 
+
 // 初期化関数
 void Result_Init() {
 	ResultBackImage();	
-
     Result_Reset();
+
 }
 
 // リセット関数
@@ -26,7 +28,9 @@ void Result_Reset() {
 
 // 更新関数
 void Result_Update() {	
-	int mouX, mouY;
+
+
+    int mouX, mouY;
 	DxLib::GetMousePoint(&mouX, &mouY);
 	ResultBackUpdate(mouX,mouY,&resultState);
 
@@ -77,6 +81,9 @@ void Result_Fade()
         if (resultFadeTimer > 0.68f) {
             resultFadeTimer = 0.68f;
             nextScene = SceneTitle;
+          
+
+
         }
         break;
     }

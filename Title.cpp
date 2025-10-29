@@ -51,6 +51,8 @@ bool vol_prevSettingHover = false;
 bool vol_prevFinHover = false;
 
 bool wasMousePresseds = false;
+
+int vol_door;
 //---------------------------------------------------------------------- 
 // ‰ŠúÝ’è 
 //----------------------------------------------------------------------
@@ -71,6 +73,11 @@ void Title_Init() {
 	if (vol_kachi == -1)
 	{
 		DxPlus::Utils::FatalError(L"./Data/Sounds/shush.mp3");
+	}	
+	vol_door = DxLib::LoadSoundMem(L"./Data/Sounds/door.mp3");
+	if (vol_door == -1)
+	{
+		DxPlus::Utils::FatalError(L"./Data/Sounds/door.mp3");
 	}
 
 	creditButton.spriteID = LoadGraph(L"./Data/images/credit.png");
@@ -85,6 +92,7 @@ void Title_Init() {
 	ChangeVolumeSoundMem((int)GetVolume(), vol_title_button);
 	ChangeVolumeSoundMem((int)GetVolume(), vol_title_BGM);
 	ChangeVolumeSoundMem((int)GetVolume(), vol_kachi);
+	ChangeVolumeSoundMem((int)GetVolume(), vol_door);
 }
 
 //---------------------------------------------------------------------- 
@@ -267,6 +275,7 @@ void Title_Fade() {
 		titleFadeTimer = 0.0f;
 		titleState++;
 
+
 		break;
 	}
 	case 1: // ’ÊíŽž 
@@ -281,6 +290,7 @@ void Title_Fade() {
 		if (titleFadeTimer > 0.5f) {
 			titleFadeTimer = 0.5f;
 			nextScene = SceneGame;
+			PlaySoundMem(vol_door, DX_PLAYTYPE_BACK);
 		}
 		break;
 	}

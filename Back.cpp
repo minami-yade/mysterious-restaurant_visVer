@@ -62,6 +62,8 @@ int vol_star2or3;
 
 bool starSoundPlayed = false;//‰¹‚ª‚È‚é‚¨‚Ì
 
+int vol_parer;
+
 
 
 void TitleBackImage() {
@@ -491,10 +493,15 @@ void ResultBackImage() {
     {
         DxPlus::Utils::FatalError(L"./Data/Sounds/twoORthree.mp3");
     }
-
+    vol_parer = DxLib::LoadSoundMem(L"./Data/Sounds/parer.mp3");
+    if (vol_parer == -1)
+    {
+        DxPlus::Utils::FatalError(L"./Data/Sounds/parer.mp3");
+    }
 
     ChangeVolumeSoundMem((int)GetVolume(), vol_star0or1);
     ChangeVolumeSoundMem((int)GetVolume(), vol_star2or3);
+    ChangeVolumeSoundMem((int)GetVolume(), vol_parer);
 }
 
 void ResultBackReset() {
@@ -537,7 +544,7 @@ void ResultBackUpdate(int mouX,int mouY,int *resultState) {
         if ((currentMouseInput & MOUSE_INPUT_LEFT) && !(prevMouseInput & MOUSE_INPUT_LEFT)) {
             TitleToClicked = true; 
             *resultState = 2;
-          //PlaySoundMem(vol_pep_break, DX_PLAYTYPE_BACK);
+          PlaySoundMem(vol_parer, DX_PLAYTYPE_BACK);
             StopAllSounds();
 
         }
