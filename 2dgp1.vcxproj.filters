@@ -76,6 +76,9 @@
     <Filter Include="Scene\02_Credit">
       <UniqueIdentifier>{982f1980-a079-482b-ac96-a40903968711}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_MainData\Credit">
+      <UniqueIdentifier>{43f3a7ab-385e-484d-8109-c612dc13600d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DxPlus\Animation.h">
@@ -177,6 +180,9 @@
     <ClInclude Include="Credit.h">
       <Filter>Scene\02_Credit</Filter>
     </ClInclude>
+    <ClInclude Include="vol.h">
+      <Filter>00_MainData\Credit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxPlus\Animation.cpp">
@@ -262,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="Credit.cpp">
       <Filter>Scene\02_Credit</Filter>
+    </ClCompile>
+    <ClCompile Include="vol.cpp">
+      <Filter>00_MainData\Credit</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
