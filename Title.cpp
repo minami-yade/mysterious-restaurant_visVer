@@ -3,6 +3,7 @@
 #include "WinMain.h"
 #include "Back.h"
 #include"vol.h"
+#include <algorithm>
 
 //---------------------------------------------------------------------- 
 // ’è” 

@@ -33,7 +33,6 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 
 	SetWindowStyleMode(7); // スタイルを「サイズ変更可能」にする
 	SetMainWindowText(L"野菜収穫ゲーム"); // ウィンドウのタイトルを変更する
-	Allvol();
 
 	// DxPIus()X ライプラリ)の初期化
 	if (DxPlus::Initialize(DxPlus::CLIENT_WIDTH, DxPlus::CLIENT_HEIGHT, WINDOWED) == -1)
@@ -65,6 +64,7 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 	}
 	Mouse_Image();
 	Mouse_Reset();
+	Allvol();
 
 	//ゲ ー ムル ー プ
 	while (DxPlus::GameLoop())
