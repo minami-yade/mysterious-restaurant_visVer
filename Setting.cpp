@@ -25,6 +25,7 @@ Entity2D setBackground;
 // 定数
 //----------------------------------------------------------------------
 bool wasMousePressed = false;
+extern int fontID1;
 
 // アニメーション用
 float settingBackAnimTimer = 0.0f;
@@ -41,6 +42,8 @@ int SettingState;
 float SettingFadeTimer;
 extern int nextScene;
 int vol_kachi2;
+int alpha = 255;
+
 
 bool prevHit[SETTING_BUTTON_NUM] = { false };
 //----------------------------------------------------------------------
@@ -185,7 +188,15 @@ void Setting_Button_CI(DxPlus::Vec2 pos, float radius, int* upDown, bool plus) {
         int color = isHit ? GetColor(255, 255, 255) : GetColor(255, 0, 0);
         DrawCircle(static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(radius), color, FALSE);
 #endif
-  
+		int cricks = 100;
+
+        if (isHit) {
+			alpha = cricks; // 暗く
+        }
+        else
+        {
+			alpha = 255;
+        }
 
         // マウスクリック状態を取得
         wasMousePressed = false; // 前回のクリック状態を保持
@@ -261,6 +272,8 @@ void Setting_Button_SQ(DxPlus::Vec2 pos, DxPlus::Vec2 length, int mode) {
 //----------------------------------------------------------------------
 void Setting_Render()
 {
+    static int Volume = (int)GetVolume();
+
     int frames = settingBackAnimFrame % TITLE_BACK_NUM;
     if (settingBack[frames].spriteID != -1) {
         DxPlus::Sprite::Draw(settingBack[frames].spriteID, {0.0f,0.0f}, { 1.0f,1.0f }, { 0.0f,0.0f });
@@ -278,16 +291,44 @@ void Setting_Render()
         }
         if (i == BackToTitle)
             DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { 1.0f,1.0f }, { 0.0f,0.0f });
-        else
+		else if (i != 0 && i != 1)
             DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { settingButton[i].scale }, { 0.0f,0.0f });
         DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-
+		// 音量調整ボタンの描画制御
+        if (i == 0 || i == 1) {
+               if(i == 1 && Volume >0)
+               {
+                   DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { settingButton[i].scale }, { 0.0f,0.0f });
+                  Setting_Button_CI({ settingButton[VolLeft].position.x + 28, settingButton[VolLeft].position.y + 28 }, 30.0f, &Volume, false);
+               }
+               if (i == 0 && Volume < 100)
+               {
+                   DxPlus::Sprite::Draw(settingButton[i].spriteID, settingButton[i].position, { settingButton[i].scale }, { 0.0f,0.0f });
+                   Setting_Button_CI({ settingButton[VolRight].position.x + 28, settingButton[VolRight].position.y + 28 }, 30.0f, &Volume, true);
+               }
+        }
     }
     // ボタンの当たり判定処理
     Setting_Button_SQ(settingButton[easy].position, {230,50}, easy);
     Setting_Button_SQ(settingButton[normal].position, {170,50}, normal);
     Setting_Button_SQ(settingButton[hard].position, {300,50}, hard);
 
+
+
+
+    // スコアの描画
+    wchar_t scoreText[16];
+    swprintf(scoreText, sizeof(scoreText) / sizeof(wchar_t), L"%d", Volume);
+
+    DxPlus::Text::DrawString(
+        scoreText,
+        { settingButton[VolRight].position.x - 100, settingButton[VolRight].position.y + 28 },
+        GetColor(165,60,40),
+        DxPlus::Text::TextAlign::MIDDLE_center,
+        { 1.2f, 1.2f },
+        0.0,
+        fontID1
+    );
     
     DxPlus::Vec2 BaseSize = { 50,100 };
     DxPlus::Vec2 StartPos = settingButton[BackToTitle].position;
@@ -297,6 +338,8 @@ void Setting_Render()
         DxPlus::Vec2 pos = StartPos + Offset * i;
         Setting_Button_SQ(pos, BaseSize, BackToTitle);
     }
+
+	SetVolume((float)Volume);
 
     // フェードイン / フェードアウト用
     if (SettingFadeTimer > 0.0f) {

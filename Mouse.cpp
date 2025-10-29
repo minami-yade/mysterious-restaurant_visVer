@@ -19,8 +19,8 @@ void Mouse_Image() {
     {
         DxPlus::Utils::FatalError(L"./Data/Sounds/click.mp3");
     }
+    
 
-    ChangeVolumeSoundMem((int)GetVolume(), vol_mouse_click);
 }
 
 void Mouse_Reset() {
@@ -35,6 +35,8 @@ void Mouse_Reset() {
 void Mouse_Update(float delta)
 {
     static bool clickProcessed = false; // クリック処理済みフラグ
+
+    ChangeVolumeSoundMem((int)GetVolume(), vol_mouse_click);
 
     int mouseInput = DxLib::GetMouseInput();
     if ((mouseInput & MOUSE_INPUT_LEFT) && !clickProcessed) // 初回クリックのみ処理
