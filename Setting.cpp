@@ -10,14 +10,14 @@
 Entity2D settingBack[TITLE_BACK_NUM];
 constexpr int SETTING_BUTTON_NUM = 6;// ボタンの数
 enum SettingButtonType {
-    VolUp,
-    VolDown,
+    VolRight,
+    VolLeft,
     easy,
 	normal,
 	hard,
     BackToTitle,
     vol_right,
-    vol_feft
+    vol_left
 };
 Entity2D settingButton[SETTING_BUTTON_NUM];//学校の自分にいいます。ここまでしかやってません//hai
 Entity2D setBackground;
@@ -75,10 +75,10 @@ void Setting_Init()
     for(int i=0;i<SETTING_BUTTON_NUM;++i){
         switch (i)
         {
-            case VolUp:
+            case VolRight:
                 settingButton[i].spriteID = LoadGraph(L"./Data/images/vol_up.png");
 				break;
-			case VolDown:
+			case VolLeft:
 				settingButton[i].spriteID = LoadGraph(L"./Data/images/vol_down.png");
 				break;
 			case easy:
@@ -118,10 +118,10 @@ void Setting_Reset()
         float baseX = 200.0f;
         switch (i)
         {
-        case VolUp:
+        case VolRight:
             settingButton[i].position = { 925.0f, 250.0f };
             break;
-        case VolDown:
+        case VolLeft:
             settingButton[i].position = { 675.0f, 250.0f };
             break;
         case easy:
@@ -224,6 +224,8 @@ void Setting_Button_SQ(DxPlus::Vec2 pos, DxPlus::Vec2 length, int mode) {
     int mouseInput = GetMouseInput();
     bool isMouseClicked = (mouseInput & MOUSE_INPUT_LEFT) != 0;
 
+
+
     if (isHit && !prevHit[mode]) {
         PlaySoundMem(vol_kachi2, DX_PLAYTYPE_BACK);
     }
@@ -284,6 +286,9 @@ void Setting_Render()
     Setting_Button_SQ(settingButton[easy].position, {230,50}, easy);
     Setting_Button_SQ(settingButton[normal].position, {170,50}, normal);
     Setting_Button_SQ(settingButton[hard].position, {300,50}, hard);
+
+    Setting_Button_SQ(settingButton[vol_right].position, { 80,80 }, vol_right);
+    Setting_Button_SQ(settingButton[vol_left].position, { 80,80 }, vol_left);
     
     DxPlus::Vec2 BaseSize = { 50,100 };
     DxPlus::Vec2 StartPos = settingButton[BackToTitle].position;
