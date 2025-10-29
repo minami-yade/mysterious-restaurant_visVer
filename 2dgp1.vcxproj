@@ -190,6 +190,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Vegetable.h" />
+    <ClInclude Include="vol.h" />
     <ClInclude Include="WinMain.h" />
     <ClInclude Include="Back.h" />
     <ClInclude Include="hook.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Vegetable.cpp" />
+    <ClCompile Include="vol.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

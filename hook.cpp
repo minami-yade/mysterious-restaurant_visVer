@@ -1,12 +1,18 @@
 #include "hook.h"
 #include "vegetable.h"
 #include "Enemy.h"
+#include"vol.h"
+
 
 Entity2D hook;
 extern Entity2D player[PLAYER_NUM];
 extern Entity2D vegetable[VEGETABLE_NUM];
 
 HookState hookState = Idle;
+
+int vol_hook;
+int vol_bowl_back;
+
 
 
 // --- 画像読み込み関係 ---
@@ -17,7 +23,17 @@ void hookImage()
     if (hook.spriteID == -1) {
         DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/hook_png.png");
     }
-
+    //ついでにサウンド
+    vol_hook = DxLib::LoadSoundMem(L"./Data/Sounds/fish.mp3");
+    if (vol_hook == -1)
+    {
+        DxPlus::Utils::FatalError(L"./Data/Sound/fish.mp3");
+    } 
+    //vol_bowl_back = DxLib::LoadSoundMem(L"./Data/Sounds/Push.mp3");
+    //if (vol_bowl_back == -1)
+    //{
+    //    DxPlus::Utils::FatalError(L"./Data/Sound/Push.mp3");
+    //}
 }
 
 // --- リセット関数（初期配置や状態の初期化） ---
@@ -46,6 +62,8 @@ void hookReset(DxPlus::Vec2 playerBasePosition)
 
     hook.angle = 12;
     hookState = Idle;
+
+    ChangeVolumeSoundMem((int)GetVolume(), vol_hook);
 }
 
 
@@ -58,7 +76,7 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
 
 
 
-  
+
     if (hookState == Idle)
     {
         hook.position = left ? hook.HomePositionRight : hook.HomePositionLeft;
@@ -78,16 +96,23 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
 
     // 左クリックが「今押されていて、前フレームは押されていなかった」＝押した瞬間
     if ((mouseInput & MOUSE_INPUT_LEFT) && !(prevMouseInput & MOUSE_INPUT_LEFT)) {
-
+       
         if (hookState == FlyingOut)//飛んでる時に押したら
         {
-           
-            if ( hook.position.y > DxPlus::CLIENT_HEIGHT - 48.0f)//地面
-            hookState = Returning;//もどる
+
+            if (hook.position.y > DxPlus::CLIENT_HEIGHT - 48.0f)//地面
+                hookState = Returning;//もどる
+            if (hookState == Returning)
+            {
+                //PlaySoundMem(vol_bowl_back, DX_PLAYTYPE_BACK);
+            }
+
         }
 
-		if (hookState == Idle)//止まってる時に押したら
-        {
+        if
+            (hookState == Idle)//止まってる時に押したら
+        { //sound
+        PlaySoundMem(vol_hook, DX_PLAYTYPE_BACK);
             DxPlus::Vec2 dir = pointer - hook.position;
             float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
             if (len > 1.0f)
@@ -95,8 +120,8 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
                 dir.x /= len;
                 dir.y /= len;
                 float launchSpeed = 30.0f; // 初速
-                hook.velocity = { dir.x * launchSpeed/2, dir.y * launchSpeed };
-				hook.reachedUpHook = false;
+                hook.velocity = { dir.x * launchSpeed / 2, dir.y * launchSpeed };
+                hook.reachedUpHook = false;
                 hookState = FlyingOut;
             }
         }
@@ -132,30 +157,30 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
             }
         }
     }
-    
+
 
 
 
     //仮
     // 画面外に出たら強制的に戻すにする
-    if (hook.position.x < 0 || hook.position.x > DxPlus::CLIENT_WIDTH 
+    if (hook.position.x < 0 || hook.position.x > DxPlus::CLIENT_WIDTH
         || hook.position.y < 0 || hook.position.y > DxPlus::CLIENT_HEIGHT - 48.0f)
     {
-		if (hook.position.y < 0) hook.position.y = 0;
-		if (hook.position.y > DxPlus::CLIENT_HEIGHT - 48.0f) hook.position.y = DxPlus::CLIENT_HEIGHT - 48.0f;
-		if (hook.position.x < 0) hook.position.x = 0;
-		if (hook.position.x > DxPlus::CLIENT_WIDTH) hook.position.x = DxPlus::CLIENT_WIDTH;
+        if (hook.position.y < 0) hook.position.y = 0;
+        if (hook.position.y > DxPlus::CLIENT_HEIGHT - 48.0f) hook.position.y = DxPlus::CLIENT_HEIGHT - 48.0f;
+        if (hook.position.x < 0) hook.position.x = 0;
+        if (hook.position.x > DxPlus::CLIENT_WIDTH) hook.position.x = DxPlus::CLIENT_WIDTH;
         //↑超えないようにするため
 
         hook.velocity = { 0,0 };//いらない移動を削除
 
-		//hookState = Returning;　//これを消すと端に行っても止まる
+        //hookState = Returning;　//これを消すと端に行っても止まる
     }
 
     // 飛んでいる間は重力を加算
     if (hookState == FlyingOut)
     {
-   
+
         hook.velocity.y += hook.gravity * deltaTime;
     }
     // -----------------
@@ -166,13 +191,13 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
         hook.position.x += hook.velocity.x * deltaTime;
         hook.position.y += hook.velocity.y * deltaTime;
     }
-  
+
 
     prevMouseInput = mouseInput; // 状態を更新
 }
 
 
-void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius,int i,bool veg)
+void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius, int i, bool veg)
 {
     float hookRadius = 10.0f;            // フックの半径
 
@@ -188,10 +213,10 @@ void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius,int i,b
     if (distanceSq <= radiusSum * radiusSum)
     {
         // 当たっている
-		if (veg)
-        onHookHit(targetPos, &hook, i);
-		else
-        onHookEnemyHit(targetPos, &hook, i);
+        if (veg)
+            onHookHit(targetPos, &hook, i);
+        else
+            onHookEnemyHit(targetPos, &hook, i);
     }
 }
 
@@ -200,10 +225,10 @@ void checkHookCollider(const DxPlus::Vec2& targetPos, float targetRadius,int i,b
 // --- 描画関数 ---
 void hookDraw(bool left)
 {
-    DxPlus::Sprite::Draw(hook.spriteID, hook.position, hook.scale, hook.center,hook.angle);
- 
+    DxPlus::Sprite::Draw(hook.spriteID, hook.position, hook.scale, hook.center, hook.angle);
 
-	// 糸の描画（ベジェ曲線でたわみを表現）
+
+    // 糸の描画（ベジェ曲線でたわみを表現）
 
 
     float time = static_cast<float>(DxLib::GetNowCount()) / 1000.0f; // 秒単位の時間
@@ -245,4 +270,11 @@ void hookDelete()
         DxPlus::Sprite::Delete(hook.spriteID);
         hook.spriteID = -1;
     }
+    //ついでにサウンド
+ 
+    if (vol_hook == -1) {
+        DxPlus::Utils::FatalError(L"./Data/Sounds/Push.mp3");
+    }
+
+
 }

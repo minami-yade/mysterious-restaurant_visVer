@@ -1,4 +1,7 @@
 #include "Back.h"
+#include"vol.h"
+
+void StopAllSounds();
 
 Entity2D titleBack[TITLE_BACK_NUM];
 Entity2D Button[TITLE_BUTTON_NUM];
@@ -52,6 +55,14 @@ const float animTitleToSpeed = 0.1f; // アニメーション速度（秒）
 
 extern int fontID1;
 
+int vol_back_game;
+int vol_back_BGM;
+int vol_star0or1;
+int vol_star2or3;
+
+bool starSoundPlayed = false;//音がなるおの
+
+
 
 void TitleBackImage() {
     const wchar_t* BacksPaths[TITLE_BACK_NUM] = {
@@ -97,6 +108,30 @@ void TitleBackImage() {
             DxPlus::Utils::FatalError((std::wstring(L"failed to load sprite : ") + titlePlayPaths[i]).c_str());
         }
 	}
+    //vol_back_game = DxLib::LoadSoundMem(L"./Data/Sounds/shush.mp3");
+    //if (vol_back_game == -1)
+    //{
+    //    DxPlus::Utils::FatalError(L"./Data/Sounds/shush.mp3");
+    //}
+    //vol_back_BGM = DxLib::LoadSoundMem(L"./Data/Sounds/shush.mp3");
+    //if (vol_back_BGM == -1)
+    //{
+    //    DxPlus::Utils::FatalError(L"./Data/Sounds/shush.mp3");
+    //}
+    vol_star0or1 = DxLib::LoadSoundMem(L"./Data/Sounds/zeroORone.mp3");
+    if (vol_star0or1 == -1)
+    {
+        DxPlus::Utils::FatalError(L"./Data/Sounds/zeroORone.mp3");
+    }
+    vol_star2or3 = DxLib::LoadSoundMem(L"./Data/Sounds/twoORthree.mp3");
+    if (vol_star2or3 == -1)
+    {
+        DxPlus::Utils::FatalError(L"./Data/Sounds/twoORthree.mp3");
+    }
+
+
+    ChangeVolumeSoundMem((int)GetVolume(), vol_star0or1);
+    ChangeVolumeSoundMem((int)GetVolume(), vol_star2or3);
 }
 
 void TitleBackReset() {
@@ -455,6 +490,8 @@ void ResultBackReset() {
 
 	TitleTo.scale = { 1.0f,1.0f };
 	TitleToClicked = false;
+    starSoundPlayed = false;
+
 }
 
 void ResultBackUpdate(int mouX,int mouY,int *resultState) {
@@ -484,6 +521,8 @@ void ResultBackUpdate(int mouX,int mouY,int *resultState) {
         if ((currentMouseInput & MOUSE_INPUT_LEFT) && !(prevMouseInput & MOUSE_INPUT_LEFT)) {
             TitleToClicked = true; 
             *resultState = 2;
+          //PlaySoundMem(vol_pep_break, DX_PLAYTYPE_BACK);
+            StopAllSounds();
 
         }
 
@@ -508,7 +547,10 @@ void ResultBackDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 cent
 
     //スコアによって表示を変える
     if (score >= MIN_SCORE_FOR_3_STARS) {
-
+        if (!starSoundPlayed) {
+            PlaySoundMem(vol_star2or3, DX_PLAYTYPE_BACK);
+            starSoundPlayed = true; // 一度だけ再生
+        }
         if (TitleToClicked) {
             DxPlus::Sprite::Draw(ResultStar3Animation[TitleToFrame], position, scale, center);
         }
@@ -516,15 +558,23 @@ void ResultBackDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 cent
             DxPlus::Sprite::Draw(ResultRank[Star3].spriteID, ResultRank[Star3].pos, ResultRank[Star3].scale, ResultRank[Star3].center);
     }
     else if (score >= MIN_SCORE_FOR_2_STARS) {
-
+        if (!starSoundPlayed) {
+            PlaySoundMem(vol_star2or3, DX_PLAYTYPE_BACK);
+            starSoundPlayed = true;
+        }
         if (TitleToClicked) {
             DxPlus::Sprite::Draw(ResultStar2Animation[TitleToFrame], position, scale, center);
         }
         else
+
             DxPlus::Sprite::Draw(ResultRank[Star2].spriteID, ResultRank[Star2].pos, ResultRank[Star2].scale, ResultRank[Star2].center);
+               
     }
     else if (score >= MIN_SCORE_FOR_1_STAR) {
-     
+        if (!starSoundPlayed) {
+            PlaySoundMem(vol_star0or1, DX_PLAYTYPE_BACK);
+            starSoundPlayed = true;
+        }
         if (TitleToClicked) {
             DxPlus::Sprite::Draw(ResultStar1Animation[TitleToFrame], position, scale, center);
         }  
@@ -532,6 +582,10 @@ void ResultBackDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 cent
             DxPlus::Sprite::Draw(ResultRank[Star1].spriteID, ResultRank[Star1].pos, ResultRank[Star1].scale, ResultRank[Star1].center);
     }
     else {
+        if (!starSoundPlayed) {
+            PlaySoundMem(vol_star0or1, DX_PLAYTYPE_BACK);
+            starSoundPlayed = true;
+        }
     
         if (TitleToClicked) {
             DxPlus::Sprite::Draw(ResultStar0Animation[TitleToFrame], position, scale, center);
@@ -546,6 +600,10 @@ void ResultBackDraw(DxPlus::Vec2 position, DxPlus::Vec2 scale, DxPlus::Vec2 cent
         // スコアの描画
         wchar_t scoreText[16];
         swprintf(scoreText, sizeof(scoreText) / sizeof(wchar_t), L"%d", score);
+       // if (!CheckSoundMem(vol_back_BGM))
+       // {
+       // PlaySoundMem(vol_back_BGM, DX_PLAYTYPE_BACK);
+       //}
         DxPlus::Text::DrawString(
             scoreText,
             { 450.0f,240.0f },
@@ -587,4 +645,19 @@ void ResultBackDelete() {
         }
     }
 }
+void StopAllSounds() {
+    // 結果画面などで使用している音をすべて停止
+    if (CheckSoundMem(vol_star0or1)) {
+        StopSoundMem(vol_star0or1);
+    }
+    if (CheckSoundMem(vol_star2or3)) {
+        StopSoundMem(vol_star2or3);
+    }
+    if (CheckSoundMem(vol_back_BGM)) {
+        StopSoundMem(vol_back_BGM);
+    }
+    if (CheckSoundMem(vol_back_game)) {
+        StopSoundMem(vol_back_game);
+    }
 
+}
