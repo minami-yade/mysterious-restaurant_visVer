@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "AllManager.h"
+#include"vol.h"
 
 // --------------------------------------------------
 // Enemy.cpp - エネミー（UFO含む）処理
@@ -33,7 +34,10 @@ const float UFO_FALL_ROT_SPEED = 720.0f;
 
 int modeSpeed = 0;
 
+int vol_UFO_width;
+int vol_UFO_height;
 
+int vol_bowl_backs;
 
 void EnemyImage()
 {
@@ -75,6 +79,30 @@ void EnemyImage()
         if (enemy[i].mouseAnim < 0 || enemy[i].mouseAnim >= MOUSE_ANIM_NUM) enemy[i].mouseAnim = 0;
         enemy[i].spriteID = mouseAnimDeg[enemy[i].mouseAnim];
     }
+
+    vol_UFO_width = DxLib::LoadSoundMem(L"./Data/Sounds/UFO.mp3");
+    if (vol_UFO_width == -1)
+    {
+        DxPlus::Utils::FatalError(L"./Data/Sounds/UFO.mp3");
+    }
+    vol_UFO_height = DxLib::LoadSoundMem(L"./Data/Sounds/UFOLL.mp3");
+    if (vol_UFO_height == -1)
+    {
+        DxPlus::Utils::FatalError(L"./Data/Sounds/UFOLL.mp3");
+    }
+     
+    
+    //vol_bowl_backs = DxLib::LoadSoundMem(L"./Data/Sounds/shush.mp3");
+    //if (vol_bowl_backs == -1)
+    //{
+    //    DxPlus::Utils::FatalError(L"./Data/Sounds/shush.mp3");
+    //}
+
+    ChangeVolumeSoundMem((int)GetVolume(), vol_UFO_width);
+    ChangeVolumeSoundMem((int)GetVolume(), vol_UFO_height);
+   // ChangeVolumeSoundMem((int)GetVolume(), vol_bowl_backs);
+
+
 }
 
 void EnemyReset()
@@ -141,7 +169,6 @@ void EnemyReset()
         else if (GameMode == 2) {
             modeSpeed = 3.0f;
         }
-
     }
 }
 
@@ -186,11 +213,19 @@ void UpdateEnemy(int i, float deltaTime, HookState& hookState, int *score)
         if (enemy[i].ufoDropState == 1) { // 野菜を取得する処理
             enemy[i].ufoDropTimer += deltaTime;
             if (enemy[i].ufoDropTimer < 70.0f) { // 少し下に移動
+                if (!CheckSoundMem(vol_UFO_height))
+                {
+                    PlaySoundMem(vol_UFO_height, DX_PLAYTYPE_BACK);
+                }
                 enemy[i].position.y += UFO_FALL_SPEED * deltaTime;
             } else if (!enemy[i].ufoHasVegetable) { // 野菜を持っていない場合のみ取得
                 enemy[i].ufoHasVegetable = true; // 野菜を取得
                 enemy[i].ufoVegetableIndex = GetRand(VEGETABLE_NUM - 1); // ランダムな野菜を取得
                 enemy[i].ufoDropState = 2; // 状態を「上昇」に変更
+                if (!CheckSoundMem(vol_UFO_height))
+                {
+                    PlaySoundMem(vol_UFO_height, DX_PLAYTYPE_BACK);
+                }
                 enemy[i].ufoDropTimer = 0.0f; // タイマーをリセット
                 *score -= 200; // 野菜を取られたペナルティ
             }
@@ -210,6 +245,11 @@ void UpdateEnemy(int i, float deltaTime, HookState& hookState, int *score)
 
         // 通常移動中
         if (enemy[i].ufoDropState == 0) {
+            if (!CheckSoundMem(vol_UFO_width))
+            {
+                PlaySoundMem(vol_UFO_width, DX_PLAYTYPE_BACK);
+            }
+
             enemy[i].position.x += enemy[i].speed * deltaTime; // 水平移動
         }
 

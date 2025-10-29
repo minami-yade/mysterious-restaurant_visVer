@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "WinMain.h"
 #include "AllManager.h"
+#include"vol.h"
 
 
 float MainGameTimer = 0.0f;
@@ -47,6 +48,8 @@ DxPlus::Vec2 ButtonBasePos = { 1145.0f,650.0f };
 int offsetX = 112;
 int offsetY = 46;
 
+int vol_BGM_gamepaley;
+
 //----------------------------------------------------------------------
 // 
 //----------------------------------------------------------------------
@@ -60,7 +63,11 @@ void Game_Init()
     if (GamePlays[1].spriteID == -1) {
         DxPlus::Utils::FatalError(L"Failed to load start game image.");
 	}
-
+    vol_BGM_gamepaley = DxLib::LoadSoundMem(L"./Data/Sounds/BGMgame.mp3");
+    if (vol_BGM_gamepaley == -1)
+    {
+        DxPlus::Utils::FatalError(L"./Data/Sounds/BGMgame.mp3");
+    }
  
 	//今の時間を取得
     g_prevMs = GetNowCount();
@@ -68,6 +75,8 @@ void Game_Init()
 	GameAllLoad();  
 
     Game_Reset();
+
+    ChangeVolumeSoundMem((int)GetVolume(), vol_BGM_gamepaley);
 }
 
 //----------------------------------------------------------------------
@@ -99,6 +108,8 @@ void Game_Reset()
 	GamePlays[1].center = { 115.0f,60.0f };
 	GamePlays[1].position = { ButtonBasePos.x,ButtonBasePos.y };
 	GamePlays[1].angle = 0.2f;
+    StopSoundMem(vol_BGM_gamepaley);
+    PlaySoundMem(vol_BGM_gamepaley, DX_PLAYTYPE_LOOP);
 }
 
 
@@ -196,6 +207,10 @@ void Game_Update()
     }
     GameBackUpdate();
     Game_Fade();
+    if (nextScene == SceneResult)
+    {
+        StopSoundMem(vol_BGM_gamepaley);
+    }
 }
 
 
@@ -341,4 +356,6 @@ void Game_Fade()
 void Game_End()
 {
 	GameAllDelete();
+    StopSoundMem(vol_BGM_gamepaley);
+
 }

@@ -3,6 +3,7 @@
 #include "WinMain.h"
 #include "Entity2D.h"
 #include "Back.h"
+#include"vol.h"
 
 
 
@@ -37,7 +38,9 @@ int GameMode = 1; // 0: easy, 1: normal, 2: hard
 int SettingState;
 float SettingFadeTimer;
 extern int nextScene;
+int vol_kachi2;
 
+bool prevHit[SETTING_BUTTON_NUM] = { false };
 //----------------------------------------------------------------------
 // èâä˙ê›íË
 //----------------------------------------------------------------------
@@ -47,6 +50,11 @@ void Setting_Init()
     if(setBackground.spriteID == -1){
         DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/kanban.png");
 	}
+    vol_kachi2 = DxLib::LoadSoundMem(L"./Data/Sounds/shush.mp3");
+    if (vol_kachi2 == -1)
+    {
+        DxPlus::Utils::FatalError(L"./Data/Sounds/shush.mp3");
+    }	ChangeVolumeSoundMem((int)GetVolume(), vol_kachi2);
 
     const wchar_t* setBackPaths[TITLE_BACK_NUM] = {
         L"./Data/images/b1 (1).png",
@@ -214,6 +222,10 @@ void Setting_Button_SQ(DxPlus::Vec2 pos, DxPlus::Vec2 length, int mode) {
     int mouseInput = GetMouseInput();
     bool isMouseClicked = (mouseInput & MOUSE_INPUT_LEFT) != 0;
 
+    if (isHit && !prevHit[mode]) {
+        PlaySoundMem(vol_kachi2, DX_PLAYTYPE_BACK);
+    }
+
     if (isHit)
     {
         settingButton[mode].scale = { 1.2f,1.2f };
@@ -235,6 +247,7 @@ void Setting_Button_SQ(DxPlus::Vec2 pos, DxPlus::Vec2 length, int mode) {
     // åªç›ÇÃÉNÉäÉbÉNèÛë‘Çï€ë∂
     wasMousePressed = isMouseClicked;
 
+    prevHit[mode] = isHit;
 }
 
 
