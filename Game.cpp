@@ -48,7 +48,7 @@ DxPlus::Vec2 ButtonBasePos = { 1145.0f,650.0f };
 int offsetX = 112;
 int offsetY = 46;
 
-int vol_BGM_gamepaley;
+extern int vol_BGM_gamepaley;
 
 //----------------------------------------------------------------------
 // 
@@ -63,11 +63,7 @@ void Game_Init()
     if (GamePlays[1].spriteID == -1) {
         DxPlus::Utils::FatalError(L"Failed to load start game image.");
 	}
-    vol_BGM_gamepaley = DxLib::LoadSoundMem(L"./Data/Sounds/BGMgame.mp3");
-    if (vol_BGM_gamepaley == -1)
-    {
-        DxPlus::Utils::FatalError(L"./Data/Sounds/BGMgame.mp3");
-    }
+
  
 	//今の時間を取得
     g_prevMs = GetNowCount();
@@ -161,13 +157,15 @@ void Game_Update()
         delta = GetDeltaTime_DxLib(g_prevMs);
 
         //ノーマルが基準
-        int BaseTime = 1;
-		int easyTime = 1.2;
-		int hardTime = 0.7;
+        float BaseTime = 1;
+		float easyTime = 1.5f;
+		float hardTime = 0.8f;
+		float easySpawn = hardTime;
+		float hardSpawn = easyTime;
         if (GameMode == 0)
         {
             vegetableSpawnTimer -=BaseTime * easyTime;
-            enemySpawnTimer -= BaseTime * easyTime;
+            enemySpawnTimer -= BaseTime * easySpawn;
         }
         else if (GameMode == 1)
         {
@@ -177,7 +175,7 @@ void Game_Update()
         else if (GameMode == 2)
         {
             vegetableSpawnTimer -= BaseTime * hardTime;
-            enemySpawnTimer -= BaseTime * hardTime;
+            enemySpawnTimer -= BaseTime * hardSpawn;
         }
      
 

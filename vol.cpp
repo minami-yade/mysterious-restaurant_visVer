@@ -5,8 +5,9 @@
 
 
 
-float g_volume = 255.0f; 
+float g_volume = 100.0f; 
  int vol_title_BGM;
+ int vol_BGM_gamepaley;
 
 float GetVolume()
 {
@@ -27,5 +28,10 @@ void Allvol()
 	{
 		DxPlus::Utils::FatalError(L"./Data/Sounds/BGMtitle.wav");
 
+	}
+	vol_BGM_gamepaley = DxLib::LoadSoundMem(L"./Data/Sounds/BGMgame.mp3");
+	if (vol_BGM_gamepaley == -1)
+	{
+		DxPlus::Utils::FatalError(L"./Data/Sounds/BGMgame.mp3");
 	}
 }
