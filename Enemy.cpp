@@ -161,13 +161,13 @@ void EnemyReset()
         }
        
         if (GameMode == 0) {
-            modeSpeed = 1.0f;
+            modeSpeed = 0.75f;
         }
         else if (GameMode == 1) {
-            modeSpeed = 1.5f;
+            modeSpeed = 1.0f;
         }
         else if (GameMode == 2) {
-            modeSpeed = 3.0f;
+            modeSpeed = 1.5f;
         }
     }
 }

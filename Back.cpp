@@ -118,20 +118,7 @@ void TitleBackImage() {
     //{
     //    DxPlus::Utils::FatalError(L"./Data/Sounds/shush.mp3");
     //}
-    vol_star0or1 = DxLib::LoadSoundMem(L"./Data/Sounds/zeroORone.mp3");
-    if (vol_star0or1 == -1)
-    {
-        DxPlus::Utils::FatalError(L"./Data/Sounds/zeroORone.mp3");
-    }
-    vol_star2or3 = DxLib::LoadSoundMem(L"./Data/Sounds/twoORthree.mp3");
-    if (vol_star2or3 == -1)
-    {
-        DxPlus::Utils::FatalError(L"./Data/Sounds/twoORthree.mp3");
-    }
-
-
-    ChangeVolumeSoundMem((int)GetVolume(), vol_star0or1);
-    ChangeVolumeSoundMem((int)GetVolume(), vol_star2or3);
+   
 }
 
 void TitleBackReset() {
@@ -478,21 +465,36 @@ void ResultBackImage() {
 
 	TitleTo.center = { 89.5f, 11.0f };
 
-    if(GameMode == 0){
-        MIN_SCORE_FOR_1_STAR  = 100;    // 1つ星を獲得するための最小スコア
-        MIN_SCORE_FOR_2_STARS = 200;  // 2つ星を獲得するための最小スコア
-        MIN_SCORE_FOR_3_STARS = 300;  // 3つ星を獲得するための最小スコア
+    if(GameMode == 0){//easy
+        MIN_SCORE_FOR_1_STAR  = 1000;  // 1つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_2_STARS = 2000;  // 2つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_3_STARS = 2500;  // 3つ星を獲得するための最小スコア
     }
-    else if(GameMode == 1){
-        MIN_SCORE_FOR_1_STAR  = 150;    // 1つ星を獲得するための最小スコア
-        MIN_SCORE_FOR_2_STARS = 300;  // 2つ星を獲得するための最小スコア
-        MIN_SCORE_FOR_3_STARS = 450;  // 3つ星を獲得するための最小スコア
+	else if (GameMode == 1) {//normal
+        MIN_SCORE_FOR_1_STAR  = 2000;  // 1つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_2_STARS = 2500;  // 2つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_3_STARS = 3200;  // 3つ星を獲得するための最小スコア
     }
-    else if(GameMode == 2){
-        MIN_SCORE_FOR_1_STAR  = 200;    // 1つ星を獲得するための最小スコア
-        MIN_SCORE_FOR_2_STARS = 400;  // 2つ星を獲得するための最小スコア
-        MIN_SCORE_FOR_3_STARS = 600;  // 3つ星を獲得するための最小スコア
+	else if (GameMode == 2) {//hard
+        MIN_SCORE_FOR_1_STAR  = 1000;  // 1つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_2_STARS = 2000;  // 2つ星を獲得するための最小スコア
+        MIN_SCORE_FOR_3_STARS = 2500;  // 3つ星を獲得するための最小スコア
 	}
+
+    vol_star0or1 = DxLib::LoadSoundMem(L"./Data/Sounds/zeroORone.mp3");
+    if (vol_star0or1 == -1)
+    {
+        DxPlus::Utils::FatalError(L"./Data/Sounds/zeroORone.mp3");
+    }
+    vol_star2or3 = DxLib::LoadSoundMem(L"./Data/Sounds/twoORthree.mp3");
+    if (vol_star2or3 == -1)
+    {
+        DxPlus::Utils::FatalError(L"./Data/Sounds/twoORthree.mp3");
+    }
+
+
+    ChangeVolumeSoundMem((int)GetVolume(), vol_star0or1);
+    ChangeVolumeSoundMem((int)GetVolume(), vol_star2or3);
 }
 
 void ResultBackReset() {
