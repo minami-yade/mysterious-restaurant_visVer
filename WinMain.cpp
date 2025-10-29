@@ -4,7 +4,7 @@
 #include "Title.h"
 #include "Result.h"
 #include "Setting.h"
-#include "Battle.h"
+#include "Credit.h"
 #include "Mouse.h"
 #include "AllManager.h"
 
@@ -97,8 +97,8 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 			case SceneResult:
 				Result_End();
 				break;
-			case SceneBattle:
-				Battle_End();
+			case SceneCredit:
+				Credit_End();
 				break;
 			case SceneSetting:
 				Setting_End();
@@ -120,8 +120,8 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 				Result_Init();
 				break;
 
-			case SceneBattle:
-				Battle_Init();
+			case SceneCredit:
+				Credit_Init();
 				break;
 
 			case SceneSetting:
@@ -160,9 +160,9 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 			Setting_Render();
 			break;
 
-		case SceneBattle:
-			Battle_Update();
-			Battle_Render();
+		case SceneCredit:
+			Credit_Update();
+			Credit_Render();
 			break;
 		}
 
@@ -193,8 +193,8 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 		Setting_End();
 		break;
 
-	case SceneBattle:
-		Battle_End();
+	case SceneCredit:
+		Credit_End();
 		break;
 	
 	}

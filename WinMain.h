@@ -5,7 +5,7 @@ enum Scene
 	SceneTitle,
 	SceneGame,
 	SceneResult,
-	SceneBattle,
+	SceneCredit,
 	SceneSetting,
 };
 
