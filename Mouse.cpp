@@ -20,7 +20,7 @@ void Mouse_Image() {
         DxPlus::Utils::FatalError(L"./Data/Sounds/click.mp3");
     }
 
-    ChangeVolumeSoundMem((int)GetVolume, vol_mouse_click);
+    ChangeVolumeSoundMem((int)GetVolume(), vol_mouse_click);
 }
 
 void Mouse_Reset() {
@@ -34,14 +34,19 @@ void Mouse_Reset() {
 
 void Mouse_Update(float delta)
 {
+    static bool clickProcessed = false; // クリック処理済みフラグ
+
     int mouseInput = DxLib::GetMouseInput();
-    if (mouseInput & MOUSE_INPUT_LEFT)
+    if ((mouseInput & MOUSE_INPUT_LEFT) && !clickProcessed) // 初回クリックのみ処理
     {
         PlaySoundMem(vol_mouse_click, DX_PLAYTYPE_BACK);
-        mouse.click = true; 
+        mouse.click = true;
+        clickProcessed = true; // 処理済みフラグを設定
     }
-
-
+    else if (!(mouseInput & MOUSE_INPUT_LEFT)) // ボタンが離されたらリセット
+    {
+        clickProcessed = false;
+    }
 
     if (mouse.click)
     {     

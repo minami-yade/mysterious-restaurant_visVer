@@ -287,8 +287,6 @@ void Setting_Render()
     Setting_Button_SQ(settingButton[normal].position, {170,50}, normal);
     Setting_Button_SQ(settingButton[hard].position, {300,50}, hard);
 
-    Setting_Button_SQ(settingButton[vol_right].position, { 80,80 }, vol_right);
-    Setting_Button_SQ(settingButton[vol_left].position, { 80,80 }, vol_left);
     
     DxPlus::Vec2 BaseSize = { 50,100 };
     DxPlus::Vec2 StartPos = settingButton[BackToTitle].position;
