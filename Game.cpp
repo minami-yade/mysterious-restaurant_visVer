@@ -9,7 +9,7 @@ float MainGameTimer = 0.0f;
 //----------------------------------------------------------------------
 // 
 //----------------------------------------------------------------------
-int vegetableSpawnTimer,enemySpawnTimer;
+float vegetableSpawnTimer,enemySpawnTimer;
 
 
 int hookX = 0;
@@ -116,6 +116,7 @@ void Game_Reset()
 //----------------------------------------------------------------------
 // 更新処理
 //----------------------------------------------------------------------
+extern int GameMode;
 
 void Game_Update()
 {
@@ -158,8 +159,27 @@ void Game_Update()
         ScoreUpdate(score);
         Timer_Update(MainGameTimer, 1 / 60.0f, &gameState);
         delta = GetDeltaTime_DxLib(g_prevMs);
-        vegetableSpawnTimer--;
-        enemySpawnTimer--;
+
+        //ノーマルが基準
+        int BaseTime = 1;
+		int easyTime = 1.2;
+		int hardTime = 0.7;
+        if (GameMode == 0)
+        {
+            vegetableSpawnTimer -=BaseTime * easyTime;
+            enemySpawnTimer -= BaseTime * easyTime;
+        }
+        else if (GameMode == 1)
+        {
+            vegetableSpawnTimer -= BaseTime;
+            enemySpawnTimer -= BaseTime;
+        }
+        else if (GameMode == 2)
+        {
+            vegetableSpawnTimer -= BaseTime * hardTime;
+            enemySpawnTimer -= BaseTime * hardTime;
+        }
+     
 
 		if (gameFadeTimer == 0.0f)
         Updatehook(delta, mouseX, mouseY, { mousePosX,mousePosY }, isRight);
