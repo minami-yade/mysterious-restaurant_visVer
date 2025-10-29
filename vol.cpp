@@ -1,6 +1,7 @@
 #include "vol.h"
 #include <DxLib.h>
 #include"DxPlus/DxPlus.h"
+#include <algorithm> 
 
 
 
@@ -21,7 +22,7 @@ void SetVolume(float newVolume)
 
 void Allvol()
 {
-	vol_title_BGM = DxLib::LoadSoundMem(L"./Data/Sounds/BGMtitle.wav");
+	vol_title_BGM =LoadSoundMem(L"./Data/Sounds/BGMtitle.wav");
 	if (vol_title_BGM == -1)
 	{
 		DxPlus::Utils::FatalError(L"./Data/Sounds/BGMtitle.wav");
