@@ -1,4 +1,5 @@
 #include "Mouse.h"
+#include "vol.h"
 
 Entity2D mouse;
 int vol_mouse_click;
@@ -19,7 +20,7 @@ void Mouse_Image() {
         DxPlus::Utils::FatalError(L"./Data/Sounds/click.mp3");
     }
 
-
+    ChangeVolumeSoundMem((int)GetVolume, vol_mouse_click);
 }
 
 void Mouse_Reset() {
