@@ -2,6 +2,7 @@
 #include "Title.h"
 #include "WinMain.h"
 #include "Back.h"
+#include"vol.h"
 
 //---------------------------------------------------------------------- 
 // 定数 
@@ -35,15 +36,44 @@ const DxPlus::Vec2 finButtonPos     = { buttonBase.x + 100.0f ,  buttonBase.y + 
 int mouseX, mouseY;
 int mouseInput;
 
+int vol_title_button;
+int vol_title_BGM;
+
+
+int vol_kachi;
+
+bool vol_prevStartHover = false;
+bool vol_prevSettingHover = false;
+bool vol_prevFinHover = false;
 
 //---------------------------------------------------------------------- 
 // 初期設定 
 //----------------------------------------------------------------------
 void Title_Init() {
 
+	//vol_title_button = DxLib::LoadSoundMem(L"./Data/Sounds/shush.mp3");
+	//if (vol_title_button == -1)
+	//{
+	//	DxPlus::Utils::FatalError(L"./Data/Sounds/shush.mp3");
+	//}
+
+	vol_title_BGM = DxLib::LoadSoundMem(L"./Data/Sounds/BGMtitle.wav");
+	if (vol_title_BGM == -1)
+	{
+		DxPlus::Utils::FatalError(L"./Data/Sounds/BGMtitle.wav");
+	}
+	vol_kachi = DxLib::LoadSoundMem(L"./Data/Sounds/shush.mp3");
+	if (vol_kachi == -1)
+	{
+		DxPlus::Utils::FatalError(L"./Data/Sounds/shush.mp3");
+	}
 	TitleBackImage();
 
 	Title_Reset();
+
+	ChangeVolumeSoundMem((int)GetVolume(), vol_title_button);
+	ChangeVolumeSoundMem((int)GetVolume(), vol_title_BGM);
+	ChangeVolumeSoundMem((int)GetVolume(), vol_kachi);
 }
 
 //---------------------------------------------------------------------- 
@@ -62,11 +92,17 @@ void Title_Reset() {
 	titleState = 0;
 	titleFadeTimer = 1.0f;
 
+
+	StopSoundMem(vol_title_BGM);
+	PlaySoundMem(vol_title_BGM, DX_PLAYTYPE_LOOP);
+
 }
 //---------------------------------------------------------------------- 
 // 更新処理
 //----------------------------------------------------------------------
 void Title_Update() {
+
+
 
     Title_Fade();
 
@@ -79,13 +115,42 @@ void Title_Update() {
     settingbutton = ButtonPosition({ settingButtonPos }, { (float)mouseX,(float)mouseY });
     finbutton = ButtonPosition({ finButtonPos }, { (float)mouseX,(float)mouseY });
 
-    // ボタンのクリック処理
-    if ((mouseInput & MOUSE_INPUT_LEFT) && startbutton)
-        titleState = 2;
-    if ((mouseInput & MOUSE_INPUT_LEFT) && settingbutton)
-        titleState = 3; // 設定画面に遷移する状態に変更
-    if ((mouseInput & MOUSE_INPUT_LEFT) && finbutton)
-        titleState = 4;
+    
+	if (startbutton && !vol_prevStartHover)
+	{
+		PlaySoundMem(vol_kachi, DX_PLAYTYPE_BACK); // ホバー音（カーソルが乗った瞬間）
+	}
+	if (settingbutton && !vol_prevSettingHover)
+	{
+		PlaySoundMem(vol_kachi, DX_PLAYTYPE_BACK);
+	}
+	if (finbutton && !vol_prevFinHover)
+	{
+		PlaySoundMem(vol_kachi, DX_PLAYTYPE_BACK);
+	}
+
+	// --- 現在の状態を次のフレーム用に保存 ---
+	vol_prevStartHover = startbutton;
+	vol_prevSettingHover = settingbutton;
+	vol_prevFinHover = finbutton;
+
+
+
+
+	if (mouseInput & MOUSE_INPUT_LEFT)
+	{
+		if (startbutton)      titleState = 2;
+		else if (settingbutton) titleState = 3;
+		else if (finbutton)     titleState = 4;
+	}
+
+
+	if ( nextScene == SceneGame)
+	{
+		StopSoundMem(vol_title_BGM);  // ← ここでタイトルBGMを止める！
+	}
+
+
 }
 
 
@@ -179,5 +244,6 @@ void Title_Fade() {
 
 }
 void Title_End() {
+	StopSoundMem(vol_title_BGM);
 	TitleBackDelete();
 }

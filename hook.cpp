@@ -11,6 +11,7 @@ extern Entity2D vegetable[VEGETABLE_NUM];
 HookState hookState = Idle;
 
 int vol_hook;
+int vol_bowl_back;
 
 
 
@@ -23,11 +24,16 @@ void hookImage()
         DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/hook_png.png");
     }
     //ついでにサウンド
-    vol_hook = DxLib::LoadSoundMem(L"./Data/Sounds/Push.mp3");
+    vol_hook = DxLib::LoadSoundMem(L"./Data/Sounds/fish.mp3");
     if (vol_hook == -1)
     {
-        DxPlus::Utils::FatalError(L"./Data/Sound/Push.mp3");
-    }
+        DxPlus::Utils::FatalError(L"./Data/Sound/fish.mp3");
+    } 
+    //vol_bowl_back = DxLib::LoadSoundMem(L"./Data/Sounds/Push.mp3");
+    //if (vol_bowl_back == -1)
+    //{
+    //    DxPlus::Utils::FatalError(L"./Data/Sound/Push.mp3");
+    //}
 }
 
 // --- リセット関数（初期配置や状態の初期化） ---
@@ -96,6 +102,11 @@ void Updatehook(float deltaTime, int x, int y, DxPlus::Vec2 pointer, bool left)
 
             if (hook.position.y > DxPlus::CLIENT_HEIGHT - 48.0f)//地面
                 hookState = Returning;//もどる
+            if (hookState == Returning)
+            {
+                //PlaySoundMem(vol_bowl_back, DX_PLAYTYPE_BACK);
+            }
+
         }
 
         if

@@ -1,7 +1,7 @@
 #include "Mouse.h"
 
 Entity2D mouse;
-
+int vol_mouse_click;
 
 void Mouse_Image() {
     mouse.spriteID = LoadGraph(L"./Data/images/wood_png.png");
@@ -12,6 +12,13 @@ void Mouse_Image() {
     if (mouse.effectID == -1) {
         DxPlus::Utils::FatalError(L"failed to load sprite : ./Data/images/effect.png");
     }
+    //‚Â‚¢‚Å‚ÉƒTƒEƒ“ƒh
+    vol_mouse_click = DxLib::LoadSoundMem(L"./Data/Sounds/click.mp3");
+    if (vol_mouse_click == -1)
+    {
+        DxPlus::Utils::FatalError(L"./Data/Sounds/click.mp3");
+    }
+
 
 }
 
@@ -29,8 +36,11 @@ void Mouse_Update(float delta)
     int mouseInput = DxLib::GetMouseInput();
     if (mouseInput & MOUSE_INPUT_LEFT)
     {
-        mouse.click = true;
+        PlaySoundMem(vol_mouse_click, DX_PLAYTYPE_BACK);
+        mouse.click = true; 
     }
+
+
 
     if (mouse.click)
     {     

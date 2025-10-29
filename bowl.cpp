@@ -1,10 +1,18 @@
 #include "bowl.h"
+#include"vol.h"
 
 Entity2D bowl;
 Entity2D bowlEffect[BOWL_EFFECT_NUM];
+int vol_bowl_backss;
 
 // --- 画像読み込み関係 ---
 void bowlImage() {
+
+    vol_bowl_backss = DxLib::LoadSoundMem(L"./Data/Sounds/Inbowl.mp3");
+    if (vol_bowl_backss == -1)
+    {
+        DxPlus::Utils::FatalError(L"./Data/Sounds/Inbowl.mp3");
+    }
 
     // bowlの画像
     bowl.spriteID = LoadGraph(L"./Data/images/bowl.png");
@@ -42,6 +50,7 @@ void bowlImage() {
         }
 
     }
+    ChangeVolumeSoundMem((int)GetVolume(), vol_bowl_backss);
 }
 
 // --- リセット関数（初期配置や状態の初期化） ---
@@ -67,6 +76,11 @@ void checkbowlCollider(Entity2D& entity,int i) {
     // 当たり判定
     if (distanceSq <= radiusSum * radiusSum)
     {
+        if (!CheckSoundMem(vol_bowl_backss))
+        {
+            PlaySoundMem(vol_bowl_backss, DX_PLAYTYPE_BACK);
+        }
+        
         // 当たっている
         Score(entity.havescore); // スコア加算
 		entity.isActive = false; // 非アクティブにする
